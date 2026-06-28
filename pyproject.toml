@@ -1,0 +1,90 @@
+# ============================================================================
+# pyproject.toml — {{PROJECT_NAME}} (SaMD {{SAMD_CLASS}})
+#
+# SOLO config de calidad de código estática (ruff + vulture).
+# La config de pytest/cobertura vive en SU PROPIO archivo (pytest.ini /
+# setup.cfg / pyproject aparte), y el build/deps también — NO van aquí.
+# ============================================================================
+
+# ----------------------------------------------------------------------------
+# [tool.ruff] — linter rápido (reemplaza flake8/pyflakes/isort en lint).
+# ----------------------------------------------------------------------------
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+# Foco en código de aplicación. Tests, scripts y migraciones tienen criterio
+# propio (ver per-file-ignores) o se excluyen.
+extend-exclude = [
+    "venv",
+    ".venv",
+    "build",
+    "dist",
+    "frontend",
+    ".github",
+    "node_modules",
+    "alembic/versions",
+]
+
+[tool.ruff.lint]
+# ----------------------------------------------------------------------------
+# ROADMAP DE STRICTNESS POR FASES (apretar nunca aflojar — ratchet SaMD §5.7).
+# Subí de fase solo cuando la anterior está en verde y la deuda saldada.
+#
+#   Fase 1 (BASELINE — actual):  ["F"]
+#       PyFlakes. Bugs reales (vars sin usar, imports rotos). Cero ruido.
+#
+#   Fase 2 (BUGS + MODERNIZACIÓN):  ["F", "E", "B", "SIM", "UP"]
+#       E   = pycodestyle (estilo)
+#       B   = flake8-bugbear (trampas reales: mutable defaults, etc.)
+#       SIM = flake8-simplify (simplificaciones)
+#       UP  = pyupgrade (sintaxis moderna del target-version)
+#
+#   Fase 3 (TIPADO + SEGURIDAD):  + ["ANN", "S", "ASYNC"]
+#       ANN   = flake8-annotations (exige type hints; refuerza a mypy)
+#       S     = flake8-bandit (SAST: subprocess, eval, hardcoded secrets)
+#       ASYNC = flake8-async (await olvidado, I/O bloqueante en async)
+#
+# Para avanzar de fase: descomentá la línea `select` correspondiente.
+# ----------------------------------------------------------------------------
+select = ["F"]
+# select = ["F", "E", "B", "SIM", "UP"]
+# select = ["F", "E", "B", "SIM", "UP", "ANN", "S", "ASYNC"]
+
+fixable = ["ALL"]
+unfixable = []
+
+[tool.ruff.lint.per-file-ignores]
+# `__init__.py` re-exporta — F401 (import unused) es por diseño.
+"__init__.py" = ["F401"]
+# Tests: importan fixtures que pytest inyecta (parecen sin usar); overloads en mocks.
+"tests/*" = ["F401", "F811"]
+# Scripts ad-hoc: prints/imports laxos tolerados.
+"scripts/*" = ["F401"]
+
+# ----------------------------------------------------------------------------
+# [tool.vulture] — detector de código muerto (dead code estático).
+# ----------------------------------------------------------------------------
+# `min_confidence = 100` solo reporta lo 100% seguro. Bajar a 80 mete falsos
+# positivos típicos (callbacks de framework que vulture no ve invocados).
+[tool.vulture]
+min_confidence = 100
+paths = ["app"]
+
+# Whitelist de framework: nombres requeridos por contrato aunque vulture no los
+# vea usados (event listeners ORM, hooks de test, convención `_unused`).
+ignore_names = [
+    "mapper",      # arg de event listeners del ORM (SQLAlchemy event.listens_for)
+    "_*",          # convención: prefijo `_` = deliberadamente sin usar
+    "test_*",      # tests descubiertos por el runner, no llamados directamente
+    "setUp",
+    "tearDown",
+    "side_effect", # mocks
+]
+exclude = [
+    "venv/",
+    ".venv/",
+    "tests/",
+    "alembic/versions/",
+    "build/",
+]

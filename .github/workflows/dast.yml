@@ -1,0 +1,68 @@
+name: DAST (OWASP ZAP)
+
+# DAST — OWASP ZAP baseline contra la app CORRIENDO en local.
+# Complementa SAST (semgrep) + SCA (trivy) + fuzz de contrato (schemathesis) con
+# un escaneo DINÁMICO de la app viva (XSS, inyección, headers/cookies inseguras,
+# fugas). Crítico en un SaMD que maneja datos de salud (HIPAA / GDPR Art.32).
+#
+#   Proyecto:   {{PROJECT_NAME}}
+#   Clase SaMD: {{SAMD_CLASS}}
+#   Backend:    {{BACKEND_STACK}}
+#
+# Sin secretos → runner barato. Nightly + manual. NUNCA apunta a producción:
+# un scan activo contra prod requiere OK explícito y otro workflow.
+#
+# Optimizaciones obligatorias: concurrency, timeout duro, acciones pineadas,
+# retención acotada de artifacts.
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'   # lunes 06:00 UTC (spider + scan tardan; semanal)
+  workflow_dispatch:
+  push:
+    paths:
+      - 'scripts/run_zap_dast.sh'
+      - '.github/workflows/dast.yml'
+
+concurrency:
+  group: dast-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  zap-baseline:
+    name: ZAP baseline (backend local)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Set up Python
+        uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install backend deps
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Run ZAP baseline DAST
+        # El script levanta el backend (SQLite, sin servicios externos), espera
+        # /health y corre ZAP contra él. El gate refleja FAILs reales (no WARN).
+        run: bash scripts/run_zap_dast.sh
+
+      - name: Upload DAST report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.4.0
+        with:
+          name: zap-dast-report
+          path: |
+            audit/zap_dast_report.html
+            audit/zap_dast_report.json
+            audit/dast_backend.log
+          retention-days: 14
+          if-no-files-found: ignore

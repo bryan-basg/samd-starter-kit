@@ -1,0 +1,60 @@
+{
+  "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
+
+  "//": "Mutation testing config for {{PROJECT_NAME}} ({{FRONTEND_STACK}}).",
+  "//_samd": "SaMD {{SAMD_CLASS}} requires demonstrable verification (IEC 62304 5.7). Mutation score is the proof that tests assert behavior, not just render.",
+
+  "packageManager": "npm",
+  "testRunner": "vitest",
+
+  "//_ignoreStatic": "Do NOT mutate static constants (literals computed once at module load). Mutating them wastes the bulk of the run on unreachable/equivalent mutants.",
+  "ignoreStatic": true,
+
+  "//_incremental": "Reuse prior results; only re-test mutants in changed files. Keep .stryker-tmp/incremental.json out of source control churn but cached in CI.",
+  "incremental": true,
+  "incrementalFile": ".stryker-tmp/incremental.json",
+
+  "//_coverageAnalysis": "perTest maps each test to the code it covers so only relevant tests run per mutant. Largest single speedup.",
+  "coverageAnalysis": "perTest",
+
+  "//_timeouts": "The full suite needs a generous dry-run window or it aborts before the baseline finishes.",
+  "dryRunTimeoutMinutes": 30,
+  "timeoutMS": 60000,
+  "timeoutFactor": 1.5,
+
+  "//_concurrency": "Tune to (nproc - 4) on the runner. Comment left for the operator; uncomment to pin.",
+  "//concurrency": 8,
+
+  "mutate": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "!src/**/*.test.ts",
+    "!src/**/*.test.tsx",
+    "!src/**/*.spec.ts",
+    "!src/**/*.spec.tsx",
+    "!src/**/*.d.ts",
+    "!src/**/__tests__/**",
+    "!src/**/__mocks__/**",
+    "!src/main.tsx",
+    "!src/vite-env.d.ts"
+  ],
+
+  "//_thresholds": "break is the CI gate: score below it fails the build. high/low only color the report.",
+  "thresholds": {
+    "high": 95,
+    "low": 90,
+    "break": 90
+  },
+
+  "reporters": ["html", "clear-text", "progress", "json"],
+  "htmlReporter": {
+    "fileName": "reports/mutation/mutation.html"
+  },
+  "jsonReporter": {
+    "fileName": "reports/mutation/mutation.json"
+  },
+
+  "tempDirName": ".stryker-tmp",
+  "cleanTempDir": true,
+  "logLevel": "info"
+}

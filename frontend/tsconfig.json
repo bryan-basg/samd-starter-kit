@@ -1,0 +1,39 @@
+{
+  // ==========================================================================
+  // TypeScript — {{PROJECT_NAME}} frontend (SaMD {{SAMD_CLASS}})
+  // IEC 62304 §5.5 — tipado estricto. Prohibido `any` implícito y código muerto.
+  // ==========================================================================
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    // --- Strictness (ratchet — apretar nunca aflojar) -----------------------
+    "strict": true,                        // todas las strict-flags base
+    "noUnusedLocals": true,                // variables locales sin usar → error
+    "noUnusedParameters": true,            // params sin usar → error (prefijo `_` exime)
+    "noFallthroughCasesInSwitch": true,    // case sin break que cae al siguiente
+    "noImplicitReturns": true,             // todo camino del cuerpo retorna
+    "noUncheckedIndexedAccess": true,      // acceso por índice puede ser undefined
+    "forceConsistentCasingInFileNames": true,
+
+    // --- Alias de módulos ---------------------------------------------------
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+
+    "types": ["vitest/globals", "node", "vite/client"]
+  },
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}

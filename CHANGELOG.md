@@ -13,6 +13,11 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 - Ejemplo trabajado (`examples/auralog/`): dispositivo Clase B ficticio con su DHF rellenado (Master Map, clasificación de seguridad, matriz de riesgo, trazabilidad).
 - Diagramas de arquitectura en **Mermaid** (render nativo en GitHub) en Master Map, Architecture Overview y Reference Architecture.
 - `dependabot.yml` (npm + pip + github-actions), `CODEOWNERS`, `.editorconfig`, `.gitattributes`.
+- **Tooling de testing + gates**: `frontend/stryker.conf.json`, `scripts/check_mutmut_score.py` (gate de mutation), `scripts/run_flaky_check.sh`, `pytest.ini`, `.coveragerc`, workflow `db-tier.yml` (Postgres real), guía `TESTING_TOOLS.md`.
+- **Stack de seguridad**: `scripts/generate_sbom.sh`, `scripts/run_gitleaks.sh` + `.gitleaks.toml`, workflows `sbom.yml` / `schemathesis.yml` / `dast.yml`, docs `SBOM_MANAGEMENT_PLAN.md` y `COMPLIANCE_CHECKLIST.md`.
+- **Configs de calidad**: `.pre-commit-config.yaml`, `.mypy.ini`, `pyproject.toml` (ruff + vulture), `frontend/tsconfig.json`, `frontend/.eslintrc.cjs`, `scripts/audit_hallucinations.py`, `scripts/audit_smells.py`, `scripts/verify_openapi_sync.py`.
+- **Docs regulatorios**: `RISK_CONTROL_TRACEABILITY.md`, `REGULATORY_VERSION_LOG.md`, `ISO_13485_READINESS_PLAN.md`, `CRITICAL_MODULES_INVENTORY.md`, `BREACH_NOTIFICATION_TEMPLATE.md`, `INCIDENT_POSTMORTEM_TEMPLATE.md`, `INCIDENT_RESPONSE_DRILL_REPORT.md`.
+- Wrappers de comandos canónicos: `scripts/run_{stryker,trivy,semgrep,schemathesis}.sh`.
 - `CHANGELOG.md`.
 
 ### Changed

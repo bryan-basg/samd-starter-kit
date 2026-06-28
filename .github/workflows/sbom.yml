@@ -1,0 +1,188 @@
+name: SBOM Generation
+
+# Generación y versionado del Software Bill of Materials (SBOM) en CycloneDX
+# 1.5 JSON para backend Python (cyclonedx-py) y frontend Node
+# (@cyclonedx/cyclonedx-npm).
+#
+#   Proyecto:   {{PROJECT_NAME}}
+#   Clase SaMD: {{SAMD_CLASS}}
+#   Cloud CI:   {{CLOUD_STACK}}
+#
+# Marco regulatorio: IEC 81001-5-1 §4.1.5 + FDA Cybersecurity 2023 §V.B +
+# EO 14028 + EU CRA. Política completa en
+# docs/07_regulatory_and_compliance/SBOM_MANAGEMENT_PLAN.md.
+#
+# Optimizaciones obligatorias (anti-saturación del presupuesto de Actions):
+#   - paths-filter: solo dispara cuando cambian deps/lockfiles.
+#   - concurrency cancel-in-progress: cancela runs viejos del mismo branch.
+#   - cache pip+npm: evita reinstalar todo en cada corrida.
+#   - timeout-minutes: 10 (límite duro).
+#   - cron semanal: drift detection sin coste diario.
+#   - acciones pineadas a SHA (suministro de Actions inmutable).
+#   - artifact retention 30 días (la retención larga regulatoria la satisface
+#     el SBOM versionado en Git, no este artifact redundante de conveniencia).
+
+on:
+  push:
+    branches: [master, main]
+    paths:
+      - 'requirements.txt'
+      - 'requirements*.txt'
+      - 'frontend/package.json'
+      - 'frontend/package-lock.json'
+      - 'scripts/generate_sbom.sh'
+      - '.github/workflows/sbom.yml'
+  schedule:
+    - cron: '0 5 * * 1'   # lunes 05:00 UTC — detección semanal de drift de deps
+  workflow_dispatch:
+
+concurrency:
+  group: sbom-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  generate-sbom:
+    name: Generate SBOM (backend + frontend)
+    # CI sin secretos → runner barato. Ajustar a vuestra plataforma {{CLOUD_STACK}}.
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          # fetch-depth 2 para poder hacer diff vs commit anterior.
+          fetch-depth: 2
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Setup Node.js 24
+        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a # v4.2.0
+        with:
+          node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      # ----------------------------------------------------------- backend deps
+      - name: Create virtualenv and install backend deps
+        run: |
+          python3 -m venv venv
+          source venv/bin/activate
+          python -m pip install --upgrade pip
+          # requirements.txt necesario para que `cyclonedx-py environment` vea
+          # el grafo transitivo real.
+          pip install -r requirements.txt
+          # Herramienta SBOM (tooling regulatorio, no runtime → fuera de requirements.txt).
+          pip install cyclonedx-bom
+
+      # ----------------------------------------------------------- frontend deps
+      - name: Install frontend deps (lockfile only)
+        working-directory: frontend
+        run: |
+          # `npm ci` respeta el lockfile exacto — clave para reproducibilidad
+          # del SBOM. `npm install` recalcularía versiones y mentiría.
+          npm ci --prefer-offline --no-audit --no-fund
+
+      # ----------------------------------------------------------- baseline previo
+      - name: Save previous SBOM for diff (if exists)
+        run: |
+          mkdir -p /tmp/sbom-prev
+          if [ -f sbom/sbom-latest-backend.json ]; then
+            cp sbom/sbom-latest-backend.json /tmp/sbom-prev/be.json
+          fi
+          if [ -f sbom/sbom-latest-frontend.json ]; then
+            cp sbom/sbom-latest-frontend.json /tmp/sbom-prev/fe.json
+          fi
+
+      # ----------------------------------------------------------- generate
+      - name: Run generate_sbom.sh
+        run: bash scripts/generate_sbom.sh
+
+      - name: Show generated files
+        run: ls -la sbom/
+
+      # ----------------------------------------------------------- diff vs baseline
+      - name: Compute diff vs previous SBOM
+        run: |
+          python3 - <<'PY'
+          import json, pathlib
+
+          SBOM_DIR = pathlib.Path("sbom")
+          PREV_DIR = pathlib.Path("/tmp/sbom-prev")
+
+          def extract(path):
+              if not path.exists():
+                  return {}
+              d = json.load(open(path))
+              return {c.get("name", "?"): c.get("version", "?") for c in d.get("components", [])}
+
+          def diff(old, new, label):
+              old_set, new_set = set(old), set(new)
+              added = sorted(new_set - old_set)
+              removed = sorted(old_set - new_set)
+              changed = sorted(n for n in (old_set & new_set) if old[n] != new[n])
+              print(f"\n=== {label} diff ===")
+              print(f"  Components total: {len(new_set)}")
+              print(f"  + Added:   {len(added)}")
+              for n in added[:40]:
+                  print(f"    + {n} {new[n]}")
+              print(f"  - Removed: {len(removed)}")
+              for n in removed[:40]:
+                  print(f"    - {n} {old[n]}")
+              print(f"  ~ Changed: {len(changed)}")
+              for n in changed[:40]:
+                  print(f"    ~ {n} {old[n]} -> {new[n]}")
+              return len(added) + len(removed) + len(changed)
+
+          be_old = extract(PREV_DIR / "be.json")
+          be_new = extract(SBOM_DIR / "sbom-latest-backend.json")
+          fe_old = extract(PREV_DIR / "fe.json")
+          fe_new = extract(SBOM_DIR / "sbom-latest-frontend.json")
+
+          total = 0
+          if be_old or be_new:
+              total += diff(be_old, be_new, "Backend (Python)")
+          if fe_old or fe_new:
+              total += diff(fe_old, fe_new, "Frontend (Node)")
+
+          print(f"\n>>> Total deltas: {total}")
+          if total == 0:
+              print(">>> SBOM unchanged from previous baseline.")
+          PY
+
+      # ----------------------------------------------------------- artifact
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.4.0
+        if: always()
+        with:
+          name: sbom-${{ github.run_id }}
+          path: sbom/
+          retention-days: 30
+
+      # ----------------------------------------------------------- guard
+      - name: Fail if SBOM files missing or empty
+        run: |
+          test -s sbom/sbom-latest-backend.json || {
+            echo "::error::sbom-latest-backend.json no fue generado o esta vacio."
+            exit 1
+          }
+          test -s sbom/sbom-latest-frontend.json || {
+            echo "::error::sbom-latest-frontend.json no fue generado o esta vacio."
+            exit 1
+          }
+          # Guard reforzado: el SBOM debe contener al menos 1 componente.
+          python3 - <<'PY'
+          import json, sys
+          for f in ("sbom/sbom-latest-backend.json", "sbom/sbom-latest-frontend.json"):
+              n = len(json.load(open(f)).get("components", []))
+              print(f"{f}: {n} componentes")
+              if n == 0:
+                  print(f"::error::{f} no tiene componentes — SBOM vacio.")
+                  sys.exit(1)
+          PY

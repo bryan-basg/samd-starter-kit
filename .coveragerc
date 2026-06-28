@@ -1,0 +1,64 @@
+# coverage.py configuration for {{PROJECT_NAME}} ({{BACKEND_STACK}})
+# SaMD {{SAMD_CLASS}} verification — coverage is evidence, so it must be reproducible.
+
+[run]
+# parallel = True makes each test worker write its own data file
+# (.coverage.<host>.<pid>.<random>), which you later `coverage combine`.
+#
+# WHY NOT measure coverage sequentially: an async + threaded suite (greenlet
+# event loop + worker threads) interleaves writes to a single SQLite-backed
+# coverage data file. The tracer and the context switches race, corrupting the
+# data file and reporting phantom misses on lines that actually ran. Run the
+# suite in parallel (pytest -n auto) so each worker owns its data file, then
+# combine. parallel = True is what enables that.
+parallel = True
+
+# concurrency must match how the code yields control, or the tracer loses lines.
+concurrency = greenlet,thread
+
+branch = True
+
+# Measure the application package(s), not tests or tooling.
+source =
+    app
+
+omit =
+    */tests/*
+    */__tests__/*
+    */migrations/*
+    */alembic/*
+    */__init__.py
+    */conftest.py
+    */.venv/*
+    */venv/*
+
+[paths]
+# Map worker/CI paths back to a single canonical tree before combining,
+# so coverage from different machines merges instead of double-counting.
+source =
+    app/
+    */app/
+
+[report]
+show_missing = True
+skip_covered = False
+precision = 2
+
+# Lines/blocks that legitimately should not count toward coverage.
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    raise NotImplementedError
+    if TYPE_CHECKING:
+    if __name__ == .__main__.:
+    \.\.\.
+
+# Canonical gate. Override per-run with `coverage report --fail-under=N`
+# if a layer (e.g. data/SQL) carries a higher floor.
+fail_under = 95
+
+[html]
+directory = reports/coverage/html
+
+[xml]
+output = reports/coverage/coverage.xml

@@ -1,0 +1,67 @@
+# .gitleaks.toml — Configuración de gitleaks con allowlist auditada (ejemplo).
+#
+#   Proyecto:   {{PROJECT_NAME}}
+#   Clase SaMD: {{SAMD_CLASS}}
+#
+# Esta config EXTIENDE las reglas default de gitleaks (no las reemplaza).
+# Solo agrega una `allowlist` para silenciar falsos positivos auditados
+# manualmente.
+#
+# ───────────────────────────────────────────────────────────────────────────
+# REGLA IMPORTANTE — cómo añadir una excepción:
+#   1. Justificación explícita: por qué NO es un secreto real (ej. clave
+#      público-readable por diseño, fixture de test sin acceso a servicios).
+#   2. Path/regex lo más específico posible (no abrir agujeros amplios).
+#   3. Comentario con fecha y operador que aprobó la excepción.
+#
+# Si un escaneo futuro revela un nuevo finding, NO se agrega a la allowlist por
+# defecto — primero se investiga si es un secreto real y, si lo es, SE ROTA.
+# Un secreto en el historial git sigue comprometido aunque se rote la clave:
+# hay que rotar Y limpiar (git filter-repo / BFG) si fue real.
+# ───────────────────────────────────────────────────────────────────────────
+
+[extend]
+# Mantener todas las reglas default del paquete gitleaks.
+useDefault = true
+
+[allowlist]
+description = "Falsos positivos auditados manualmente — <YYYY-MM-DD>"
+
+# ── regexes ────────────────────────────────────────────────────────────────
+# Silencian matches por CONTENIDO del secreto (más estricto que paths: solo si
+# el contenido exacto coincide). Usar para identificadores público-readable.
+#
+# Ejemplo 1 — clave pública de cliente (público-readable por diseño).
+#   Las API keys de cliente web/móvil (p.ej. Firebase `AIzaSy...`) son
+#   identificadores públicos: quedan visibles en el bundle JS, en el APK y en
+#   los archivos de configuración del cliente. El proveedor las trata como
+#   identifiers, no secretos. La seguridad real viene de restricciones de
+#   origen/HTTP-referrer + reglas de seguridad del backend + App Check.
+#   Auditado: <YYYY-MM-DD> — <OWNER>.
+#
+# Ejemplo 2 — clave pública VAPID de WebPush.
+#   Viaja al navegador para que el ServiceWorker se suscriba; el par privado
+#   vive solo en el backend. Auditado: <YYYY-MM-DD> — <OWNER>.
+regexes = [
+  # '''<CLAVE_PUBLICA_DE_CLIENTE_AQUI>''',
+  # '''<CLAVE_PUBLICA_VAPID_AQUI>''',
+]
+
+# ── paths ──────────────────────────────────────────────────────────────────
+# Silencian archivos completos (para reglas específicas o todas). Usar para
+# fixtures de test con passwords mock y documentación que cita ejemplos.
+#
+# Ejemplo 3 — mocks de passwords en fixtures de tests.
+#   Strings como `password="mock_pass_123"` dentro de tests que verifican
+#   lógica de auth en aislamiento (no tocan servicios reales). Si pasan a
+#   conectarse a un servicio real, rotar. Auditado: <YYYY-MM-DD>.
+#
+# Ejemplo 4 — documentación que cita findings históricos.
+#   Docs de deuda técnica / planes SBOM pueden contener ejemplos textuales
+#   (`password="..."`, `audit_token: ...` en frontmatter) que NO son secretos
+#   vivos. Auditado: <YYYY-MM-DD>.
+paths = [
+  # '''tests/.*_secrets_fixture\.py''',
+  # '''docs/08_verification_and_audits/TECHNICAL_DEBT_SUMMARY\.md''',
+  # '''docs/07_regulatory_and_compliance/SBOM_MANAGEMENT_PLAN\.md''',
+]

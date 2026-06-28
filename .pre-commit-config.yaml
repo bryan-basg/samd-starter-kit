@@ -1,0 +1,100 @@
+# ============================================================================
+# Pre-commit hooks — {{PROJECT_NAME}} (SaMD {{SAMD_CLASS}})
+# IEC 62304 §5.5/§5.7 — calidad e higiene de código verificable antes del commit.
+#
+# Instalar:
+#   pip install pre-commit
+#   pre-commit install                 # hooks de commit
+#   pre-commit install --hook-type pre-push   # hook "CI on push" (opcional)
+#
+# Las `rev` están PINEADAS a propósito (builds reproducibles SaMD).
+# Para actualizar:  pre-commit autoupdate   (revisa el CHANGELOG antes de subir rev)
+# ============================================================================
+repos:
+  # --- Higiene básica de archivos -------------------------------------------
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0  # actualizar rev
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-added-large-files
+        args: ["--maxkb=1024"]
+      - id: check-merge-conflict
+      - id: debug-statements  # bloquea pdb/breakpoint() olvidados
+
+  # --- Formato: black -------------------------------------------------------
+  - repo: https://github.com/psf/black
+    rev: 23.12.1  # actualizar rev
+    hooks:
+      - id: black
+        language_version: python3
+
+  # --- Formato: isort (orden de imports, compatible con black) --------------
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2  # actualizar rev
+    hooks:
+      - id: isort
+        args: ["--profile", "black"]
+
+  # --- Lint: ruff (rápido; reemplaza flake8/pyflakes) -----------------------
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.1.11  # actualizar rev
+    hooks:
+      - id: ruff
+        args: ["--fix", "--exit-non-zero-on-fix"]
+
+  # --- Type-check: mypy estricto --------------------------------------------
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.8.0  # actualizar rev
+    hooks:
+      - id: mypy
+        # Añadir aquí los stubs de tipos que use el proyecto.
+        additional_dependencies: [types-requests, pydantic]
+        args: ["--config-file=.mypy.ini"]
+
+  # --- Detección de secretos: gitleaks --------------------------------------
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.1  # actualizar rev
+    hooks:
+      - id: gitleaks
+
+  # --- Hooks locales del proyecto -------------------------------------------
+  - repo: local
+    hooks:
+      # Auditoría anti-alucinaciones de IA (placeholders, credenciales demo).
+      - id: audit-hallucinations
+        name: Auditoría anti-alucinaciones (placeholders/secretos demo)
+        entry: python scripts/audit_hallucinations.py
+        language: system
+        pass_filenames: false
+
+      # Auditoría de smells async (I/O bloqueante en funciones async, except: amplio).
+      - id: audit-smells
+        name: Auditoría de smells (async I/O bloqueante, except amplio)
+        entry: python scripts/audit_smells.py
+        language: system
+        pass_filenames: false
+
+      # Lint del frontend (solo cuando cambian archivos del front).
+      - id: frontend-lint
+        name: Frontend Lint
+        entry: bash -c 'cd frontend && npm run lint'
+        language: system
+        files: ^frontend/
+        pass_filenames: false
+        types_or: [javascript, jsx, ts, tsx]
+
+      # ----------------------------------------------------------------------
+      # "CI on push" (OPCIONAL) — corre la verificación completa antes de push.
+      # Solo se dispara en `git push` (stage: pre-push), no en cada commit.
+      # Descomentar y apuntar a tu script de CI local.
+      # ----------------------------------------------------------------------
+      # - id: full-validation
+      #   name: CI local completo (pre-push)
+      #   entry: bash scripts/<run_local_ci.sh>
+      #   language: system
+      #   stages: [pre-push]
+      #   pass_filenames: false
+      #   always_run: true

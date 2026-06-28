@@ -19,6 +19,7 @@ Brújula del DHF de {{PROJECT_NAME}}. El **[Master Map](./00_master/MASTER_MAP.m
 - [SOFTWARE_DEVELOPMENT_PLAN](./03_software_development_plan/SOFTWARE_DEVELOPMENT_PLAN.md) — plan de ciclo de vida, actividades por clase, entregables.
 - [DEVELOPMENT_GUIDE_COMPLETE](./03_software_development_plan/DEVELOPMENT_GUIDE_COMPLETE.md) — guía de desarrollo: setup, comandos, estándares, Definition of Done.
 - [COMPLETE_TESTING_STRATEGY](./03_software_development_plan/COMPLETE_TESTING_STRATEGY.md) — estrategia de verificación SaMD-grade.
+- [TESTING_TOOLS](./03_software_development_plan/TESTING_TOOLS.md) — guía maestra del stack de testing (qué herramienta, cuándo, comandos).
 - [AUDIT_PROTOCOL](./03_software_development_plan/AUDIT_PROTOCOL.md) — protocolo de auditoría interna de changesets/fases.
 
 ## 05 · Decisiones de diseño (RFCs)
@@ -32,6 +33,8 @@ Brújula del DHF de {{PROJECT_NAME}}. El **[Master Map](./00_master/MASTER_MAP.m
 
 - [DEPLOY_RUNBOOK](./06_operations_and_runbooks/DEPLOY_RUNBOOK.md) — pre-checks, migración atómica, rollback, verificación post-deploy.
 - [INCIDENT_RUNBOOK](./06_operations_and_runbooks/INCIDENT_RUNBOOK.md) — diagnóstico de incidentes en producción, síntomas comunes, escalada.
+- [INCIDENT_POSTMORTEM_TEMPLATE](./06_operations_and_runbooks/INCIDENT_POSTMORTEM_TEMPLATE.md) — post-mortem sin culpa (timeline, causa raíz, CAPA, lecciones).
+- [INCIDENT_RESPONSE_DRILL_REPORT](./06_operations_and_runbooks/INCIDENT_RESPONSE_DRILL_REPORT.md) — registro de simulacros periódicos de respuesta a incidentes.
 
 ## 07 · Regulatorio y compliance
 
@@ -39,12 +42,16 @@ Brújula del DHF de {{PROJECT_NAME}}. El **[Master Map](./00_master/MASTER_MAP.m
 - [ISO_14971_RISK_MATRIX](./07_regulatory_and_compliance/ISO_14971_RISK_MATRIX.md) — matriz de gestión de riesgo.
 - [TRACEABILITY_MATRIX_SAMD](./07_regulatory_and_compliance/TRACEABILITY_MATRIX_SAMD.md) — trazabilidad necesidad → REQ → diseño → verificación → riesgo.
 - [SOFTWARE_SAFETY_CLASSIFICATION](./07_regulatory_and_compliance/SOFTWARE_SAFETY_CLASSIFICATION.md) — clasificación de seguridad IEC 62304 §4.3.
+- [RISK_CONTROL_TRACEABILITY](./07_regulatory_and_compliance/RISK_CONTROL_TRACEABILITY.md) — cruce riesgo → control → REQ → test → riesgo residual (cierra el loop).
+- [CRITICAL_MODULES_INVENTORY](./07_regulatory_and_compliance/CRITICAL_MODULES_INVENTORY.md) — clasificación de módulos por criticidad y umbral de rigor de testing.
 
 **Ciclo de vida y mantenimiento**
 - [SOUP_INVENTORY](./07_regulatory_and_compliance/SOUP_INVENTORY.md) — inventario de Software of Unknown Provenance.
 - [SOFTWARE_MAINTENANCE_PLAN](./07_regulatory_and_compliance/SOFTWARE_MAINTENANCE_PLAN.md) — plan de mantenimiento IEC 62304 §6.
 - [SOFTWARE_CONFIGURATION_MANAGEMENT_PLAN](./07_regulatory_and_compliance/SOFTWARE_CONFIGURATION_MANAGEMENT_PLAN.md) — gestión de configuración.
 - [SOFTWARE_PROBLEM_RESOLUTION_PROCEDURE](./07_regulatory_and_compliance/SOFTWARE_PROBLEM_RESOLUTION_PROCEDURE.md) — resolución de problemas IEC 62304 §9.
+- [SBOM_MANAGEMENT_PLAN](./07_regulatory_and_compliance/SBOM_MANAGEMENT_PLAN.md) — generación, almacenamiento y revisión del SBOM por release.
+- [REGULATORY_VERSION_LOG](./07_regulatory_and_compliance/REGULATORY_VERSION_LOG.md) — control de versiones de todos los docs regulatorios (ISO 13485).
 
 **Evidencia clínica y post-market**
 - [CLINICAL_EVALUATION_PLAN](./07_regulatory_and_compliance/CLINICAL_EVALUATION_PLAN.md) — plan de evaluación clínica.
@@ -61,9 +68,12 @@ Brújula del DHF de {{PROJECT_NAME}}. El **[Master Map](./00_master/MASTER_MAP.m
 - [DATA_RETENTION_POLICY](./07_regulatory_and_compliance/DATA_RETENTION_POLICY.md) — política de retención.
 - [DATA_FLOW_DOCUMENTATION](./07_regulatory_and_compliance/DATA_FLOW_DOCUMENTATION.md) — flujo de datos y fronteras de confianza.
 - [INCIDENT_RESPONSE_PLAN](./07_regulatory_and_compliance/INCIDENT_RESPONSE_PLAN.md) — respuesta a incidentes y notificación de brechas.
+- [COMPLIANCE_CHECKLIST](./07_regulatory_and_compliance/COMPLIANCE_CHECKLIST.md) — checklist operativo control-por-control GDPR Art.32 + HIPAA.
+- [BREACH_NOTIFICATION_TEMPLATE](./07_regulatory_and_compliance/BREACH_NOTIFICATION_TEMPLATE.md) — notificación de brecha a autoridad y titulares (plazos GDPR/HIPAA).
 
 **Certificación**
 - [CERTIFICATION_HOWTO](./07_regulatory_and_compliance/CERTIFICATION_HOWTO.md) — cómo llegar a certificación para tu clase.
+- [ISO_13485_READINESS_PLAN](./07_regulatory_and_compliance/ISO_13485_READINESS_PLAN.md) — preparación del QMS hacia auditoría externa (gaps y checkpoints).
 
 ## 08 · Verificación y auditorías (IEC 62304 §5.7)
 

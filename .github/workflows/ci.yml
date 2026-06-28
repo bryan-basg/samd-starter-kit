@@ -51,7 +51,8 @@ jobs:
   frontend:
     name: Frontend (lint + types + tests)
     needs: changes
-    if: needs.changes.outputs.frontend == 'true'
+    # Se saltea hasta que exista frontend/package.json (plantilla → proyecto real).
+    if: needs.changes.outputs.frontend == 'true' && hashFiles('frontend/package.json') != ''
     runs-on: ubuntu-latest
     timeout-minutes: 20
     defaults:
@@ -72,7 +73,8 @@ jobs:
   backend:
     name: Backend (types + tests)
     needs: changes
-    if: needs.changes.outputs.backend == 'true'
+    # Se saltea hasta que exista requirements.txt (plantilla → proyecto real).
+    if: needs.changes.outputs.backend == 'true' && hashFiles('requirements.txt') != ''
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
@@ -95,7 +97,8 @@ jobs:
   contract-sync:
     name: Contrato OpenAPI sincronizado
     needs: changes
-    if: needs.changes.outputs.backend == 'true'
+    # Se saltea hasta que exista requirements.txt (plantilla → proyecto real).
+    if: needs.changes.outputs.backend == 'true' && hashFiles('requirements.txt') != ''
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:

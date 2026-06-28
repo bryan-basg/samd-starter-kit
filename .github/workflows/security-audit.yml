@@ -35,6 +35,8 @@ jobs:
 
   semgrep:
     name: Semgrep (SAST Python + TypeScript)
+    # Se saltea hasta que exista código de app que escanear (plantilla → proyecto real).
+    if: ${{ hashFiles('app/**', 'frontend/src/**') != '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     container:

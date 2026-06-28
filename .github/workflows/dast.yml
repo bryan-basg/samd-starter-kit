@@ -34,6 +34,8 @@ permissions:
 jobs:
   zap-baseline:
     name: ZAP baseline (backend local)
+    # Se saltea hasta que exista requirements.txt (plantilla → proyecto real).
+    if: ${{ hashFiles('requirements.txt') != '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:

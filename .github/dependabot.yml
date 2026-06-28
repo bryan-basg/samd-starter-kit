@@ -1,18 +1,22 @@
 # Dependabot — vigila dependencias vulnerables y propone updates (seguridad por diseño).
+#
+# Los ecosistemas npm y pip están COMENTADOS porque la plantilla todavía no tiene
+# manifiestos (frontend/package.json, requirements.txt) — Dependabot fallaría si no
+# los encuentra. DESCOMENTALOS cuando agregues tu app real.
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/frontend"
-    schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 5
-    labels: ["dependencies", "security"]
-  - package-ecosystem: "pip"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 5
-    labels: ["dependencies", "security"]
+  # - package-ecosystem: "npm"
+  #   directory: "/frontend"
+  #   schedule:
+  #     interval: "weekly"
+  #   open-pull-requests-limit: 5
+  #   labels: ["dependencies", "security"]
+  # - package-ecosystem: "pip"
+  #   directory: "/"
+  #   schedule:
+  #     interval: "weekly"
+  #   open-pull-requests-limit: 5
+  #   labels: ["dependencies", "security"]
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:

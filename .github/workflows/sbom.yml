@@ -47,6 +47,8 @@ jobs:
   generate-sbom:
     name: Generate SBOM (backend + frontend)
     # CI sin secretos → runner barato. Ajustar a vuestra plataforma {{CLOUD_STACK}}.
+    # Se saltea hasta que exista un manifiesto real (plantilla → proyecto real).
+    if: ${{ hashFiles('requirements.txt', 'frontend/package-lock.json') != '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:

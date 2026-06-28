@@ -43,6 +43,8 @@ permissions:
 jobs:
   postgres-tier:
     name: pytest @ Postgres + pgvector
+    # Se saltea hasta que exista requirements.txt (plantilla → proyecto real).
+    if: ${{ hashFiles('requirements.txt') != '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
 

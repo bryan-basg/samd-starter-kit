@@ -21,6 +21,8 @@ concurrency:
 jobs:
   stryker:
     name: Stryker (frontend)
+    # Se saltea hasta que exista frontend/package.json (plantilla → proyecto real).
+    if: ${{ hashFiles('frontend/package.json') != '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 360   # una corrida full puede tomar horas
     defaults:

@@ -49,6 +49,8 @@ permissions:
 jobs:
   fuzz:
     name: Fuzz API contra OpenAPI
+    # Se saltea hasta que exista requirements.txt (plantilla → proyecto real).
+    if: ${{ hashFiles('requirements.txt') != '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:

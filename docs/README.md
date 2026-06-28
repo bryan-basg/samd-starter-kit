@@ -12,6 +12,7 @@ Brújula del DHF de {{PROJECT_NAME}}. El **Master Map** (`00_master/MASTER_MAP.m
 | `06_operations_and_runbooks/` | Runbooks de deploy e incidentes. | — |
 | `07_regulatory_and_compliance/` | Risk matrix ISO 14971, trazabilidad SaMD, clasificación de seguridad, SOUP, evaluación/validación clínica, post-market, IFU, etiquetado, privacidad, retención, flujo de datos, respuesta a incidentes, gestión de configuración, resolución de problemas, compliance/seguridad maestro, cómo certificar. | IEC 62304 + ISO 14971 + ISO 13485 + GDPR/HIPAA |
 | `08_verification_and_audits/` | Deuda técnica (summary + history), auditorías, reportes de verificación. | IEC 62304 §5.7 |
+| `09_engineering_experience/` | Capa de experiencia: lecciones de producción, arquitectura de referencia, método de orquestación multi-agente. | — |
 
 ## Regla de integridad
 

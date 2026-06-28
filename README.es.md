@@ -69,6 +69,14 @@ La regla central es la **Regla 0**: *toda decisión técnica se subordina al cum
 - Identidad solo del token (JWT-only) — nunca `user_id` desde el cliente.
 - Errores sin tracebacks al usuario — mensajes empáticos + código HTTP correcto.
 
+## 🧪 Field notes y metodología
+
+El kit no son solo plantillas — trae la **experiencia ganada en la trinchera** que hay detrás. Basadas en incidentes reales de producción, generalizadas (sin datos del producto):
+
+- **[Lecciones de producción](docs/09_engineering_experience/PRODUCTION_LESSONS.md)** — qué rompió en producción y qué se aprendió: pool agotado disfrazado de error de auth, el "verde" de migración que miente, footguns de env vars, disciplina offline-first, tests de mutation como contratos.
+- **[Arquitectura de referencia](docs/09_engineering_experience/REFERENCE_ARCHITECTURE.md)** — el patrón híbrido offline-first (cliente + API + BD transaccional + nube) con el *porqué* de cada decisión y cuándo **no** usarlo.
+- **[Método "Mesa de Ingenieros"](docs/09_engineering_experience/MULTI_AGENT_ENGINEERING_METHOD.md)** — orquestar un equipo de agentes de IA sobre un código regulado sin perder cohesión: el protocolo anti-drift, la verificación adversarial y las reglas duras que un modelo mejor no anula.
+
 ## 📐 Estándares cubiertos
 
 IEC 62304 · ISO 14971 · ISO 13485 · IEC 62366 · WCAG 2.1 AA · GDPR + HIPAA.
@@ -76,6 +84,12 @@ IEC 62304 · ISO 14971 · ISO 13485 · IEC 62366 · WCAG 2.1 AA · GDPR + HIPAA.
 ## ⚠️ Qué NO es
 
 Este kit es un **andamiaje de proceso**, no asesoría regulatoria ni garantía de certificación. La clasificación, la evidencia clínica y la aprobación de un dispositivo médico requieren el juicio de profesionales regulatorios y, según el mercado, un Organismo Notificado o la autoridad sanitaria correspondiente.
+
+## 👤 Origen
+
+Este kit no nació como una plantilla. Se **extrajo de una plataforma SaMD Clase B real, en producción** — una aplicación de salud offline-first construida y operada de punta a punta: backend, capa de datos, nube, CI/CD, el DHF regulatorio y un equipo de agentes de IA llevando el trabajo. Los agentes, reglas, workflows y lecciones que ves acá son lo que de verdad sobrevivió al contacto con la producción y la regulación.
+
+Mantenido por [@bryan-basg](https://github.com/bryan-basg). Si te ahorra aprender estas lecciones a las malas, cumplió su trabajo.
 
 ## 🤝 Contribuir
 

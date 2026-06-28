@@ -82,6 +82,14 @@ The core rule is **Rule 0**: *every technical decision is subordinate to SaMD co
 - Identity comes only from the token (JWT-only) — never `user_id` from the client.
 - Errors never expose tracebacks to the user — empathetic messages + correct HTTP code.
 
+## 🧪 Field notes & methodology
+
+The kit isn't only templates — it carries the **hard-won experience** behind them. These are based on real production incidents, generalized (no product specifics):
+
+- **[Production lessons](docs/09_engineering_experience/PRODUCTION_LESSONS.md)** — what broke in production and what we learned: pool exhaustion masquerading as auth failures, the migration "green" that lies, env-var footguns, offline-first discipline, mutation tests as contracts.
+- **[Reference architecture](docs/09_engineering_experience/REFERENCE_ARCHITECTURE.md)** — the hybrid offline-first pattern (client + API + transactional DB + cloud) with the *why* behind each decision and when **not** to use it.
+- **[The "Engineers' Table" method](docs/09_engineering_experience/MULTI_AGENT_ENGINEERING_METHOD.md)** — orchestrating a team of AI agents on a regulated codebase without losing coherence: the anti-drift protocol, adversarial verification, and the hard rules a better model doesn't override.
+
 ## 📐 Standards covered
 
 IEC 62304 (medical software lifecycle) · ISO 14971 (risk management) · ISO 13485 (QMS) · IEC 62366 (usability) · WCAG 2.1 AA (accessibility) · GDPR + HIPAA (health data privacy/security).
@@ -89,6 +97,12 @@ IEC 62304 (medical software lifecycle) · ISO 14971 (risk management) · ISO 134
 ## ⚠️ What this is NOT
 
 This kit is a **process scaffold**, not regulatory advice and not a guarantee of certification. Safety classification, clinical evidence, and approval of a medical device require the judgment of regulatory professionals and, depending on the market, a Notified Body or the relevant health authority.
+
+## 👤 Origin
+
+This kit didn't start as a template. It was **extracted from a real, in-production Class B SaMD platform** — an offline-first health application built and operated end to end: backend, data layer, cloud, CI/CD, the regulatory DHF, and a team of AI agents driving the work. The agents, rules, workflows and lessons here are what actually survived contact with production and regulation.
+
+Maintained by [@bryan-basg](https://github.com/bryan-basg). If it saves you from learning these lessons the hard way, it did its job.
 
 ## 🤝 Contributing
 

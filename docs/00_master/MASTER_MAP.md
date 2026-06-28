@@ -39,6 +39,7 @@
 | `docs/06_operations_and_runbooks/` | Runbooks de operación, deploy, incidentes. |
 | `docs/07_regulatory_and_compliance/` | Matriz de riesgo ISO 14971, trazabilidad SaMD, validación clínica, IFU, post-market, SBOM, políticas. |
 | `docs/08_verification_and_audits/` | Deuda técnica, historia de deuda, auditorías, reportes de verificación. |
+| `docs/09_engineering_experience/` | Lecciones de producción, arquitectura de referencia, método multi-agente (capa de experiencia). |
 
 ## Módulos clínicos críticos
 

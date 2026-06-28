@@ -1,0 +1,44 @@
+name: Bug report
+description: Report a defect or possible improvement in a template, agent, or workflow shipped by the kit.
+title: "[bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve the SaMD Starter Kit. Please keep reports focused on the **templates this kit ships**, not on a device you have built from it.
+        Do **not** include secrets, real patient data (PHI/PII), or production credentials in this issue.
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What is wrong? Describe the defect, insecure default, or missing safeguard.
+      placeholder: A clear and concise description of the problem.
+    validations:
+      required: true
+  - type: input
+    id: affected-file
+    attributes:
+      label: Affected file or template
+      description: Path within the repository (e.g. `.github/workflows/ci.yml`, `docs/.../TEMPLATE.md`, `.claude/agents/...`).
+      placeholder: path/to/affected/file
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What should the template do or say instead?
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: How does this surface? Steps to reproduce, regulatory or safety impact, environment, and anything else that helps.
+      placeholder: |
+        - How you ran into it
+        - Why it matters (safety / traceability / security / compliance)
+        - Versions or tooling involved
+    validations:
+      required: false

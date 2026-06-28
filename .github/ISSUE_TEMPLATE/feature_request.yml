@@ -1,0 +1,43 @@
+name: Feature request
+description: Propose a new agent, template, or workflow for the kit.
+title: "[enhancement]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for proposing an addition to the SaMD Starter Kit. The kit favors scaffolding that helps teams meet recognized standards (e.g. IEC 62304, ISO 14971, ISO 13485, WCAG 2.1 AA, GDPR/HIPAA). Tie your proposal to a concrete need where you can.
+  - type: textarea
+    id: gap
+    attributes:
+      label: What's missing
+      description: Describe the agent, template, or workflow you'd like to see and what gap it fills.
+      placeholder: A clear and concise description of the proposed addition.
+    validations:
+      required: true
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use case
+      description: Who needs this and when? What does it let a team building a SaMD do that they can't do today?
+      placeholder: |
+        - The situation where this helps
+        - The team role or layer it serves
+        - The outcome you expect
+    validations:
+      required: true
+  - type: input
+    id: standard
+    attributes:
+      label: Related regulatory standard (optional)
+      description: If this maps to a specific norm or clause, name it (e.g. IEC 62304 §5.6, ISO 14971, GDPR Art. 32).
+      placeholder: e.g. IEC 62304 §5.7
+    validations:
+      required: false
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional context
+      description: Sketches, references, prior art, or anything else that helps evaluate the proposal.
+    validations:
+      required: false

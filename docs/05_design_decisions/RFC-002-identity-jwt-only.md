@@ -74,3 +74,6 @@ Detalles de construcción:
 |---|---|---|---|
 | v0.1 | 2026-01-16 | Equipo de Backend | Propuesta inicial |
 | v1.0 | 2026-01-22 | Equipo de Backend | Aceptada e implementada; auditoría de routers + test de contrato anti-IDOR |
+
+---
+**Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

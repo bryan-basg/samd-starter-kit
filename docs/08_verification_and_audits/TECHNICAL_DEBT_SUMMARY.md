@@ -29,3 +29,6 @@
 | <—> | <—> | <—> | YYYY-MM-DD |
 
 > Al cerrar una deuda: estado `✅ CERRADA` + fecha + commit; mover a `TECHNICAL_DEBT_HISTORY.md`; si afectaba un control de riesgo, actualizar `ISO_14971_RISK_MATRIX.md`; si tenía REQ asociado, validar TRACEABILITY.
+
+---
+**Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

@@ -62,10 +62,10 @@ Describir el recorrido de los datos (incluidos PII/PHI) a través de **{{PROJECT
 
 | Punto | Mecanismo | Clave | Ubicación de la clave |
 |---|---|---|---|
-| Tránsito cliente↔backend | TLS 1.2+ | Certificado TLS | {{placeholder}} |
-| Tránsito backend↔BD/nube | TLS | Certificado TLS | {{placeholder}} |
+| Tránsito cliente↔backend | TLS 1.2+ | Certificado TLS | <completar> |
+| Tránsito backend↔BD/nube | TLS | Certificado TLS | <completar> |
 | Reposo (columnas PII/PHI) | AES-256-GCM | `ENCRYPTION_KEY` | Gestor de secretos (distinta de `SECRET_KEY`) |
-| Backups | {{placeholder}} | {{placeholder}} | {{placeholder}} |
+| Backups | <completar> | <completar> | <completar> |
 
 ---
 
@@ -73,9 +73,9 @@ Describir el recorrido de los datos (incluidos PII/PHI) a través de **{{PROJECT
 
 | Dato | Clasificación | En tránsito | En reposo | Cifrado en reposo |
 |---|---|---|---|---|
-| {{placeholder}} | PII | Sí | Sí | Sí (AES-256-GCM) |
-| {{placeholder}} | PHI | Sí | Sí | Sí (AES-256-GCM) |
-| {{placeholder}} | Técnico (sin PII) | Sí | Logs | No requerido |
+| <completar> | PII | Sí | Sí | Sí (AES-256-GCM) |
+| <completar> | PHI | Sí | Sí | Sí (AES-256-GCM) |
+| <completar> | Técnico (sin PII) | Sí | Logs | No requerido |
 
 ---
 
@@ -92,3 +92,6 @@ Describir el recorrido de los datos (incluidos PII/PHI) a través de **{{PROJECT
 | Versión | Fecha | Autor | Cambio |
 |---|---|---|---|
 | v1.0 | YYYY-MM-DD | {{OWNER}} | Versión inicial de plantilla. |
+
+---
+**Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

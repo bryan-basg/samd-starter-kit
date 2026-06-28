@@ -23,7 +23,7 @@ Todo problema se documenta en un registro central con, como mínimo:
 | Origen | Usuario / test / monitoreo / auditoría / SAST |
 | Descripción | Qué se observó (sin PII en el registro) |
 | Severidad provisional | Ver §4 |
-| Componente afectado | `{{archivo:línea}}` / módulo |
+| Componente afectado | `archivo:línea` / módulo |
 | Estado | Abierto / En análisis / Corregido / Verificado / Cerrado |
 
 ---
@@ -96,3 +96,6 @@ Un problema se cierra solo cuando: corrección integrada en baseline, verificaci
 | Versión | Fecha | Autor | Cambio |
 |---|---|---|---|
 | v1.0 | YYYY-MM-DD | {{OWNER}} | Versión inicial de plantilla. |
+
+---
+**Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

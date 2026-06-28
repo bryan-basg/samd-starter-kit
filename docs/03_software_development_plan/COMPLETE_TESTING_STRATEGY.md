@@ -33,3 +33,6 @@
 - `ignoreStatic: true` para no malgastar tiempo mutando constantes estáticas.
 - Atacar el umbral **por archivo**, no en superficie. Irreducibles → refactor de producción mínimo justificado, no cerrar por debajo del umbral.
 - Los tests de mutation son **load-bearing**: tocar el literal de producción obliga a tocar su killer en el mismo PR.
+
+---
+**Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

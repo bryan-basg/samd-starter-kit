@@ -33,7 +33,7 @@ Este documento consolida el modelo de amenazas, los controles de seguridad por c
 
 | Amenaza (STRIDE) | Vector representativo | Control mitigante | Referencia |
 |---|---|---|---|
-| Spoofing (suplantación) | Reuso de token, `user_id` falsificado en body/query | Identidad **solo** del JWT verificado; nunca se acepta `user_id` desde body/query | §5.1 · `{{archivo:línea}}` |
+| Spoofing (suplantación) | Reuso de token, `user_id` falsificado en body/query | Identidad **solo** del JWT verificado; nunca se acepta `user_id` desde body/query | §5.1 · `archivo:línea` |
 | Tampering (manipulación) | Alteración de datos en tránsito o en reposo | TLS 1.2+ en tránsito; AES-256-GCM en reposo; audit de mutaciones | §5.2, §5.3 |
 | Repudiation (repudio) | Usuario niega una acción de mutación | Audit middleware solo-mutaciones con identidad y timestamp | §5.3 |
 | Information Disclosure (fuga) | Traceback con datos internos; PII en logs | Errores sin traceback al cliente; logs sin PII | §5.4, §5.5 |
@@ -63,13 +63,13 @@ Este documento consolida el modelo de amenazas, los controles de seguridad por c
 - La identidad se deriva **exclusivamente** del token verificado (JWT-only). El backend **nunca** acepta `user_id` desde body, query o headers no verificados.
 - Verificación de firma y expiración del token en cada petición autenticada.
 - Autorización por recurso: cada acceso valida que el sujeto del token sea el propietario o tenga rol autorizado (anti-IDOR).
-- Implementación: `{{archivo:línea}}` (dependencia de identidad), `{{archivo:línea}}` (verificación de propiedad).
+- Implementación: `archivo:línea` (dependencia de identidad), `archivo:línea` (verificación de propiedad).
 
 ### 5.2 Cifrado
 
 - **En tránsito:** TLS 1.2+ obligatorio; HSTS habilitado.
 - **En reposo:** columnas con PII/PHI cifradas con **AES-256-GCM**. La clave de cifrado (`ENCRYPTION_KEY`) reside en el gestor de secretos y es **distinta de la clave de firma de tokens** (`SECRET_KEY`).
-- Rotación de claves documentada en `{{archivo:línea}}`.
+- Rotación de claves documentada en `archivo:línea`.
 - Cumple ISO 27001 A.10 (criptografía), HIPAA §164.312(a)(2)(iv) y §164.312(e)(2)(ii).
 
 ### 5.3 Auditoría (audit middleware)
@@ -130,11 +130,11 @@ Este documento consolida el modelo de amenazas, los controles de seguridad por c
 
 | ID | Documento | Última revisión | Estado |
 |---|---|---|---|
-| SEC-01 | `PRIVACY_POLICY.md` | YYYY-MM-DD | {{placeholder}} |
-| SEC-02 | `DATA_RETENTION_POLICY.md` | YYYY-MM-DD | {{placeholder}} |
-| SEC-03 | `DATA_FLOW_DOCUMENTATION.md` | YYYY-MM-DD | {{placeholder}} |
-| SEC-04 | `INCIDENT_RESPONSE_PLAN.md` | YYYY-MM-DD | {{placeholder}} |
-| SEC-05 | Reporte de pruebas SAST/DAST | YYYY-MM-DD | {{placeholder}} |
+| SEC-01 | `PRIVACY_POLICY.md` | YYYY-MM-DD | <completar> |
+| SEC-02 | `DATA_RETENTION_POLICY.md` | YYYY-MM-DD | <completar> |
+| SEC-03 | `DATA_FLOW_DOCUMENTATION.md` | YYYY-MM-DD | <completar> |
+| SEC-04 | `INCIDENT_RESPONSE_PLAN.md` | YYYY-MM-DD | <completar> |
+| SEC-05 | Reporte de pruebas SAST/DAST | YYYY-MM-DD | <completar> |
 
 ---
 
@@ -143,3 +143,6 @@ Este documento consolida el modelo de amenazas, los controles de seguridad por c
 | Versión | Fecha | Autor | Cambio |
 |---|---|---|---|
 | v1.0 | YYYY-MM-DD | {{OWNER}} | Versión inicial de plantilla. |
+
+---
+**Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

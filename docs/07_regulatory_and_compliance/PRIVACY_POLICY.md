@@ -10,8 +10,8 @@
 
 - **Responsable:** {{OWNER}}
 - **Producto:** {{PROJECT_NAME}}
-- **Datos de contacto:** {{placeholder: dirección postal, email}}
-- **Delegado de Protección de Datos (DPO):** {{placeholder: nombre, email}}
+- **Datos de contacto:** <dirección postal, email>
+- **Delegado de Protección de Datos (DPO):** <nombre, email>
 
 ---
 
@@ -19,11 +19,11 @@
 
 | Categoría | Ejemplos | Origen | ¿Datos especiales (Art. 9 GDPR)? |
 |---|---|---|---|
-| Identificación | {{placeholder}} | Titular | No |
-| Contacto | {{placeholder}} | Titular | No |
-| Datos de salud (PHI) | {{placeholder}} | Titular / uso del producto | Sí (Art. 9 GDPR) |
-| Datos de uso técnico | {{placeholder}} | Automático | No |
-| Identificadores de dispositivo | {{placeholder}} | Automático | No |
+| Identificación | <completar> | Titular | No |
+| Contacto | <completar> | Titular | No |
+| Datos de salud (PHI) | <completar> | Titular / uso del producto | Sí (Art. 9 GDPR) |
+| Datos de uso técnico | <completar> | Automático | No |
+| Identificadores de dispositivo | <completar> | Automático | No |
 
 Los datos de salud se tratan como **categoría especial** bajo el Art. 9 GDPR y como PHI bajo HIPAA, con salvaguardas reforzadas (cifrado AES-256-GCM en reposo, acceso de mínimo privilegio).
 
@@ -53,7 +53,7 @@ El titular puede ejercer, sin coste y en cualquier momento:
 - **No ser objeto de decisiones automatizadas** (Art. 22)
 - **Retirar el consentimiento** en cualquier momento (Art. 7(3))
 
-Solicitudes a: {{placeholder: email DPO}}. Plazo de respuesta: **1 mes** (Art. 12(3)), prorrogable a 3 meses en casos complejos.
+Solicitudes a: <email DPO>. Plazo de respuesta: **1 mes** (Art. 12(3)), prorrogable a 3 meses en casos complejos.
 
 ---
 
@@ -67,8 +67,8 @@ Los plazos de retención se detallan en `DATA_RETENTION_POLICY.md`. Como princip
 
 | Encargado / Destinatario | Finalidad | Ubicación | Garantía de transferencia |
 |---|---|---|---|
-| {{CLOUD_STACK}} | Alojamiento / procesamiento | {{placeholder}} | {{placeholder: SCC / adecuación Art. 45–46}} |
-| {{placeholder}} | {{placeholder}} | {{placeholder}} | {{placeholder}} |
+| {{CLOUD_STACK}} | Alojamiento / procesamiento | <completar> | <SCC / adecuación Art. 45–46> |
+| <completar> | <completar> | <completar> | <completar> |
 
 Las transferencias internacionales fuera del EEE se amparan en decisiones de adecuación (Art. 45) o cláusulas contractuales tipo (Art. 46). Cuando aplique HIPAA, los encargados firman un Business Associate Agreement (BAA).
 
@@ -82,13 +82,13 @@ Aplicamos medidas técnicas y organizativas (GDPR Art. 32): cifrado en tránsito
 
 ## 8. Menores
 
-{{placeholder: política sobre menores de edad y, en su caso, consentimiento parental conforme al Art. 8 GDPR.}}
+<política sobre menores de edad y, en su caso, consentimiento parental conforme al Art. 8 GDPR.>
 
 ---
 
 ## 9. Cambios en esta política
 
-Notificaremos cambios sustanciales por {{placeholder: canal}}. La fecha de la última actualización figura en el encabezado.
+Notificaremos cambios sustanciales por <canal>. La fecha de la última actualización figura en el encabezado.
 
 ---
 
@@ -97,3 +97,6 @@ Notificaremos cambios sustanciales por {{placeholder: canal}}. La fecha de la ú
 | Versión | Fecha | Autor | Cambio |
 |---|---|---|---|
 | v1.0 | YYYY-MM-DD | {{OWNER}} | Versión inicial de plantilla. |
+
+---
+**Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

@@ -96,3 +96,6 @@ Formato: **Síntoma → Causa → Lección.**
 
 ### Investigá antes de fixear
 - **La lección que más caro sale:** ante un bug reportado, investigá primero — no saltes a escribir código. Más de una vez "se arregló la voz" cuando el problema eran los audífonos del usuario. Un bug tras un deploy: leé los **logs estructurados** antes de teorizar sobre cache, Service Worker o navegador. El diagnóstico equivocado cuesta más que el bug.
+
+---
+**Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

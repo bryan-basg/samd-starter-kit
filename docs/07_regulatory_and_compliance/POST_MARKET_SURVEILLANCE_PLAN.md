@@ -120,3 +120,6 @@ Si el producto se declara **exento de PMCF**, justifíquese aquí: `<justificaci
 - MDR (UE) 2017/745 Art. 83–88 — Vigilancia post-comercialización; Anexo III — Plan PMS; Anexo XIV Parte B — PMCF.
 - ISO 14971 §10 — Información de producción y posproducción.
 - IMDRF/SaMD WG/N12 — Categorización de riesgo SaMD.
+
+---
+**Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

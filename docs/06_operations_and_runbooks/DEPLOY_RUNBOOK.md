@@ -95,3 +95,6 @@ deploy ──► job de migración (espera resultado, --wait)
 | Versión | Fecha | Autor | Cambio |
 |---|---|---|---|
 | v0.1 | 2026-01-01 | {{OWNER}} | Plantilla inicial |
+
+---
+**Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

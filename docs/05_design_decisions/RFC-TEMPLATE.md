@@ -64,3 +64,6 @@
 | Versión | Fecha | Autor | Cambio |
 |---|---|---|---|
 | v0.1 | YYYY-MM-DD | _(autor)_ | Propuesta inicial |
+
+---
+**Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

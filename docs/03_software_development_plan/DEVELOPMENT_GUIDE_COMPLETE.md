@@ -14,7 +14,7 @@
 | Backend | {{BACKEND_STACK}} |
 | Base de datos | {{DB_STACK}} |
 | Cloud | {{CLOUD_STACK}} |
-| Gestor de secretos | _(Secret Manager / Vault / .env local)_ |
+| Gestor de secretos | <Secret Manager / Vault / .env local> |
 
 ```bash
 # 1. Clonar e instalar dependencias
@@ -116,3 +116,6 @@ Una tarea está "lista" solo si cumple TODO:
 | Versión | Fecha | Autor | Cambio |
 |---|---|---|---|
 | v0.1 | 2026-01-01 | {{OWNER}} | Plantilla inicial |
+
+---
+**Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

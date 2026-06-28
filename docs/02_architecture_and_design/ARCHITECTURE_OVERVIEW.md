@@ -57,11 +57,11 @@
 
 | ID | Decisión | Motivo | RFC |
 |---|---|---|---|
-| ADR-001 | Offline-first con outbox | Continuidad de uso sin red; integridad de datos clínicos | _(RFC-XXX)_ |
-| ADR-002 | Identidad solo desde token verificado | Anti-IDOR; evita suplantación | _(RFC-XXX)_ |
-| ADR-003 | Cifrado en reposo de campos sensibles | Protección de PHI/PII | _(RFC-XXX)_ |
-| ADR-004 | Migraciones automáticas con aborto ante fallo | Proteger producción | _(RFC-XXX)_ |
-| ADR-005 | _(añadir)_ | _(motivo)_ | _(RFC-XXX)_ |
+| ADR-001 | Offline-first con outbox | Continuidad de uso sin red; integridad de datos clínicos | <RFC-XXX> |
+| ADR-002 | Identidad solo desde token verificado | Anti-IDOR; evita suplantación | <RFC-XXX> |
+| ADR-003 | Cifrado en reposo de campos sensibles | Protección de PHI/PII | <RFC-XXX> |
+| ADR-004 | Migraciones automáticas con aborto ante fallo | Proteger producción | <RFC-XXX> |
+| ADR-005 | <añadir> | <motivo> | <RFC-XXX> |
 
 ---
 
@@ -71,12 +71,12 @@
 
 | Ítem de software | Descripción | Clase de seguridad | Justificación |
 |---|---|---|---|
-| Motor de algoritmo clínico | _(qué calcula/decide)_ | _(A/B/C)_ | _(daño posible si falla)_ |
-| Motor de sincronización offline | Persistencia y orden de mutaciones | _(A/B/C)_ | _(pérdida/corrupción de datos)_ |
-| Capa de autenticación/identidad | Resolución del sujeto | _(A/B/C)_ | _(acceso indebido a PHI)_ |
-| Capa de notificaciones/alertas | Avisos clínicos al usuario | _(A/B/C)_ | _(alerta perdida)_ |
-| UI de cliente | Presentación e interacción | _(A/B/C)_ | _(error de interpretación)_ |
-| Integraciones externas (IA/3os) | _(qué proveen)_ | _(A/B/C)_ | _(dato erróneo a decisión)_ |
+| Motor de algoritmo clínico | <qué calcula/decide> | <A/B/C> | <daño posible si falla> |
+| Motor de sincronización offline | Persistencia y orden de mutaciones | <A/B/C> | <pérdida/corrupción de datos> |
+| Capa de autenticación/identidad | Resolución del sujeto | <A/B/C> | <acceso indebido a PHI> |
+| Capa de notificaciones/alertas | Avisos clínicos al usuario | <A/B/C> | <alerta perdida> |
+| UI de cliente | Presentación e interacción | <A/B/C> | <error de interpretación> |
+| Integraciones externas (IA/3os) | <qué proveen> | <A/B/C> | <dato erróneo a decisión> |
 
 ---
 
@@ -97,3 +97,6 @@
 | Versión | Fecha | Autor | Cambio |
 |---|---|---|---|
 | v0.1 | 2026-01-01 | {{OWNER}} | Plantilla inicial |
+
+---
+**Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

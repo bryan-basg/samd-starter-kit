@@ -74,3 +74,6 @@ Detalles de construcción:
 |---|---|---|---|
 | v0.1 | 2026-01-08 | Equipo de Plataforma | Propuesta inicial |
 | v1.0 | 2026-01-15 | Equipo de Plataforma | Aceptada e implementada; columnas PII/PHI migradas a `EncryptedString` |
+
+---
+**Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

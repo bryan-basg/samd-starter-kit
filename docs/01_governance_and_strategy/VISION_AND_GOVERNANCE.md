@@ -29,9 +29,9 @@ Consecuencias prácticas (no son reglas opcionales):
 |---|---|
 | Nombre | {{PROJECT_NAME}} |
 | Uso previsto (*intended use*) | {{INTENDED_USE}} |
-| Población objetivo | _(describir usuarios/pacientes)_ |
-| Problema clínico que resuelve | _(describir)_ |
-| Lo que el producto NO hace | _(límites explícitos del *intended use*; claims fuera de alcance)_ |
+| Población objetivo | <describir usuarios/pacientes> |
+| Problema clínico que resuelve | <describir> |
+| Lo que el producto NO hace | <límites explícitos del *intended use*; claims fuera de alcance> |
 | Propietario / *legal manufacturer* | {{OWNER}} |
 | Stack frontend | {{FRONTEND_STACK}} |
 | Stack backend | {{BACKEND_STACK}} |
@@ -54,11 +54,11 @@ Consecuencias prácticas (no son reglas opcionales):
 | Rol | Responsable | Responsabilidad principal |
 |---|---|---|
 | Propietario del producto | {{OWNER}} | Decisión final, *intended use*, autorización de release |
-| Responsable regulatorio (QA/RA) | _(nombre)_ | DHF, matriz de riesgos, trazabilidad, auditorías |
-| Líder técnico | _(nombre)_ | Arquitectura, estándares de código, integridad técnica |
-| Responsable clínico | _(nombre)_ | Validez de algoritmos clínicos, evidencia |
-| Responsable de seguridad | _(nombre)_ | Cifrado, gestión de claves, control de acceso, SAST/DAST |
-| DPO / privacidad | _(nombre)_ | GDPR/HIPAA, minimización de PII/PHI, derechos del titular |
+| Responsable regulatorio (QA/RA) | <nombre> | DHF, matriz de riesgos, trazabilidad, auditorías |
+| Líder técnico | <nombre> | Arquitectura, estándares de código, integridad técnica |
+| Responsable clínico | <nombre> | Validez de algoritmos clínicos, evidencia |
+| Responsable de seguridad | <nombre> | Cifrado, gestión de claves, control de acceso, SAST/DAST |
+| DPO / privacidad | <nombre> | GDPR/HIPAA, minimización de PII/PHI, derechos del titular |
 
 ### 2.2 Toma de decisiones
 
@@ -83,21 +83,21 @@ Consecuencias prácticas (no son reglas opcionales):
 | Norma de ciclo de vida | IEC 62304 |
 | Gestión de riesgos | ISO 14971 |
 | Accesibilidad | WCAG 2.1 AA |
-| Privacidad | _(GDPR / HIPAA / otra, según mercado)_ |
-| Mercados objetivo | _(UE / EE. UU. / LATAM / otro)_ |
-| Vía regulatoria | _(marcado CE bajo MDR / 510(k) / De Novo / otra)_ |
-| Sistema de gestión de calidad | _(ISO 13485 — alcance)_ |
+| Privacidad | <GDPR / HIPAA / otra, según mercado> |
+| Mercados objetivo | <UE / EE. UU. / LATAM / otro> |
+| Vía regulatoria | <marcado CE bajo MDR / 510(k) / De Novo / otra> |
+| Sistema de gestión de calidad | <ISO 13485 — alcance> |
 
 ### 3.1 Hitos regulatorios
 
 | Hito | Estado | Fecha objetivo |
 |---|---|---|
-| Definición de *intended use* y Clase | _(pendiente/hecho)_ | YYYY-MM-DD |
-| DHF base completo | _(pendiente)_ | YYYY-MM-DD |
-| Matriz de riesgos ISO 14971 cerrada | _(pendiente)_ | YYYY-MM-DD |
-| Evaluación de usabilidad IEC 62366 | _(pendiente)_ | YYYY-MM-DD |
-| Evidencia clínica | _(pendiente)_ | YYYY-MM-DD |
-| Sumisión regulatoria | _(pendiente)_ | YYYY-MM-DD |
+| Definición de *intended use* y Clase | <pendiente/hecho> | YYYY-MM-DD |
+| DHF base completo | <pendiente> | YYYY-MM-DD |
+| Matriz de riesgos ISO 14971 cerrada | <pendiente> | YYYY-MM-DD |
+| Evaluación de usabilidad IEC 62366 | <pendiente> | YYYY-MM-DD |
+| Evidencia clínica | <pendiente> | YYYY-MM-DD |
+| Sumisión regulatoria | <pendiente> | YYYY-MM-DD |
 
 Detalle de la ruta de certificación: `docs/07_regulatory_and_compliance/CERTIFICATION_HOWTO.md`.
 
@@ -108,3 +108,6 @@ Detalle de la ruta de certificación: `docs/07_regulatory_and_compliance/CERTIFI
 | Versión | Fecha | Autor | Cambio |
 |---|---|---|---|
 | v0.1 | 2026-01-01 | {{OWNER}} | Plantilla inicial |
+
+---
+**Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

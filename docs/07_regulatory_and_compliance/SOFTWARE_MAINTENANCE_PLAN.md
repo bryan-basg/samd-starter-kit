@@ -113,3 +113,6 @@ Toda modificación se trata como un cambio controlado bajo el proceso de gestió
 | Versión | Fecha | Autor | Cambio |
 |---|---|---|---|
 | vX.Y | YYYY-MM-DD | `<autor>` | `<descripción del cambio>` |
+
+---
+**Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

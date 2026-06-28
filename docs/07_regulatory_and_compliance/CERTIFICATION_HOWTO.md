@@ -76,3 +76,6 @@ La Clase determina el rigor de verificación y la documentación exigida. **A** 
 | Versión | Fecha | Autor | Cambio |
 |---|---|---|---|
 | v0.1 | 2026-01-01 | {{OWNER}} | Plantilla inicial |
+
+---
+**Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

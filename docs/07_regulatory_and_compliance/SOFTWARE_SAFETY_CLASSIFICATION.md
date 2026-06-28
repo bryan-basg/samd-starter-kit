@@ -96,3 +96,6 @@ Medidas que **no** residen en el software y que reducen el riesgo antes de la cl
 | vX.Y | YYYY-MM-DD | `<autor>` | `<descripción del cambio>` |
 
 > Toda reclasificación (cambio de clase de un ítem o del sistema) exige re-evaluar las actividades obligatorias del SDP y registrar el impacto en la matriz de trazabilidad y en el plan de mantenimiento.
+
+---
+**Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

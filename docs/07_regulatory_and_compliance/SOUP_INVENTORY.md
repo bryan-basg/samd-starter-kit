@@ -70,3 +70,6 @@ Lista de anomalías publicadas del SOUP (bugs/avisos del proveedor) que permanec
 | Versión | Fecha | Autor | Cambio |
 |---|---|---|---|
 | vX.Y | YYYY-MM-DD | `<autor>` | `<descripción del cambio>` |
+
+---
+**Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

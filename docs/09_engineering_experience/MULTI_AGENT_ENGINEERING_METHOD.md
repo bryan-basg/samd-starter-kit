@@ -61,3 +61,6 @@ Estas no son limitaciones de inteligencia — son **mecánica, factura y contrat
 ## Por qué esto importa bajo regulación
 
 Sin este método, un equipo de agentes produce mucho código rápido y **pierde la trazabilidad** — justo lo que SaMD prohíbe. El método existe para que la velocidad de N agentes no destruya la cohesión que IEC 62304 §5.6/§5.7 exige. Velocidad **y** trazabilidad, no una a costa de la otra.
+
+---
+**Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

@@ -16,11 +16,11 @@ Definir cómo **{{PROJECT_NAME}}** detecta, contiene, erradica y se recupera de 
 
 | Rol | Responsable | Responsabilidad principal |
 |---|---|---|
-| Coordinador de incidente (IC) | {{placeholder}} | Dirige la respuesta de extremo a extremo |
-| Responsable técnico | {{placeholder}} | Contención y erradicación técnica |
-| DPO / Privacidad | {{placeholder}} | Evalúa obligación de notificar (GDPR/HIPAA) |
-| Comunicación | {{placeholder}} | Comunicación interna/externa |
-| Responsable legal | {{placeholder}} | Asesoría legal y regulatoria |
+| Coordinador de incidente (IC) | <completar> | Dirige la respuesta de extremo a extremo |
+| Responsable técnico | <completar> | Contención y erradicación técnica |
+| DPO / Privacidad | <completar> | Evalúa obligación de notificar (GDPR/HIPAA) |
+| Comunicación | <completar> | Comunicación interna/externa |
+| Responsable legal | <completar> | Asesoría legal y regulatoria |
 | Titular del producto | {{OWNER}} | Decisión final y rendición de cuentas |
 
 ---
@@ -56,7 +56,7 @@ Definir cómo **{{PROJECT_NAME}}** detecta, contiene, erradica y se recupera de 
 - Monitoreo reforzado durante el período de observación.
 
 ### 4.5 Post-mortem
-- Análisis de causa raíz sin culpabilización (blameless), en plazo de {{placeholder, p. ej. 5 días hábiles}}.
+- Análisis de causa raíz sin culpabilización (blameless), en plazo de <p. ej. 5 días hábiles>.
 - Acciones correctivas/preventivas (CAPA) con responsable y fecha.
 - Actualizar modelo de amenazas y controles si procede.
 
@@ -84,13 +84,13 @@ Todo incidente se documenta en un registro central: cronología, decisiones, evi
 
 | Contacto | Canal | Disponibilidad |
 |---|---|---|
-| {{placeholder}} | {{placeholder}} | {{placeholder}} |
+| <completar> | <completar> | <completar> |
 
 ---
 
 ## 8. Pruebas del plan
 
-Este plan se ejercita (tabletop/simulacro) con periodicidad {{placeholder}} y se actualiza tras cada incidente real o ejercicio.
+Este plan se ejercita (tabletop/simulacro) con periodicidad <completar> y se actualiza tras cada incidente real o ejercicio.
 
 ---
 
@@ -99,3 +99,6 @@ Este plan se ejercita (tabletop/simulacro) con periodicidad {{placeholder}} y se
 | Versión | Fecha | Autor | Cambio |
 |---|---|---|---|
 | v1.0 | YYYY-MM-DD | {{OWNER}} | Versión inicial de plantilla. |
+
+---
+**Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

@@ -121,3 +121,6 @@ Si las instrucciones se suministran en formato electrónico, cumplir el **Reglam
 - Reglamento (UE) 2021/2226 — Instrucciones de uso en formato electrónico.
 - Reglamento de implementación (UE) sobre sistema UDI.
 - FDA 21 CFR Part 801 / UDI Rule — referencia para mercado estadounidense.
+
+---
+**Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

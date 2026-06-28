@@ -36,3 +36,6 @@ git ls-files | grep <archivo>
 # El test existe HOY:
 <runner> --list | grep "<nombre_test>"
 ```
+
+---
+**Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

@@ -7,3 +7,6 @@
 | Código | Descripción | Cómo se cerró | Commit/PR | Riesgo asociado | Fecha de cierre |
 |---|---|---|---|---|---|
 | <—> | <—> | <—> | <—> | R-XXX-NN | YYYY-MM-DD |
+
+---
+**Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

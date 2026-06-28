@@ -174,3 +174,6 @@ Se mantiene una matriz de trazabilidad bidireccional que enlaza:
 | Versión | Fecha | Autor | Cambio |
 |---|---|---|---|
 | vX.Y | YYYY-MM-DD | `<autor>` | `<descripción del cambio>` |
+
+---
+**Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

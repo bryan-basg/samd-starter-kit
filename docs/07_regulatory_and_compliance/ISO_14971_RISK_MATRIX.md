@@ -38,3 +38,6 @@ Cuando un vector de seguridad también es un riesgo clínico (auth roto → expo
 ## 4. Riesgo residual global
 
 Declaración de aceptabilidad del riesgo residual global tras todos los controles, firmada por el responsable de gestión de riesgo. Se revisa en cada release y ante cada reporte de post-market surveillance.
+
+---
+**Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

@@ -28,7 +28,7 @@ Definir cómo se identifican, controlan y versionan los elementos de configuraci
 
 ## 3. Control de versiones
 
-- **SCV:** {{placeholder, p. ej. Git}}. Todo SCI versionado; nada fuera de control de versiones.
+- **SCV:** <p. ej. Git>. Todo SCI versionado; nada fuera de control de versiones.
 - **Versionado semántico** (MAJOR.MINOR.PATCH) para releases.
 - **Secretos NUNCA** se versionan (ver `COMPLIANCE_AND_SECURITY_MASTER.md` §5.7).
 
@@ -65,11 +65,11 @@ Reglas: PR obligatorio, al menos una revisión, CI (build + tests + SAST) en ver
 
 | Campo del baseline | Valor (ejemplo) |
 |---|---|
-| Versión de release | {{placeholder}} |
-| Hash de commit | `{{placeholder}}` |
-| Revisión de migración BD | `{{placeholder}}` |
-| Digest de artefacto | `{{placeholder}}` |
-| Versión DHF asociada | {{placeholder}} |
+| Versión de release | `<completar>` |
+| Hash de commit | `<completar>` |
+| Revisión de migración BD | `<completar>` |
+| Digest de artefacto | `<completar>` |
+| Versión DHF asociada | `<completar>` |
 | Fecha | YYYY-MM-DD |
 
 ---
@@ -92,3 +92,6 @@ Verificación periódica de que el estado desplegado coincide con el baseline ap
 | Versión | Fecha | Autor | Cambio |
 |---|---|---|---|
 | v1.0 | YYYY-MM-DD | {{OWNER}} | Versión inicial de plantilla. |
+
+---
+**Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

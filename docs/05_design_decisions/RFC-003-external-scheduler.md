@@ -74,3 +74,6 @@ Detalles de construcción:
 |---|---|---|---|
 | v0.1 | 2026-01-23 | Equipo de Plataforma / Cloud | Propuesta inicial |
 | v1.0 | 2026-01-29 | Equipo de Plataforma / Cloud | Aceptada e implementada; scheduler interno deshabilitado por default, cron externo en prod |
+
+---
+**Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

@@ -133,3 +133,6 @@ Conforme a **ISO 15223-1** y **EN ISO 20417**.
 - EN ISO 20417 — Información suministrada por el fabricante.
 - IEC 62366-1 — Ingeniería de usabilidad.
 - IEC 62304 §5.1 — Documentación del software.
+
+---
+**Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

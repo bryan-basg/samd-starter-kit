@@ -24,13 +24,13 @@ Definir cuánto tiempo se conserva cada categoría de datos de **{{PROJECT_NAME}
 
 | Categoría | Plazo de retención | Acción al vencer | Base legal |
 |---|---|---|---|
-| Datos de cuenta / identificación | {{placeholder}} | Borrado | GDPR Art. 5(1)(e); contrato |
-| Datos de salud (PHI) | {{placeholder}} | Borrado / anonimización | GDPR Art. 9; HIPAA §164.316 |
-| Registros de auditoría (mutaciones) | {{placeholder, p. ej. 6 años}} | Borrado | HIPAA §164.316(b)(2); IEC 62304 §5.7 |
-| Logs técnicos (sin PII) | {{placeholder, p. ej. 14–90 días}} | Borrado | Interés legítimo; seguridad |
-| Backups | {{placeholder}} | Rotación / expiración | GDPR Art. 32; continuidad |
-| Datos de soporte / incidencias | {{placeholder}} | Borrado | Interés legítimo |
-| Consentimientos | Mientras dure el tratamiento + {{placeholder}} | Archivo / borrado | GDPR Art. 7(1) (prueba del consentimiento) |
+| Datos de cuenta / identificación | <completar> | Borrado | GDPR Art. 5(1)(e); contrato |
+| Datos de salud (PHI) | <completar> | Borrado / anonimización | GDPR Art. 9; HIPAA §164.316 |
+| Registros de auditoría (mutaciones) | <p. ej. 6 años> | Borrado | HIPAA §164.316(b)(2); IEC 62304 §5.7 |
+| Logs técnicos (sin PII) | <p. ej. 14–90 días> | Borrado | Interés legítimo; seguridad |
+| Backups | <completar> | Rotación / expiración | GDPR Art. 32; continuidad |
+| Datos de soporte / incidencias | <completar> | Borrado | Interés legítimo |
+| Consentimientos | Mientras dure el tratamiento + <completar> | Archivo / borrado | GDPR Art. 7(1) (prueba del consentimiento) |
 
 ---
 
@@ -52,8 +52,8 @@ Cuando exista una obligación legal de conservación o un litigio en curso (lega
 
 | Control | Mecanismo | Frecuencia |
 |---|---|---|
-| Job de borrado programado | `{{archivo:línea}}` | {{placeholder}} |
-| Revisión de cumplimiento de plazos | Auditoría interna | {{placeholder}} |
+| Job de borrado programado | `archivo:línea` | <completar> |
+| Revisión de cumplimiento de plazos | Auditoría interna | <completar> |
 
 ---
 
@@ -62,3 +62,6 @@ Cuando exista una obligación legal de conservación o un litigio en curso (lega
 | Versión | Fecha | Autor | Cambio |
 |---|---|---|---|
 | v1.0 | YYYY-MM-DD | {{OWNER}} | Versión inicial de plantilla. |
+
+---
+**Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

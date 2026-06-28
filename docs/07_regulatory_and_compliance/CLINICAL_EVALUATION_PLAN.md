@@ -122,3 +122,6 @@ El balance **beneficio/riesgo** debe resultar favorable para todas las indicacio
 - IMDRF/SaMD WG/N12 — *Software as a Medical Device: Possible Framework for Risk Categorization*.
 - IEC 62304 — Procesos del ciclo de vida del software de dispositivos médicos.
 - ISO 14971 — Aplicación de la gestión de riesgos a productos sanitarios.
+
+---
+**Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

@@ -63,7 +63,7 @@ Ante un incidente o un workflow en rojo, **leer los logs estructurados frescos d
 
 ## 6. Post-mortem (sin culpa)
 
-Tras resolver, dentro de _(N)_ días hábiles:
+Tras resolver, dentro de <N> días hábiles:
 
 - [ ] Línea de tiempo de los hechos (detección → mitigación → resolución).
 - [ ] Causa raíz (técnica y de proceso).
@@ -80,3 +80,6 @@ Tras resolver, dentro de _(N)_ días hábiles:
 | Versión | Fecha | Autor | Cambio |
 |---|---|---|---|
 | v0.1 | 2026-01-01 | {{OWNER}} | Plantilla inicial |
+
+---
+**Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

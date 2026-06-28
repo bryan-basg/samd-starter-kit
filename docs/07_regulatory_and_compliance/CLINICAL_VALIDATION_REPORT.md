@@ -122,3 +122,6 @@ Las brechas de evidencia de §6 se gestionan según el `POST_MARKET_SURVEILLANCE
 - ISO 14971 — Gestión de riesgos.
 - IEC 62304 §5.7 — Pruebas del sistema de software.
 - IEC 62366-1 — Aplicación de la ingeniería de usabilidad.
+
+---
+**Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

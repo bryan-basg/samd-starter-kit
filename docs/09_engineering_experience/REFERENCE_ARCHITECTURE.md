@@ -84,3 +84,6 @@ Este documento describe el patrón de arquitectura que sostuvo una plataforma Sa
 - Si tu app **no** necesita offline real, el outbox es complejidad pura — usá fetch+cache directo.
 - Si no manejás PHI, el cifrado a nivel columna y la auditoría estricta son sobre-ingeniería.
 - La arquitectura sigue al **uso previsto** y a la **clase de seguridad**, no al revés. Clasificá primero (`SOFTWARE_SAFETY_CLASSIFICATION.md`), arquitecturá después.
+
+---
+**Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

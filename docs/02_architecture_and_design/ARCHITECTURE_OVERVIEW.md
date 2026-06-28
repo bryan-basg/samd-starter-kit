@@ -18,37 +18,29 @@
 
 ## 2. Diagrama de alto nivel
 
-```
-            ┌─────────────────────────────────────────────────────────┐
-            │  CLIENTE (offline-first)  ──  {{FRONTEND_STACK}}         │
-            │                                                         │
-            │   UI ──► Cache/Query ──► Almacén local ──► Outbox ──┐    │
-            │    ▲                          (IndexedDB/SQLite)    │    │
-            │    └──────────── render ◄──── Sync engine ◄─────────┘    │
-            └──────────────────────────────┬──────────────────────────┘
-                                           │  HTTPS + token verificado
-                                           ▼
-            ┌─────────────────────────────────────────────────────────┐
-            │  BACKEND (API + lógica)  ──  {{BACKEND_STACK}}           │
-            │   Auth ─► Routers ─► Services ─► Audit middleware        │
-            │     │         │           │                              │
-            │     │         │           └─► Fail-safe (503 + Retry)    │
-            └─────┼─────────┼───────────────────────┬─────────────────┘
-                  │         │                        │
-                  ▼         ▼                        ▼
-        ┌──────────────┐ ┌──────────────┐  ┌────────────────────────┐
-        │ Auth/Identidad│ │ BASE DE DATOS│  │ Servicios externos     │
-        │  (proveedor)  │ │ {{DB_STACK}} │  │ (IA, email, pagos...)  │
-        └──────────────┘ │ cifrado en   │  └────────────────────────┘
-                         │ reposo       │
-                         └──────────────┘
-                                  ▲
-                                  │
-            ┌─────────────────────┴───────────────────────────────────┐
-            │  PLATAFORMA CLOUD  ──  {{CLOUD_STACK}}                   │
-            │   Cómputo · Migraciones · Scheduler · Secret Manager ·  │
-            │   Logs estructurados · Monitoring                       │
-            └─────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    subgraph CLIENT["Cliente — offline-first"]
+        UI["UI accesible"] --> CACHE["Cache / Query"]
+        CACHE --> STORE[("Almacén local<br/>IndexedDB / SQLite")]
+        STORE --> OUTBOX["Outbox"]
+        OUTBOX --> SYNC["Sync engine"]
+        SYNC -. render .-> UI
+    end
+    CLIENT -->|"HTTPS + token verificado"| API
+    subgraph API["Backend — API + lógica"]
+        AUTH["Auth"] --> ROUTERS["Routers"]
+        ROUTERS --> SERVICES["Services"]
+        SERVICES --> AUDIT["Audit middleware"]
+        SERVICES --> FAILSAFE["Fail-safe<br/>503 + Retry-After"]
+    end
+    API --> IDP["Proveedor de identidad"]
+    API --> DB[("Base de datos<br/>cifrado en reposo")]
+    API --> EXT["Servicios externos<br/>IA · email · pagos"]
+    subgraph CLOUD["Plataforma cloud"]
+        OPS["Cómputo · Migraciones · Scheduler<br/>Secret Manager · Logs · Monitoring"]
+    end
+    DB --- CLOUD
 ```
 
 ---

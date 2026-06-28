@@ -17,14 +17,12 @@
 
 ## Arquitectura (alto nivel)
 
-```
-[ Cliente {{FRONTEND_STACK}} ]  --offline-first (outbox/sync)-->  [ BD del cliente ]
-        |  (HTTP + token)
-        v
-[ Backend {{BACKEND_STACK}} ]  -->  [ {{DB_STACK}} transaccional + auditoría ]
-        |
-        v
-[ {{CLOUD_STACK}}: cómputo, secretos, scheduler, IA, monitoring ]
+```mermaid
+flowchart TD
+    CLIENT["Cliente<br/>(offline-first)"] -->|"outbox / sync"| CDB[("BD del cliente")]
+    CLIENT -->|"HTTP + token"| BACKEND["Backend<br/>(API + lógica)"]
+    BACKEND --> DB[("BD transaccional<br/>+ auditoría")]
+    BACKEND --> CLOUD["Plataforma cloud<br/>cómputo · secretos · scheduler · IA · monitoring"]
 ```
 
 ## Índice documental

@@ -6,32 +6,21 @@ Este documento describe el patrón de arquitectura que sostuvo una plataforma Sa
 
 ## Vista de 10.000 pies
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│  CLIENTE (offline-first)                                          │
-│  UI accesible (WCAG 2.1 AA)                                       │
-│  ├─ Estado local: IndexedDB                                       │
-│  ├─ Outbox de mutaciones ──┐                                      │
-│  └─ Librería de fetch+cache │ (sync cuando hay red)               │
-└────────────────────────────┼─────────────────────────────────────┘
-                             │  HTTP + token (identidad)
-                             ▼
-┌─────────────────────────────────────────────────────────────────┐
-│  BACKEND (API + lógica de negocio)                               │
-│  ├─ Auth: user_id SOLO del token decodificado                    │
-│  ├─ Audit middleware: persiste mutaciones, loggea lecturas       │
-│  ├─ Fusibles: 503 + Retry-After ante presión de recursos         │
-│  └─ Módulos clínicos con fail-safe explícito                     │
-└──────────────┬──────────────────────────────┬───────────────────┘
-               │                              │
-               ▼                              ▼
-┌──────────────────────────┐   ┌──────────────────────────────────┐
-│  BD TRANSACCIONAL         │   │  PLATAFORMA CLOUD                 │
-│  + auditoría              │   │  ├─ Gestor de secretos            │
-│  + cifrado en reposo      │   │  ├─ Scheduler externo (cron)      │
-│    (AES-256-GCM/columna)  │   │  ├─ IA gestionada                 │
-│  + migraciones atómicas   │   │  └─ Logging + monitoring          │
-└──────────────────────────┘   └──────────────────────────────────┘
+```mermaid
+flowchart TD
+    subgraph CLIENT["Cliente — offline-first"]
+        UI["UI accesible (WCAG 2.1 AA)"] --> LOCAL[("Estado local<br/>IndexedDB")]
+        LOCAL --> OUTBOX["Outbox de mutaciones"]
+    end
+    CLIENT -->|"HTTP + token · sync con red"| BACKEND
+    subgraph BACKEND["Backend — API + lógica de negocio"]
+        AUTH["Auth: user_id solo del token"]
+        AUDIT["Audit middleware<br/>mutaciones a BD · lecturas a log"]
+        FUSE["Fusibles: 503 + Retry-After"]
+        CLIN["Módulos clínicos<br/>fail-safe explícito"]
+    end
+    BACKEND --> DB[("BD transaccional + auditoría<br/>AES-256-GCM por columna<br/>migraciones atómicas")]
+    BACKEND --> CLOUD["Plataforma cloud<br/>secretos · scheduler externo · IA · monitoring"]
 ```
 
 ## Las decisiones y su porqué

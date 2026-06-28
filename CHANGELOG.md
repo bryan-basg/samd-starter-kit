@@ -10,10 +10,14 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 - Equipo de agentes ampliado a 10: `i18n-translations` (internacionalización) y `mobile-native` (capa nativa móvil).
 - Capa de experiencia de ingeniería (`docs/09_engineering_experience/`): lecciones de producción, arquitectura de referencia y método multi-agente "Mesa de Ingenieros".
 - Índice navegable del DHF (`docs/README.md`) con enlace a cada documento + pie de navegación en cada doc.
+- Ejemplo trabajado (`examples/auralog/`): dispositivo Clase B ficticio con su DHF rellenado (Master Map, clasificación de seguridad, matriz de riesgo, trazabilidad).
+- Diagramas de arquitectura en **Mermaid** (render nativo en GitHub) en Master Map, Architecture Overview y Reference Architecture.
+- `dependabot.yml` (npm + pip + github-actions), `CODEOWNERS`, `.editorconfig`, `.gitattributes`.
 - `CHANGELOG.md`.
 
 ### Changed
 - Normalizada la convención de relleno en las plantillas: el "completar después" usa `<...>`; `{{...}}` queda reservado para los 9 marcadores que rellena `init_kit.sh`.
+- READMEs sin emojis decorativos en los encabezados (look más sobrio para público regulatorio). Los marcadores de estado ✅/⚠️ del DHF se conservan.
 
 ## [1.0.0] - 2026-06-28
 

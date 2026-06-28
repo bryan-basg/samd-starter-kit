@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🏥 SaMD Starter Kit
+# SaMD Starter Kit
 
 **A starter kit to build Software as a Medical Device (SaMD) with a team of AI agents.**
 
@@ -13,7 +13,7 @@
 [![Maintained](https://img.shields.io/badge/maintained-yes-brightgreen.svg)](CHANGELOG.md)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-**🌎 English · [Español](README.es.md)**
+**English · [Español](README.es.md)**
 
 </div>
 
@@ -23,7 +23,7 @@ This kit distills the experience of a real SaMD Class B project: a team of speci
 
 This repository is **not an application**. It is the **scaffolding and methodology** so that you (and your AI coding agent, such as Claude Code) can start a SaMD from scratch without reinventing the compliance, testing, and traceability process that **IEC 62304 + ISO 14971** demand.
 
-## 🚀 60-second quickstart
+## 60-second quickstart
 
 ```bash
 git clone https://github.com/bryan-basg/samd-starter-kit my-medical-device
@@ -34,13 +34,13 @@ bash scripts/init_kit.sh       # fill the {{...}} placeholders with your project
 
 Then classify your software (Class A/B/C) in `docs/07_regulatory_and_compliance/SOFTWARE_SAFETY_CLASSIFICATION.md` — it drives the rigor of everything else.
 
-## 🎯 Who is this for?
+## Who is this for?
 
 - **A solo founder or startup** building health software who doesn't want to discover regulatory compliance the hard way.
 - **A medtech / medical-device company** that wants a ready process scaffold (IEC 62304 + ISO 14971) with traceability by design.
 - **Teams working with AI agents** (Claude Code) who want a crew of specialists with the SaMD rules pre-loaded.
 
-## 📦 What's inside
+## What's inside
 
 | Piece | Path | What it is |
 |---|---|---|
@@ -53,8 +53,9 @@ Then classify your software (Class A/B/C) in `docs/07_regulatory_and_compliance/
 | **Example RFCs** | `docs/05_design_decisions/RFC-001..003` | Three real SaMD decisions already written (encryption at rest, JWT-only identity, external scheduler). |
 | **Design History File** | `docs/` | 30+ regulatory & process templates: ISO 14971, SaMD traceability, IEC 62304 plan, safety classification, SOUP, clinical evaluation/validation, post-market, IFU, privacy, runbooks. |
 | **Working CI/CD** | `.github/workflows/` | `ci.yml`, `security-audit.yml` (Trivy+Semgrep), `nightly-mutation.yml` (Stryker). Reference stack: React+TS / Python+FastAPI. |
+| **Worked example** | `examples/auralog/` | A fictional Class B device (AuraLog) with its DHF filled in — see the kit in action. |
 
-## 🧭 The idea: compliance by design, not as a separate sprint
+## The idea: compliance by design, not as a separate sprint
 
 The core rule is **Rule 0**: *every technical decision is subordinate to SaMD compliance*. In practice, four habits the agent team enforces on its own:
 
@@ -63,7 +64,7 @@ The core rule is **Rule 0**: *every technical decision is subordinate to SaMD co
 3. **Explicit fail-safe** (ISO 14971): when something fails, it degrades safely and predictably — never silently.
 4. **Impact analysis before fixing** (§5.6): a bug is fixed after reviewing ALL consumers of the symbol, not just the file where it was reported.
 
-## 🤖 The 10-agent team
+## The 10-agent team
 
 | Agent | Layer | Use it for |
 |---|---|---|
@@ -78,7 +79,7 @@ The core rule is **Rule 0**: *every technical decision is subordinate to SaMD co
 | `i18n-translations` | i18n | Locales across all languages, key parity, anti "copied-untranslated" auditing, pre-certification clinical glossary. |
 | `mobile-native` | Mobile | Packaging the web client as a native app (Capacitor/RN/equiv.), native plugins/auth/storage, push, build/sign/distribution. |
 
-## ✅ Hard rules the kit enforces
+## Hard rules the kit enforces
 
 - No one commits or pushes without the owner's explicit OK.
 - The mutation engine never runs in parallel with agents writing tests.
@@ -86,7 +87,7 @@ The core rule is **Rule 0**: *every technical decision is subordinate to SaMD co
 - Identity comes only from the token (JWT-only) — never `user_id` from the client.
 - Errors never expose tracebacks to the user — empathetic messages + correct HTTP code.
 
-## 🧪 Field notes & methodology
+## Field notes & methodology
 
 The kit isn't only templates — it carries the **hard-won experience** behind them. These are based on real production incidents, generalized (no product specifics):
 
@@ -94,24 +95,24 @@ The kit isn't only templates — it carries the **hard-won experience** behind t
 - **[Reference architecture](docs/09_engineering_experience/REFERENCE_ARCHITECTURE.md)** — the hybrid offline-first pattern (client + API + transactional DB + cloud) with the *why* behind each decision and when **not** to use it.
 - **[The "Engineers' Table" method](docs/09_engineering_experience/MULTI_AGENT_ENGINEERING_METHOD.md)** — orchestrating a team of AI agents on a regulated codebase without losing coherence: the anti-drift protocol, adversarial verification, and the hard rules a better model doesn't override.
 
-## 📐 Standards covered
+## Standards covered
 
 IEC 62304 (medical software lifecycle) · ISO 14971 (risk management) · ISO 13485 (QMS) · IEC 62366 (usability) · WCAG 2.1 AA (accessibility) · GDPR + HIPAA (health data privacy/security).
 
-## ⚠️ What this is NOT
+## What this is NOT
 
 This kit is a **process scaffold**, not regulatory advice and not a guarantee of certification. Safety classification, clinical evidence, and approval of a medical device require the judgment of regulatory professionals and, depending on the market, a Notified Body or the relevant health authority.
 
-## 👤 Origin
+## Origin
 
 This kit didn't start as a template. It was **extracted from a real, in-production Class B SaMD platform** — an offline-first health application built and operated end to end: backend, data layer, cloud, CI/CD, the regulatory DHF, and a team of AI agents driving the work. The agents, rules, workflows and lessons here are what actually survived contact with production and regulation.
 
 Maintained by [@bryan-basg](https://github.com/bryan-basg). If it saves you from learning these lessons the hard way, it did its job.
 
-## 🤝 Contributing
+## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). Security reports: privately, see [SECURITY.md](.github/SECURITY.md). Be kind: [Code of Conduct](CODE_OF_CONDUCT.md).
 
-## 📄 License
+## License
 
 [MIT](LICENSE). Built distilling the experience of a real Class B SaMD project.

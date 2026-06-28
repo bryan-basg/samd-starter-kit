@@ -1,0 +1,11 @@
+# Normalización de fin de línea (LF) y manejo de binarios.
+* text=auto eol=lf
+
+*.png   binary
+*.apk   binary
+*.jpg   binary
+
+# Linguist: el repo es mayormente documentación; no lo cuentes como código.
+docs/**         linguist-documentation
+examples/**     linguist-documentation
+*.md            linguist-documentation

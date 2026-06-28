@@ -1,0 +1,8 @@
+# Dueño por defecto de todo el repo.
+*                                       @bryan-basg
+
+# El DHF regulatorio exige revisión del dueño (trazabilidad SaMD).
+/docs/07_regulatory_and_compliance/     @bryan-basg
+/docs/00_master/                        @bryan-basg
+/CLAUDE.md                              @bryan-basg
+/.claude/agents/                        @bryan-basg

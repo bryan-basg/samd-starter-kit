@@ -43,7 +43,7 @@ Después: clasificá tu software (Clase A/B/C) en `docs/07_regulatory_and_compli
 | Pieza | Path | Qué es |
 |---|---|---|
 | **Reglamento del agente** | `CLAUDE.md` | La "Regla 0" (SaMD es prioridad absoluta) + cómo trabaja el agente, testing, orquestación multi-agente. |
-| **Equipo de 8 agentes** | `.claude/agents/` | Especialistas por capa: `backend`, `frontend`, `db-architect`, `cloud-ops`, `qa-mutation`, `security-samd`, `samd-audit-trace`, `docs-dhf`. |
+| **Equipo de 10 agentes** | `.claude/agents/` | Especialistas por capa: `backend`, `frontend`, `db-architect`, `cloud-ops`, `qa-mutation`, `security-samd`, `samd-audit-trace`, `docs-dhf`, `i18n-translations`, `mobile-native`. |
 | **Comando + skill** | `.claude/commands/`, `.claude/skills/` | `samd-trace`: análisis de impacto (§5.6) antes de declarar algo "arreglado". |
 | **Workflow multi-agente** | `.claude/workflows/` | `samd-review`: revisión del diff por dimensiones de riesgo con verificación adversarial. |
 | **Protocolo de desarrollo** | `.agents/workflows/` | Espejo agnóstico al agente del proceso estable. |

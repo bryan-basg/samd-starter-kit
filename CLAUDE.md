@@ -147,6 +147,8 @@ El proyecto tiene un equipo de agentes en `.claude/agents/`, cada uno cargado co
 | `samd-audit-trace` | Regulatorio (audita) | Auditar un changeset contra IEC 62304 §5.1/§5.7 + ISO 14971 antes de cerrar fase/PR. Detecta gaps, NO los escribe. |
 | `docs-dhf` | Regulatorio (escribe) | Materializar updates en Master Map, TECHNICAL_DEBT_SUMMARY, ISO_14971_RISK_MATRIX, TRACEABILITY_MATRIX_SAMD, RFCs. Corre link-checker. |
 | `security-samd` | Seguridad regulatoria | SAST (Trivy + Semgrep + fuzz de API), cifrado, gestión de claves, JWT-only, audit sin PII, pentest contra el contrato OpenAPI. Reporta D-SEC-XX; NO escribe docs ni toca secretos. |
+| `i18n-translations` | Internacionalización | Locales en todos los idiomas (frontend + backend), paridad y anti "copiado sin traducir", glosario clínico pre-certificación (sin claims de dispositivo médico no certificado), placeholders y plurales. |
+| `mobile-native` | Nativo móvil | Empaquetado del cliente web en app nativa (Capacitor/React Native/equiv.), plugins nativos, auth nativa, persistencia nativa, push, build/firma/distribución. Verifica EN DEVICE real. Distinto del `frontend` (web). |
 
 ---
 

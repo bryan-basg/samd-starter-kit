@@ -43,7 +43,7 @@ Then classify your software (Class A/B/C) in `docs/07_regulatory_and_compliance/
 | Piece | Path | What it is |
 |---|---|---|
 | **Agent ruleset** | `CLAUDE.md` | "Rule 0" (SaMD is the absolute priority) + how the agent works, testing, multi-agent orchestration. |
-| **Team of 8 agents** | `.claude/agents/` | Per-layer specialists: `backend`, `frontend`, `db-architect`, `cloud-ops`, `qa-mutation`, `security-samd`, `samd-audit-trace`, `docs-dhf`. |
+| **Team of 10 agents** | `.claude/agents/` | Per-layer specialists: `backend`, `frontend`, `db-architect`, `cloud-ops`, `qa-mutation`, `security-samd`, `samd-audit-trace`, `docs-dhf`, `i18n-translations`, `mobile-native`. |
 | **Command + skill** | `.claude/commands/`, `.claude/skills/` | `samd-trace`: impact analysis (§5.6) before declaring anything "fixed". |
 | **Multi-agent workflow** | `.claude/workflows/` | `samd-review`: diff review across risk dimensions with adversarial verification. |
 | **Development protocol** | `.agents/workflows/` | Agent-agnostic mirror of the stable process. |
@@ -61,7 +61,7 @@ The core rule is **Rule 0**: *every technical decision is subordinate to SaMD co
 3. **Explicit fail-safe** (ISO 14971): when something fails, it degrades safely and predictably — never silently.
 4. **Impact analysis before fixing** (§5.6): a bug is fixed after reviewing ALL consumers of the symbol, not just the file where it was reported.
 
-## 🤖 The 8-agent team
+## 🤖 The 10-agent team
 
 | Agent | Layer | Use it for |
 |---|---|---|
@@ -73,6 +73,8 @@ The core rule is **Rule 0**: *every technical decision is subordinate to SaMD co
 | `security-samd` | Security | SAST (Trivy+Semgrep+fuzz), encryption, key management, JWT-only, audit. |
 | `samd-audit-trace` | Regulatory (audits) | Audits a changeset against IEC 62304 §5.1/§5.7 + ISO 14971. Reports gaps. |
 | `docs-dhf` | Regulatory (writes) | Materializes DHF updates: Master Map, risk matrix, traceability, RFCs. |
+| `i18n-translations` | i18n | Locales across all languages, key parity, anti "copied-untranslated" auditing, pre-certification clinical glossary. |
+| `mobile-native` | Mobile | Packaging the web client as a native app (Capacitor/RN/equiv.), native plugins/auth/storage, push, build/sign/distribution. |
 
 ## ✅ Hard rules the kit enforces
 

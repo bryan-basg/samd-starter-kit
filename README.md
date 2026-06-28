@@ -18,7 +18,9 @@ Este repositorio NO es una aplicación. Es el **andamiaje y la metodología** pa
 | **Protocolo de desarrollo** | `.agents/workflows/protocolo_desarrollo.md` | Espejo agnóstico al agente del proceso estable. |
 | **Memoria** | `memory/MEMORY.md` | Estructura de memoria persistente del agente (snapshots dinámicos, no reglas estables). |
 | **Design History File (DHF)** | `docs/` | ~25 plantillas regulatorias: matriz de riesgo ISO 14971, trazabilidad SaMD, plan de desarrollo IEC 62304, clasificación de seguridad, SOUP, evaluación/validación clínica, post-market, IFU, privacidad, gestión de configuración, runbooks, RFCs, y más. |
-| **Scaffolding** | `frontend/` `app/` `tests/` `scripts/` `.github/` | Carpetas de arranque + scripts de auditoría + CI de ejemplo. |
+| **RFCs de ejemplo** | `docs/05_design_decisions/RFC-001..003` | Tres decisiones SaMD reales ya escritas (cifrado en reposo, identidad JWT-only, scheduler externo) — modelo para tus propias RFCs. |
+| **CI/CD funcional** | `.github/workflows/` | `ci.yml` (lint+types+tests+drift de contrato), `security-audit.yml` (Trivy+Semgrep), `nightly-mutation.yml` (Stryker). Sobre el **stack de referencia** (React+TS / Python+FastAPI) — adaptá los `run:` a tu stack. |
+| **Scaffolding** | `frontend/` `app/` `tests/` `scripts/` | Carpetas de arranque + scripts reales (`init_kit`, `check_doc_links`, `run_local_ci`, `sast`, `export_openapi`). |
 
 ---
 

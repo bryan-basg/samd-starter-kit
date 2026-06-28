@@ -1,0 +1,44 @@
+# Auditoría de seguridad SaMD — Trivy (CVEs) + Semgrep (SAST).
+# Nightly + en PRs que tocan código o dependencias. Gate: bloquea HIGH/CRITICAL sin waiver.
+name: Security Audit
+
+on:
+  schedule:
+    - cron: '0 3 * * *'   # nightly 03:00 UTC
+  pull_request:
+    paths:
+      - 'app/**'
+      - 'frontend/src/**'
+      - 'requirements*.txt'
+      - 'frontend/package*.json'
+      - 'Dockerfile'
+  workflow_dispatch:
+
+concurrency:
+  group: security-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  trivy:
+    name: Trivy (CVEs deps + misconfig + secrets)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          scanners: vuln,secret,misconfig
+          severity: HIGH,CRITICAL
+          exit-code: '1'
+          cache: true
+
+  semgrep:
+    name: Semgrep (SAST Python + TypeScript)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    container:
+      image: semgrep/semgrep
+    steps:
+      - uses: actions/checkout@v4
+      - run: semgrep --config auto --error --severity ERROR app/ frontend/src/

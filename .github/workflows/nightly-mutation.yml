@@ -1,0 +1,51 @@
+# Mutation testing nightly (SaMD §5.7.4). Stack de referencia: Stryker (frontend).
+# Patrón del proyecto: incremental varias veces por semana + full 1×/mes (más caro).
+# El motor de mutation NUNCA corre en paralelo con agentes que escriben tests.
+name: Nightly Mutation
+
+on:
+  schedule:
+    - cron: '0 4 * * 1,3,5'   # incremental lun/mié/vie
+    - cron: '0 5 1 * *'       # full el día 1 de cada mes
+  workflow_dispatch:
+    inputs:
+      full_run:
+        description: 'Corrida full (true) o incremental (false)'
+        type: boolean
+        default: false
+
+concurrency:
+  group: mutation-${{ github.ref }}
+  cancel-in-progress: false   # NO cancelar una corrida de mutation a medias
+
+jobs:
+  stryker:
+    name: Stryker (frontend)
+    runs-on: ubuntu-latest
+    timeout-minutes: 360   # una corrida full puede tomar horas
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # incremental necesita historia para el diff
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - name: Stryker
+        run: |
+          if [ "${{ github.event.inputs.full_run }}" = "true" ] || [ "${{ github.event.schedule }}" = "0 5 1 * *" ]; then
+            npx stryker run                       # full: ignoreStatic:true + dryRunTimeoutMinutes:30 en la config
+          else
+            npx stryker run --incremental         # incremental barato
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mutation-report
+          path: frontend/reports/mutation/
+          retention-days: 14

@@ -1,0 +1,36 @@
+# Secretos — NUNCA al repo (viven en el gestor de secretos en prod)
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+service-account*.json
+google-services.json
+
+# Dependencias
+node_modules/
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Builds
+dist/
+build/
+*.apk
+
+# Reportes de testing / mutation
+frontend/reports/
+coverage/
+.stryker-tmp/
+.mutmut-cache
+
+# IDE / SO
+.DS_Store
+.idea/
+.vscode/
+*.log
+
+# Memoria del agente (snapshots dinámicos — opcional versionar)
+# memory/*.md
+# !memory/MEMORY.md

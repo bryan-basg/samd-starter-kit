@@ -19,18 +19,18 @@ name: Schemathesis (API contract fuzzing)
 #   - acciones pineadas a SHA.
 
 on:
-  pull_request:
-    branches: [main, master]
-    paths:
-      - 'app/routers/**'
-      - 'app/schemas/**'
-      - 'app/main.py'
-      - 'app/dependencies.py'
-      - 'app/app_factory.py'
-      - 'scripts/run_schemathesis.sh'
-      - '.github/workflows/schemathesis.yml'
-  schedule:
-    - cron: '0 4 1,15 * *'   # días 1 y 15, 04:00 UTC
+  # Triggers automáticos COMENTADOS hasta que tu API exista. Descomentá al agregarla.
+  # pull_request:
+  #   branches: [main, master]
+  #   paths:
+  #     - 'app/routers/**'
+  #     - 'app/schemas/**'
+  #     - 'app/main.py'
+  #     - 'app/dependencies.py'
+  #     - 'scripts/run_schemathesis.sh'
+  #     - '.github/workflows/schemathesis.yml'
+  # schedule:
+  #   - cron: '0 4 1,15 * *'   # días 1 y 15, 04:00 UTC
   workflow_dispatch:
     inputs:
       examples:
@@ -49,8 +49,6 @@ permissions:
 jobs:
   fuzz:
     name: Fuzz API contra OpenAPI
-    # Se saltea hasta que exista requirements.txt (plantilla → proyecto real).
-    if: ${{ hashFiles('requirements.txt') != '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:

@@ -23,17 +23,18 @@ name: SBOM Generation
 #     el SBOM versionado en Git, no este artifact redundante de conveniencia).
 
 on:
-  push:
-    branches: [master, main]
-    paths:
-      - 'requirements.txt'
-      - 'requirements*.txt'
-      - 'frontend/package.json'
-      - 'frontend/package-lock.json'
-      - 'scripts/generate_sbom.sh'
-      - '.github/workflows/sbom.yml'
-  schedule:
-    - cron: '0 5 * * 1'   # lunes 05:00 UTC — detección semanal de drift de deps
+  # Triggers automáticos COMENTADOS hasta que existan tus lockfiles. Descomentá al agregarlos.
+  # push:
+  #   branches: [master, main]
+  #   paths:
+  #     - 'requirements.txt'
+  #     - 'requirements*.txt'
+  #     - 'frontend/package.json'
+  #     - 'frontend/package-lock.json'
+  #     - 'scripts/generate_sbom.sh'
+  #     - '.github/workflows/sbom.yml'
+  # schedule:
+  #   - cron: '0 5 * * 1'   # lunes 05:00 UTC
   workflow_dispatch:
 
 concurrency:
@@ -47,8 +48,6 @@ jobs:
   generate-sbom:
     name: Generate SBOM (backend + frontend)
     # CI sin secretos → runner barato. Ajustar a vuestra plataforma {{CLOUD_STACK}}.
-    # Se saltea hasta que exista un manifiesto real (plantilla → proyecto real).
-    if: ${{ hashFiles('requirements.txt', 'frontend/package-lock.json') != '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:

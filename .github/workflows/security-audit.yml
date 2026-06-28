@@ -3,15 +3,16 @@
 name: Security Audit
 
 on:
-  schedule:
-    - cron: '0 3 * * *'   # nightly 03:00 UTC
-  pull_request:
-    paths:
-      - 'app/**'
-      - 'frontend/src/**'
-      - 'requirements*.txt'
-      - 'frontend/package*.json'
-      - 'Dockerfile'
+  # Triggers automáticos COMENTADOS hasta que tu código de app exista. Descomentá al agregarlo.
+  # schedule:
+  #   - cron: '0 3 * * *'   # nightly 03:00 UTC
+  # pull_request:
+  #   paths:
+  #     - 'app/**'
+  #     - 'frontend/src/**'
+  #     - 'requirements*.txt'
+  #     - 'frontend/package*.json'
+  #     - 'Dockerfile'
   workflow_dispatch:
 
 concurrency:
@@ -35,8 +36,6 @@ jobs:
 
   semgrep:
     name: Semgrep (SAST Python + TypeScript)
-    # Se saltea hasta que exista código de app que escanear (plantilla → proyecto real).
-    if: ${{ hashFiles('app/**', 'frontend/src/**') != '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     container:

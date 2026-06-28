@@ -16,13 +16,14 @@ name: DAST (OWASP ZAP)
 # retención acotada de artifacts.
 
 on:
-  schedule:
-    - cron: '0 6 * * 1'   # lunes 06:00 UTC (spider + scan tardan; semanal)
+  # Triggers automáticos COMENTADOS hasta que tu backend exista. Descomentá al agregarlo.
+  # schedule:
+  #   - cron: '0 6 * * 1'   # lunes 06:00 UTC
+  # push:
+  #   paths:
+  #     - 'scripts/run_zap_dast.sh'
+  #     - '.github/workflows/dast.yml'
   workflow_dispatch:
-  push:
-    paths:
-      - 'scripts/run_zap_dast.sh'
-      - '.github/workflows/dast.yml'
 
 concurrency:
   group: dast-${{ github.ref }}
@@ -34,8 +35,6 @@ permissions:
 jobs:
   zap-baseline:
     name: ZAP baseline (backend local)
-    # Se saltea hasta que exista requirements.txt (plantilla → proyecto real).
-    if: ${{ hashFiles('requirements.txt') != '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:

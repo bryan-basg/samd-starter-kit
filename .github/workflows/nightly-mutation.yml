@@ -4,9 +4,10 @@
 name: Nightly Mutation
 
 on:
-  schedule:
-    - cron: '0 4 * * 1,3,5'   # incremental lun/mié/vie
-    - cron: '0 5 1 * *'       # full el día 1 de cada mes
+  # Triggers automáticos COMENTADOS hasta que tu frontend exista. Descomentá al agregarlo.
+  # schedule:
+  #   - cron: '0 4 * * 1,3,5'   # incremental lun/mié/vie
+  #   - cron: '0 5 1 * *'       # full el día 1 de cada mes
   workflow_dispatch:
     inputs:
       full_run:
@@ -21,8 +22,6 @@ concurrency:
 jobs:
   stryker:
     name: Stryker (frontend)
-    # Se saltea hasta que exista frontend/package.json (plantilla → proyecto real).
-    if: ${{ hashFiles('frontend/package.json') != '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 360   # una corrida full puede tomar horas
     defaults:

@@ -1,8 +1,8 @@
 <div align="center">
 
-# SaMD Starter Kit
+<img src=".github/social-preview.png" alt="SaMD Starter Kit — build Software as a Medical Device with a team of AI agents" width="820">
 
-**A starter kit to build Software as a Medical Device (SaMD) with a team of AI agents.**
+### A starter kit to build Software as a Medical Device (SaMD) with a team of AI agents.
 
 [![Version](https://img.shields.io/badge/version-1.0.0-informational.svg)](CHANGELOG.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -14,6 +14,8 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
 **English · [Español](README.es.md)**
+
+[Quickstart](#60-second-quickstart) · [The 10 agents](#the-10-agent-team) · [Design History File](docs/) · [Worked example](examples/auralog/) · [Contributing](CONTRIBUTING.md)
 
 </div>
 

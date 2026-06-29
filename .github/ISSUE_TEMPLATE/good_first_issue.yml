@@ -1,0 +1,58 @@
+name: Good first issue
+description: A small, well-scoped task for a first-time or returning contributor.
+title: "[good first issue]: "
+labels: ["good first issue", "help wanted"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for getting involved with the SaMD Starter Kit. This template is for **small, self-contained contributions** — a doc fix, a clearer template, a missing example, a bilingual (EN/ES) parity gap. New to the project? Read [CONTRIBUTING.md](../../CONTRIBUTING.md) and the [ROADMAP.md](../../ROADMAP.md) first.
+        Please keep changes focused on the **templates the kit ships**, not on a device you have built from it. Do **not** include secrets, real patient data (PHI/PII), or production credentials.
+  - type: textarea
+    id: task
+    attributes:
+      label: The task
+      description: What small improvement would you like to make? Keep it to one self-contained change.
+      placeholder: A clear, single-scope description of the change.
+    validations:
+      required: true
+  - type: input
+    id: affected-file
+    attributes:
+      label: File or area
+      description: Which file(s) or area does it touch (e.g. `README.es.md`, `.claude/agents/frontend.md`, `docs/.../TEMPLATE.md`)?
+      placeholder: path/to/affected/file
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind of change
+      description: What kind of first issue is this?
+      options:
+        - Documentation / wording
+        - Bilingual parity (EN/ES)
+        - Template clarity or example
+        - Tooling / scripts
+        - Other (explain below)
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional context
+      description: Anything that helps a maintainer review — links, prior discussion, or why this helps newcomers.
+    validations:
+      required: false
+  - type: checkboxes
+    id: guardrails
+    attributes:
+      label: Before you start
+      description: A couple of the kit's non-negotiable rules.
+      options:
+        - label: I will keep the bilingual EN/ES structure in sync when I touch user-facing docs.
+          required: true
+        - label: My change adds no claim of an uncertified medical-device function (pre-certification clinical glossary).
+          required: true
+        - label: I understand no one commits or pushes without the owner's explicit OK.
+          required: true

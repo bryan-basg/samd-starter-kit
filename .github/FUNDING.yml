@@ -1,0 +1,16 @@
+# GitHub Sponsors / funding configuration for the SaMD Starter Kit.
+#
+# This file is a TEMPLATE. The repository owner fills it in when activating
+# GitHub Sponsors (or another funding platform) and removes the leading "#"
+# from the lines that apply. Replace every {{...}} placeholder with a real
+# account/handle. Leave the rest commented so unused platforms stay hidden.
+#
+# Docs: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/displaying-a-sponsor-button-in-your-repository
+
+# github: [{{GITHUB_SPONSOR_USERNAME}}]   # one or more GitHub usernames, e.g. [bryan-basg]
+# ko_fi: {{KOFI_USERNAME}}                # a single Ko-fi username
+# buy_me_a_coffee: {{BMAC_USERNAME}}      # a single Buy Me a Coffee username
+# open_collective: {{OPENCOLLECTIVE_SLUG}}
+# liberapay: {{LIBERAPAY_USERNAME}}
+# patreon: {{PATREON_USERNAME}}
+# custom: [{{CUSTOM_FUNDING_URL}}]        # up to 4 custom URLs

@@ -1,0 +1,57 @@
+# Release automation — al pushear un tag `v*` (p. ej. `v1.1.0`):
+#   1. Extrae la sección correspondiente de CHANGELOG.md (formato Keep a Changelog).
+#   2. Crea un GitHub Release con esas notas.
+# La fuente de verdad de las notas es CHANGELOG.md → no se duplica a mano.
+# El tag lo crea el dueño (decisión humana); este workflow solo materializa el
+# Release a partir de él.
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write   # crear el GitHub Release
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Crear GitHub Release desde CHANGELOG.md
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Extraer notas de la versión desde CHANGELOG.md
+        id: notes
+        run: |
+          set -euo pipefail
+          # Tag `v1.1.0` → versión `1.1.0` (la cabecera del changelog es `## [1.1.0]`).
+          VERSION="${GITHUB_REF_NAME#v}"
+          echo "Versión: $VERSION"
+          # Extrae el bloque entre `## [VERSION]` y la siguiente cabecera `## [`.
+          # Saltea las definiciones de enlace de referencia al pie (`[x]: http...`).
+          awk -v ver="$VERSION" '
+            $0 ~ "^## \\[" ver "\\]"  { capture=1; next }
+            capture && /^## \[/       { exit }
+            capture && /^\[[^]]+\]: / { next }
+            capture                   { print }
+          ' CHANGELOG.md > release-notes.md
+          if [ ! -s release-notes.md ]; then
+            echo "::error::No se encontró la sección '## [$VERSION]' en CHANGELOG.md" >&2
+            exit 1
+          fi
+          echo "----- Notas extraídas -----"
+          cat release-notes.md
+
+      - name: Publicar el GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ github.ref_name }}
+          body_path: release-notes.md
+          draft: false
+          prerelease: false

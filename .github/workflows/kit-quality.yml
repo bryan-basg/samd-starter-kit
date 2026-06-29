@@ -1,0 +1,30 @@
+# Calidad del propio kit (IEC 62304 §5.7 — verificación del kit como soporte).
+# A diferencia de ci.yml (que verifica el código de TU proyecto), este workflow
+# verifica que la maquinaria del SaMD Starter Kit esté sana: que el equipo de
+# agentes/comandos/skills tenga estructura válida y que la documentación del DHF
+# no tenga enlaces cross-doc rotos. Barato y agnóstico al stack → corre siempre.
+name: Kit Quality
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+concurrency:
+  group: kit-quality-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  kit-quality:
+    name: Lint de agentes + enlaces cross-doc
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Lint de agentes/comandos/skills (estructura mínima)
+        run: python scripts/lint_agents.py
+      - name: Link-checker cross-doc (0 broken obligatorio)
+        run: bash scripts/check_doc_links.sh

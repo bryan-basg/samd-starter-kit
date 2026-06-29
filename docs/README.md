@@ -2,6 +2,8 @@
 
 Brújula del DHF de {{PROJECT_NAME}}. El **[Master Map](./00_master/MASTER_MAP.md)** es el mapa maestro vivo; lo mantiene el agente `docs-dhf`. Este índice enlaza **todos** los documentos para que el DHF se navegue solo.
 
+> ¿Recién llegás? Empezá por [`GETTING_STARTED.md`](../GETTING_STARTED.md) (camino guiado) y mirá el [ejemplo trabajado AuraLog](../examples/auralog/) para ver estas plantillas ya rellenadas en un dispositivo Clase B ficticio.
+
 ## 00 · Master
 
 - [MASTER_MAP](./00_master/MASTER_MAP.md) — mapa maestro: identidad del dispositivo, arquitectura, módulos clínicos críticos, versiones.

@@ -53,8 +53,9 @@ bash scripts/init_kit.sh       # fill the {{...}} placeholders with your project
 | **Development protocol** | `.agents/workflows/` | Agent-agnostic mirror of the stable process. |
 | **Memory** | `memory/MEMORY.md` | The agent's persistent memory structure. |
 | **Example RFCs** | `docs/05_design_decisions/RFC-001..003` | Three real SaMD decisions already written (encryption at rest, JWT-only identity, external scheduler). |
-| **Design History File** | `docs/` | 30+ regulatory & process templates: ISO 14971, SaMD traceability, IEC 62304 plan, safety classification, SOUP, clinical evaluation/validation, post-market, IFU, privacy, runbooks. |
+| **Design History File** | `docs/` | 40+ regulatory & process templates: ISO 14971, SaMD traceability, IEC 62304 plan, safety classification, SOUP, clinical evaluation/validation, post-market, IFU, user docs, privacy, runbooks. |
 | **Working CI/CD** | `.github/workflows/` | `ci.yml`, `security-audit.yml` (Trivy+Semgrep), `nightly-mutation.yml` (Stryker). Reference stack: React+TS / Python+FastAPI. |
+| **Runnable skeleton** | `app/` · `frontend/` · `tests/` | A minimal FastAPI + React/TS example wiring the hard rules (token-only identity, AES-256-GCM at rest, fail-safe, flat accessible UI). Runs with zero infra: `pytest` 8/8, `vitest` 5/5. Delete it when you bring your own app. |
 | **Worked example** | `examples/auralog/` | A fictional Class B device (AuraLog) with its DHF filled in — see the kit in action. |
 
 ## How the pieces fit together

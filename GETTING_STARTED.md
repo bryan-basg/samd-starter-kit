@@ -19,6 +19,36 @@ You bring your application code into `app/` (backend), `frontend/` (client) and 
 
 ---
 
+## Map of the repo
+
+```
+my-medical-device/
+├── CLAUDE.md            ← the ruleset the agents obey (Rule 0)
+├── GETTING_STARTED.md   ← you are here
+├── CONTRIBUTING.md      ← workflow, Definition of Done, hard rules
+├── .claude/
+│   ├── agents/          ← 10 layer specialists (backend, frontend, db, …)
+│   ├── commands/ skills/← samd-trace: impact analysis (§5.6)
+│   └── workflows/       ← samd-review: multi-agent diff review
+├── .agents/workflows/   ← agent-agnostic mirror of the process
+├── app/                 ← your backend        (bring your code)
+├── frontend/            ← your client         (bring your code)
+├── tests/               ← your verification   (bring your code)
+├── docs/                ← the Design History File (DHF) — see docs/README.md
+│   ├── 00_master/       ← Master Map: the living map of your device
+│   ├── 02_… 03_…        ← architecture · development & testing plan
+│   ├── 04_user_documentation/  ← user guide, release notes
+│   ├── 05_design_decisions/    ← RFCs (3 real ones, filled in)
+│   ├── 06_… 07_…        ← runbooks · regulatory & compliance (25 templates)
+│   └── 08_… 09_…        ← verification & audits · engineering lessons
+├── examples/auralog/    ← a fictional Class B device with its DHF filled in
+├── scripts/             ← init_kit, CI, security, mutation, link-check
+├── memory/              ← the agent's persistent memory
+└── .github/workflows/   ← working CI
+```
+
+---
+
 ## The path: 5 steps
 
 ```mermaid
@@ -90,9 +120,24 @@ See [`examples/auralog/`](examples/auralog/) for these exact four, filled in for
 
 The full route to certification lives in [`CERTIFICATION_HOWTO`](docs/07_regulatory_and_compliance/CERTIFICATION_HOWTO.md).
 
-### Step 3 — Wire your stack
+### Step 3 — Run the example, then wire your stack
 
-The `app/`, `frontend/` and `tests/` folders ship as READMEs describing the expected structure and the hard rules. Bring your code in:
+The `app/`, `frontend/` and `tests/` folders ship with a **minimal runnable reference example** that demonstrates the hard rules in real code (identity from the token only, AES-256-GCM at rest, owner isolation, fail-safe without tracebacks, flat accessible UI). It runs with **zero infrastructure** (in-memory store) so you can see the patterns immediately:
+
+```bash
+# Backend (from the repo root)
+python -m venv venv && source venv/bin/activate
+pip install -r requirements-dev.txt
+pytest                          # 8/8 green
+uvicorn app.main:app --reload   # http://localhost:8000/docs
+
+# Frontend
+cd frontend && npm install
+npm test                        # 5/5 green
+npm run dev                     # http://localhost:5173
+```
+
+**Delete the example when you bring your own app** — it's clearly marked. Then bring your code in, honoring the hard rules:
 
 - **`app/`** — your backend. Hard rules: identity from the token only, fully async, strict typing, no tracebacks to the user, fail-safe with `503 + Retry-After`. See [`.claude/agents/backend.md`](.claude/agents/backend.md).
 - **`frontend/`** — your client. Hard rules: offline-first, flat design (no glassmorphism), `prefers-reduced-motion` honored, accessible labels. See [`.claude/agents/frontend.md`](.claude/agents/frontend.md).

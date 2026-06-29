@@ -53,8 +53,9 @@ bash scripts/init_kit.sh       # rellena los marcadores {{...}} con tu proyecto
 | **Protocolo de desarrollo** | `.agents/workflows/` | Espejo agnóstico al agente del proceso estable. |
 | **Memoria** | `memory/MEMORY.md` | Estructura de memoria persistente del agente. |
 | **RFCs de ejemplo** | `docs/05_design_decisions/RFC-001..003` | Tres decisiones SaMD reales ya escritas (cifrado en reposo, identidad JWT-only, scheduler externo). |
-| **Design History File** | `docs/` | 30+ plantillas regulatorias y de proceso: ISO 14971, trazabilidad SaMD, plan IEC 62304, clasificación, SOUP, evaluación/validación clínica, post-market, IFU, privacidad, runbooks. |
+| **Design History File** | `docs/` | 40+ plantillas regulatorias y de proceso: ISO 14971, trazabilidad SaMD, plan IEC 62304, clasificación, SOUP, evaluación/validación clínica, post-market, IFU, docs de usuario, privacidad, runbooks. |
 | **CI/CD funcional** | `.github/workflows/` | `ci.yml`, `security-audit.yml` (Trivy+Semgrep), `nightly-mutation.yml` (Stryker). Stack de referencia React+TS / Python+FastAPI. |
+| **Esqueleto ejecutable** | `app/` · `frontend/` · `tests/` | Un ejemplo mínimo FastAPI + React/TS que cablea las reglas duras (identidad solo del token, AES-256-GCM en reposo, fail-safe, UI plana y accesible). Corre sin infra: `pytest` 8/8, `vitest` 5/5. Borralo cuando traigas tu app. |
 | **Ejemplo trabajado** | `examples/auralog/` | Un dispositivo Clase B ficticio (AuraLog) con su DHF rellenado — el kit en acción. |
 
 ## Cómo encajan las piezas

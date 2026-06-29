@@ -1,0 +1,8 @@
+# requirements.txt — dependencias de runtime del esqueleto de ejemplo (app/).
+# Esqueleto MÍNIMO para demostrar las reglas duras del kit; reemplazá por tu stack real.
+fastapi>=0.110
+uvicorn[standard]>=0.29
+pydantic>=2.6
+pydantic-settings>=2.2
+cryptography>=42
+pyjwt>=2.8

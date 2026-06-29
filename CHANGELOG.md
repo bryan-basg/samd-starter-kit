@@ -7,6 +7,7 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 ## [Unreleased]
 
 ### Added
+- **Esqueleto ejecutable** en `app/` (FastAPI) + `frontend/` (Vite + React + TS) + `tests/`: slice mínimo que cablea las reglas duras en código real — identidad solo del token (JWT), cifrado AES-256-GCM en reposo, aislamiento por dueño, fail-safe 503 + Retry-After, handler global sin traceback, UI plana/accesible con `prefers-reduced-motion`. Corre sin infra (store en memoria). Verificado: `pytest` 8/8 + mypy estricto + ruff; `vitest` 5/5 + build de producción. `requirements.txt` / `requirements-dev.txt` añadidos.
 - **`GETTING_STARTED.md`**: guía de arranque guiada (primer día) con árbol de decisión de clase A/B/C en Mermaid, los 4 documentos base en orden, el ciclo diario con los agentes y un mapa "leé por clase" para no ahogarse en las 40+ plantillas.
 - **`docs/04_user_documentation/`** (tapa el hueco de numeración 00–09): `USER_GUIDE.md` (manual de usuario final) y `RELEASE_NOTES_TEMPLATE.md`, enlazados en el índice del DHF — información de seguridad IEC 62366-1.
 - Diagrama "cómo encajan las piezas" (Mermaid) en ambos READMEs + enlace prominente a la guía de arranque.
@@ -23,7 +24,11 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 - Wrappers de comandos canónicos: `scripts/run_{stryker,trivy,semgrep,schemathesis}.sh`.
 - `CHANGELOG.md`.
 
+### Fixed
+- **`.mypy.ini`** venía roto de fábrica: el placeholder `python_version = <3.12>` y comentarios en la misma línea que el valor (`clave = True   # …`) hacían que mypy no parseara la config. Corregido a `python_version = 3.12`, comentarios movidos a su propia línea y secciones de override de ejemplo comentadas (cero ruido). Ahora `mypy` pasa estricto out-of-the-box.
+
 ### Changed
+- **`pytest.ini`**: ignore angosto para la deprecación de `httpx` que emite el `TestClient` de Starlette (ruido de terceros; `filterwarnings = error` la convertía en fallo).
 - **`scripts/init_kit.sh`**: valida la clase de seguridad (A/B/C, normaliza mayúsculas; en `--yes` aborta si es inválida), muestra un ejemplo por campo en cada prompt e imprime los próximos pasos concretos según la clase elegida.
 - Normalizada la convención de relleno en las plantillas: el "completar después" usa `<...>`; `{{...}}` queda reservado para los 9 marcadores que rellena `init_kit.sh`.
 - READMEs sin emojis decorativos en los encabezados (look más sobrio para público regulatorio). Los marcadores de estado ✅/⚠️ del DHF se conservan.

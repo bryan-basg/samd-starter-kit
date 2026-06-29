@@ -2,7 +2,7 @@
 
 Brújula del DHF de {{PROJECT_NAME}}. El **[Master Map](./00_master/MASTER_MAP.md)** es el mapa maestro vivo; lo mantiene el agente `docs-dhf`. Este índice enlaza **todos** los documentos para que el DHF se navegue solo.
 
-> ¿Recién llegás? Empezá por [`GETTING_STARTED.md`](../GETTING_STARTED.md) (camino guiado) y mirá el [ejemplo trabajado AuraLog](../examples/auralog/) para ver estas plantillas ya rellenadas en un dispositivo Clase B ficticio.
+> ¿Recién llegás? Empezá por [`GETTING_STARTED.md`](https://github.com/bryan-basg/samd-starter-kit/blob/main/GETTING_STARTED.md) (camino guiado) y mirá el [ejemplo trabajado AuraLog](https://github.com/bryan-basg/samd-starter-kit/tree/main/examples/auralog) para ver estas plantillas ya rellenadas en un dispositivo Clase B ficticio.
 
 ## 00 · Master
 
@@ -81,6 +81,13 @@ Brújula del DHF de {{PROJECT_NAME}}. El **[Master Map](./00_master/MASTER_MAP.m
 **Certificación**
 - [CERTIFICATION_HOWTO](./07_regulatory_and_compliance/CERTIFICATION_HOWTO.md) — cómo llegar a certificación para tu clase.
 - [ISO_13485_READINESS_PLAN](./07_regulatory_and_compliance/ISO_13485_READINESS_PLAN.md) — preparación del QMS hacia auditoría externa (gaps y checkpoints).
+
+**Cobertura cross-framework (mapeos a otros marcos regulatorios)**
+- [REGULATORY_FRAMEWORK_CROSSWALK](./07_regulatory_and_compliance/REGULATORY_FRAMEWORK_CROSSWALK.md) — matriz maestra: cada doc del DHF ↔ cláusula de IEC 62304 / ISO 14971 / ISO 13485 / EU MDR / FDA / IMDRF.
+- [FDA_SUBMISSION_MAPPING](./07_regulatory_and_compliance/FDA_SUBMISSION_MAPPING.md) — puente a FDA: vías 510(k)/De Novo/PMA, premarket content, ciberseguridad + SBOM, PCCP para IA/ML.
+- [EU_MDR_MAPPING](./07_regulatory_and_compliance/EU_MDR_MAPPING.md) — EU MDR 2017/745: clasificación Regla 11, GSPR (Anexo I), doc técnica (Anexos II/III), Notified Body.
+- [IMDRF_SAMD_FRAMEWORK](./07_regulatory_and_compliance/IMDRF_SAMD_FRAMEWORK.md) — categorización de riesgo SaMD (matriz N12) y correspondencia de ejes; GMLP si hay IA/ML.
+- [INFOSEC_READINESS_ISO27001_SOC2](./07_regulatory_and_compliance/INFOSEC_READINESS_ISO27001_SOC2.md) — readiness InfoSec: controles del kit ↔ ISO/IEC 27001:2022 Anexo A + SOC 2 TSC.
 
 ## 08 · Verificación y auditorías (IEC 62304 §5.7)
 

@@ -1,0 +1,65 @@
+# Construye el sitio de documentación (MkDocs Material) y lo publica en GitHub Pages.
+#
+#   · build con `mkdocs build --strict`: cualquier warning (enlace roto, página fuera
+#     del nav, anchor inexistente) ABORTA el deploy — mismo rigor de trazabilidad que
+#     el resto del CI (IEC 62304 §5.7: verificación demostrable antes de publicar).
+#   · publica con las actions oficiales de Pages (artifact + deploy-pages), sin tokens
+#     custom ni `gh-deploy` empujando a una rama.
+#
+# REQUISITO MANUAL (una sola vez): Settings → Pages → Build and deployment →
+# Source = "GitHub Actions". Sin eso, el job `deploy` falla al no encontrar Pages activo.
+
+name: Docs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - "mkdocs.yml"
+      - "requirements-docs.txt"
+      - ".github/workflows/docs.yml"
+  workflow_dispatch: {}
+
+# Permisos mínimos para desplegar a Pages vía OIDC (id-token) — nada de contents:write.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Una sola publicación a la vez; no cancelar un deploy a Pages a medias.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build del sitio (mkdocs build --strict)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Instalar dependencias del sitio
+        run: pip install -r requirements-docs.txt
+      - name: Build estricto (warnings = error)
+        run: mkdocs build --strict
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    name: Publicar en GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

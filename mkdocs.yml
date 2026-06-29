@@ -1,0 +1,173 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# MkDocs Material — sitio de documentación navegable del SaMD Starter Kit.
+#
+# Uso:
+#   pip install -r requirements-docs.txt
+#   mkdocs serve            # preview local en http://127.0.0.1:8000
+#   mkdocs build --strict   # build de CI: cualquier warning (link roto, página
+#                           # fuera del nav, anchor inexistente) ABORTA el build.
+#
+# ── Decisión de diseño: ¿cuál es la "home" del sitio? ────────────────────────
+# Los archivos de onboarding (README.md / GETTING_STARTED.md / ROADMAP.md) viven
+# en la RAÍZ del repo, fuera de `docs/`. MkDocs solo sirve lo que está bajo
+# `docs_dir`. Evaluamos las opciones y elegimos la MÁS ROBUSTA (sin plugins
+# frágiles, `mkdocs build --strict` en verde):
+#
+#   * NO usamos `docs_dir: .` (mezclaría todo el repo en el sitio).
+#   * NO creamos `docs/index.md`: `docs/README.md` YA es el índice navegable del
+#     DHF y, además, ~50 documentos lo enlazan como `[Índice del DHF](../README.md)`.
+#     MkDocs mapea TANTO `README.md` COMO `index.md` a la misma URL (`index.html`):
+#     tener ambos dispara `WARNING - Excluding 'README.md' ... conflicts with
+#     'index.md'`, que bajo `--strict` es ERROR, y romper `README.md` rompería esos
+#     ~50 enlaces entrantes. Por eso la HOME del sitio ES `docs/README.md`.
+#   * Para GETTING_STARTED y ROADMAP (raíz) creamos páginas-espejo cortas dentro
+#     de `docs/` (`getting-started.md`, `roadmap.md`) que resumen y enlazan al
+#     archivo canónico en GitHub. Sin plugins de include: enlaces absolutos =
+#     no rompen `--strict` y funcionan igual en GitHub y en el sitio.
+# ─────────────────────────────────────────────────────────────────────────────
+
+site_name: SaMD Starter Kit
+site_description: >-
+  A starter kit to build Software as a Medical Device (SaMD) with a team of AI
+  agents — the compliance ruleset, multi-agent workflows and a complete
+  regulatory Design History File (IEC 62304 + ISO 14971), ready to adapt.
+site_author: bryan-basg
+
+# Repo (habilita el botón "Edit this page" y el enlace al repositorio).
+repo_url: https://github.com/bryan-basg/samd-starter-kit
+repo_name: bryan-basg/samd-starter-kit
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  language: en
+  icon:
+    repo: fontawesome/brands/github
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.indexes
+    - navigation.tracking
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.action.edit
+  palette:
+    # Modo claro
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    # Modo oscuro
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+# Solo el plugin de búsqueda integrado: nada externo ni frágil. Los diagramas
+# Mermaid se renderizan vía pymdownx.superfences (custom_fences, abajo), que es
+# el soporte nativo de Material — no requiere mkdocs-mermaid2 ni Node.
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - tables
+  - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - toc:
+      permalink: true
+
+nav:
+  - Home: README.md
+  - Getting started: getting-started.md
+  - Roadmap: roadmap.md
+  - Master:
+      - Master Map: 00_master/MASTER_MAP.md
+  - Governance:
+      - Vision & Governance: 01_governance_and_strategy/VISION_AND_GOVERNANCE.md
+  - Architecture:
+      - Architecture Overview: 02_architecture_and_design/ARCHITECTURE_OVERVIEW.md
+      - Agent Team & SaMD Flow: 02_architecture_and_design/AGENT_TEAM_AND_FLOW.md
+  - Development Plan:
+      - Software Development Plan: 03_software_development_plan/SOFTWARE_DEVELOPMENT_PLAN.md
+      - Development Guide: 03_software_development_plan/DEVELOPMENT_GUIDE_COMPLETE.md
+      - Testing Strategy: 03_software_development_plan/COMPLETE_TESTING_STRATEGY.md
+      - Testing Tools: 03_software_development_plan/TESTING_TOOLS.md
+      - Audit Protocol: 03_software_development_plan/AUDIT_PROTOCOL.md
+  - User Docs:
+      - User Guide: 04_user_documentation/USER_GUIDE.md
+      - Release Notes Template: 04_user_documentation/RELEASE_NOTES_TEMPLATE.md
+  - Design Decisions:
+      - RFC Template: 05_design_decisions/RFC-TEMPLATE.md
+      - "RFC-001 · Encryption at rest": 05_design_decisions/RFC-001-encryption-at-rest.md
+      - "RFC-002 · Identity (JWT-only)": 05_design_decisions/RFC-002-identity-jwt-only.md
+      - "RFC-003 · External scheduler": 05_design_decisions/RFC-003-external-scheduler.md
+  - Operations:
+      - Deploy Runbook: 06_operations_and_runbooks/DEPLOY_RUNBOOK.md
+      - Incident Runbook: 06_operations_and_runbooks/INCIDENT_RUNBOOK.md
+      - Incident Postmortem Template: 06_operations_and_runbooks/INCIDENT_POSTMORTEM_TEMPLATE.md
+      - Incident Response Drill Report: 06_operations_and_runbooks/INCIDENT_RESPONSE_DRILL_REPORT.md
+  - Regulatory & Compliance:
+      - Risk & traceability:
+          - ISO 14971 Risk Matrix: 07_regulatory_and_compliance/ISO_14971_RISK_MATRIX.md
+          - SaMD Traceability Matrix: 07_regulatory_and_compliance/TRACEABILITY_MATRIX_SAMD.md
+          - Software Safety Classification: 07_regulatory_and_compliance/SOFTWARE_SAFETY_CLASSIFICATION.md
+          - Risk Control Traceability: 07_regulatory_and_compliance/RISK_CONTROL_TRACEABILITY.md
+          - Critical Modules Inventory: 07_regulatory_and_compliance/CRITICAL_MODULES_INVENTORY.md
+      - Lifecycle & maintenance:
+          - SOUP Inventory: 07_regulatory_and_compliance/SOUP_INVENTORY.md
+          - Software Maintenance Plan: 07_regulatory_and_compliance/SOFTWARE_MAINTENANCE_PLAN.md
+          - Software Configuration Management Plan: 07_regulatory_and_compliance/SOFTWARE_CONFIGURATION_MANAGEMENT_PLAN.md
+          - Software Problem Resolution Procedure: 07_regulatory_and_compliance/SOFTWARE_PROBLEM_RESOLUTION_PROCEDURE.md
+          - SBOM Management Plan: 07_regulatory_and_compliance/SBOM_MANAGEMENT_PLAN.md
+          - Regulatory Version Log: 07_regulatory_and_compliance/REGULATORY_VERSION_LOG.md
+      - Clinical evidence & post-market:
+          - Clinical Evaluation Plan: 07_regulatory_and_compliance/CLINICAL_EVALUATION_PLAN.md
+          - Clinical Validation Report: 07_regulatory_and_compliance/CLINICAL_VALIDATION_REPORT.md
+          - Post-Market Surveillance Plan: 07_regulatory_and_compliance/POST_MARKET_SURVEILLANCE_PLAN.md
+      - Labeling & instructions:
+          - Instructions For Use (IFU): 07_regulatory_and_compliance/INSTRUCTIONS_FOR_USE_IFU.md
+          - Medical Device Labeling: 07_regulatory_and_compliance/MEDICAL_DEVICE_LABELING.md
+      - Security & privacy:
+          - Compliance & Security Master: 07_regulatory_and_compliance/COMPLIANCE_AND_SECURITY_MASTER.md
+          - Privacy Policy: 07_regulatory_and_compliance/PRIVACY_POLICY.md
+          - Data Retention Policy: 07_regulatory_and_compliance/DATA_RETENTION_POLICY.md
+          - Data Flow Documentation: 07_regulatory_and_compliance/DATA_FLOW_DOCUMENTATION.md
+          - Incident Response Plan: 07_regulatory_and_compliance/INCIDENT_RESPONSE_PLAN.md
+          - Compliance Checklist: 07_regulatory_and_compliance/COMPLIANCE_CHECKLIST.md
+          - Breach Notification Template: 07_regulatory_and_compliance/BREACH_NOTIFICATION_TEMPLATE.md
+      - Certification:
+          - Certification How-To: 07_regulatory_and_compliance/CERTIFICATION_HOWTO.md
+          - ISO 13485 Readiness Plan: 07_regulatory_and_compliance/ISO_13485_READINESS_PLAN.md
+      - Cross-framework coverage:
+          - Regulatory Framework Crosswalk: 07_regulatory_and_compliance/REGULATORY_FRAMEWORK_CROSSWALK.md
+          - FDA Submission Mapping: 07_regulatory_and_compliance/FDA_SUBMISSION_MAPPING.md
+          - EU MDR Mapping: 07_regulatory_and_compliance/EU_MDR_MAPPING.md
+          - IMDRF SaMD Framework: 07_regulatory_and_compliance/IMDRF_SAMD_FRAMEWORK.md
+          - InfoSec Readiness (ISO 27001 / SOC 2): 07_regulatory_and_compliance/INFOSEC_READINESS_ISO27001_SOC2.md
+  - Verification & Audits:
+      - Technical Debt Summary: 08_verification_and_audits/TECHNICAL_DEBT_SUMMARY.md
+      - Technical Debt History: 08_verification_and_audits/TECHNICAL_DEBT_HISTORY.md
+  - Engineering Experience:
+      - Production Lessons: 09_engineering_experience/PRODUCTION_LESSONS.md
+      - Reference Architecture: 09_engineering_experience/REFERENCE_ARCHITECTURE.md
+      - Multi-Agent Engineering Method: 09_engineering_experience/MULTI_AGENT_ENGINEERING_METHOD.md

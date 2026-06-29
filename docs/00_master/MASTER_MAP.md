@@ -10,6 +10,7 @@
 | Uso previsto (Intended Use) | {{INTENDED_USE}} |
 | Clasificación SaMD | Clase {{SAMD_CLASS}} (IEC 62304 §4.3) |
 | Marco regulatorio | IEC 62304 + ISO 14971 + ISO 13485 + GDPR + HIPAA + WCAG 2.1 AA |
+| Mapeos cross-framework | EU MDR 2017/745 · FDA (21 CFR 820 + guías) · IMDRF SaMD · ISO/IEC 27001 + SOC 2 (ver [`REGULATORY_FRAMEWORK_CROSSWALK`](../07_regulatory_and_compliance/REGULATORY_FRAMEWORK_CROSSWALK.md)) |
 | Stack frontend | {{FRONTEND_STACK}} |
 | Stack backend | {{BACKEND_STACK}} |
 | Stack datos | {{DB_STACK}} |
@@ -31,12 +32,12 @@ flowchart TD
 |---|---|
 | `docs/00_master/` | Master Map, brújula documental. |
 | `docs/01_governance_and_strategy/` | Visión, gobernanza, estrategia. |
-| `docs/02_architecture_and_design/` | Arquitectura, diseño detallado, diagramas. |
+| `docs/02_architecture_and_design/` | Arquitectura, diseño detallado, diagramas. Incluye [`AGENT_TEAM_AND_FLOW`](../02_architecture_and_design/AGENT_TEAM_AND_FLOW.md) (equipo de 10 agentes por capa + flujo SaMD bajo la Regla 0). |
 | `docs/03_software_development_plan/` | Plan de desarrollo IEC 62304, estrategia de testing, guías. |
 | `docs/04_user_documentation/` | Guía de usuario (IFU), notas de versión — documentación de cara al usuario. |
 | `docs/05_design_decisions/` | RFCs (decisiones estructurales). |
 | `docs/06_operations_and_runbooks/` | Runbooks de operación, deploy, incidentes. |
-| `docs/07_regulatory_and_compliance/` | Matriz de riesgo ISO 14971, trazabilidad SaMD, validación clínica, IFU, post-market, SBOM, políticas. |
+| `docs/07_regulatory_and_compliance/` | Matriz de riesgo ISO 14971, trazabilidad SaMD, validación clínica, IFU, post-market, SBOM, políticas, mapeos cross-framework (FDA / EU MDR / IMDRF / ISO 27001 / SOC 2). |
 | `docs/08_verification_and_audits/` | Deuda técnica, historia de deuda, auditorías, reportes de verificación. |
 | `docs/09_engineering_experience/` | Lecciones de producción, arquitectura de referencia, método multi-agente (capa de experiencia). |
 

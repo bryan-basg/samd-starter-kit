@@ -1,0 +1,12 @@
+# Dependencias del sitio de documentación (MkDocs Material).
+#
+# Uso:
+#   pip install -r requirements-docs.txt
+#   mkdocs serve            # preview local en http://127.0.0.1:8000
+#   mkdocs build --strict   # build de CI (warnings = error)
+#
+# mkdocs-material arrastra transitivamente mkdocs, pymdown-extensions y pygments,
+# que son todo lo que el sitio necesita: la búsqueda y el render de Mermaid son
+# nativos de Material (pymdownx.superfences), sin plugins externos ni Node.
+# Pin por versión MAYOR para builds reproducibles sin congelar parches de seguridad.
+mkdocs-material>=9.7,<10

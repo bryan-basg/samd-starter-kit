@@ -13,6 +13,11 @@
 [![Maintained](https://img.shields.io/badge/maintained-yes-brightgreen.svg)](CHANGELOG.md)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
+[![CI](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/ci.yml)
+[![Security Audit](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/security-audit.yml/badge.svg)](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/security-audit.yml)
+[![API contract fuzzing](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/schemathesis.yml/badge.svg)](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/schemathesis.yml)
+[![OpenAPI contract drift](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/openapi-contract.yml/badge.svg)](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/openapi-contract.yml)
+
 **[English](README.md) · Español**
 
 [Arranque](#arranque-en-60-segundos) · [Guía de arranque](GETTING_STARTED.md) · [Los 10 agentes](#el-equipo-de-10-agentes) · [Design History File](docs/) · [Ejemplo trabajado](examples/auralog/) · [Contribuir](CONTRIBUTING.es.md)

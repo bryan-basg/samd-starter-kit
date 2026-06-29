@@ -7,6 +7,9 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 ## [Unreleased]
 
 ### Added
+- **`GETTING_STARTED.md`**: guía de arranque guiada (primer día) con árbol de decisión de clase A/B/C en Mermaid, los 4 documentos base en orden, el ciclo diario con los agentes y un mapa "leé por clase" para no ahogarse en las 40+ plantillas.
+- **`docs/04_user_documentation/`** (tapa el hueco de numeración 00–09): `USER_GUIDE.md` (manual de usuario final) y `RELEASE_NOTES_TEMPLATE.md`, enlazados en el índice del DHF — información de seguridad IEC 62366-1.
+- Diagrama "cómo encajan las piezas" (Mermaid) en ambos READMEs + enlace prominente a la guía de arranque.
 - Equipo de agentes ampliado a 10: `i18n-translations` (internacionalización) y `mobile-native` (capa nativa móvil).
 - Capa de experiencia de ingeniería (`docs/09_engineering_experience/`): lecciones de producción, arquitectura de referencia y método multi-agente "Mesa de Ingenieros".
 - Índice navegable del DHF (`docs/README.md`) con enlace a cada documento + pie de navegación en cada doc.
@@ -21,6 +24,7 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 - `CHANGELOG.md`.
 
 ### Changed
+- **`scripts/init_kit.sh`**: valida la clase de seguridad (A/B/C, normaliza mayúsculas; en `--yes` aborta si es inválida), muestra un ejemplo por campo en cada prompt e imprime los próximos pasos concretos según la clase elegida.
 - Normalizada la convención de relleno en las plantillas: el "completar después" usa `<...>`; `{{...}}` queda reservado para los 9 marcadores que rellena `init_kit.sh`.
 - READMEs sin emojis decorativos en los encabezados (look más sobrio para público regulatorio). Los marcadores de estado ✅/⚠️ del DHF se conservan.
 

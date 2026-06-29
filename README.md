@@ -15,7 +15,7 @@
 
 **English · [Español](README.es.md)**
 
-[Quickstart](#60-second-quickstart) · [The 10 agents](#the-10-agent-team) · [Design History File](docs/) · [Worked example](examples/auralog/) · [Contributing](CONTRIBUTING.md)
+[Quickstart](#60-second-quickstart) · [Getting started](GETTING_STARTED.md) · [The 10 agents](#the-10-agent-team) · [Design History File](docs/) · [Worked example](examples/auralog/) · [Contributing](CONTRIBUTING.md)
 
 </div>
 
@@ -34,7 +34,7 @@ rm -rf .git && git init        # start your own history
 bash scripts/init_kit.sh       # fill the {{...}} placeholders with your project
 ```
 
-Then classify your software (Class A/B/C) in `docs/07_regulatory_and_compliance/SOFTWARE_SAFETY_CLASSIFICATION.md` — it drives the rigor of everything else.
+**Then open [`GETTING_STARTED.md`](GETTING_STARTED.md)** — the guided path: classify your software (A/B/C), fill the four foundation documents in order, wire your stack, and learn the daily loop with the agent team. It tells you which of the 40+ documents actually apply to *your* class, so you don't drown in templates.
 
 ## Who is this for?
 
@@ -56,6 +56,27 @@ Then classify your software (Class A/B/C) in `docs/07_regulatory_and_compliance/
 | **Design History File** | `docs/` | 30+ regulatory & process templates: ISO 14971, SaMD traceability, IEC 62304 plan, safety classification, SOUP, clinical evaluation/validation, post-market, IFU, privacy, runbooks. |
 | **Working CI/CD** | `.github/workflows/` | `ci.yml`, `security-audit.yml` (Trivy+Semgrep), `nightly-mutation.yml` (Stryker). Reference stack: React+TS / Python+FastAPI. |
 | **Worked example** | `examples/auralog/` | A fictional Class B device (AuraLog) with its DHF filled in — see the kit in action. |
+
+## How the pieces fit together
+
+```mermaid
+flowchart TB
+    RULES["CLAUDE.md<br/>the ruleset · Rule 0"]
+    AGENTS[".claude/agents/<br/>10 layer specialists"]
+    WF[".claude/workflows/<br/>samd-review"]
+    CODE["app/ · frontend/ · tests/<br/>your application"]
+    DHF["docs/<br/>Design History File"]
+    CI[".github/workflows/<br/>CI gates"]
+    RULES --> AGENTS
+    AGENTS -->|build| CODE
+    AGENTS -->|record traceability| DHF
+    WF -->|adversarial review| CODE
+    CODE --> CI
+    DHF --> CI
+    style RULES fill:#0d9488,color:#fff
+```
+
+The ruleset configures the agents; the agents build your code **and** keep the DHF in sync; the review workflow and CI are the gates. New here? Start with **[`GETTING_STARTED.md`](GETTING_STARTED.md)**.
 
 ## The idea: compliance by design, not as a separate sprint
 

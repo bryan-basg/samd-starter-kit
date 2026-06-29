@@ -15,7 +15,7 @@
 
 **[English](README.md) · Español**
 
-[Arranque](#arranque-en-60-segundos) · [Qué hay adentro](#qué-hay-adentro) · [Design History File](docs/) · [Ejemplo trabajado](examples/auralog/) · [Contribuir](CONTRIBUTING.md)
+[Arranque](#arranque-en-60-segundos) · [Guía de arranque](GETTING_STARTED.md) · [Qué hay adentro](#qué-hay-adentro) · [Design History File](docs/) · [Ejemplo trabajado](examples/auralog/) · [Contribuir](CONTRIBUTING.md)
 
 </div>
 
@@ -34,7 +34,7 @@ rm -rf .git && git init        # arrancá tu propia historia
 bash scripts/init_kit.sh       # rellena los marcadores {{...}} con tu proyecto
 ```
 
-Después: clasificá tu software (Clase A/B/C) en `docs/07_regulatory_and_compliance/SOFTWARE_SAFETY_CLASSIFICATION.md` — eso define el rigor de todo lo demás.
+**Después abrí [`GETTING_STARTED.md`](GETTING_STARTED.md)** — el camino guiado: clasificá tu software (A/B/C), completá los cuatro documentos base en orden, conectá tu stack y aprendé el ciclo diario con el equipo de agentes. Te dice cuáles de los 40+ documentos aplican a *tu* clase, para que no te ahogues en plantillas.
 
 ## ¿Para quién es?
 
@@ -56,6 +56,27 @@ Después: clasificá tu software (Clase A/B/C) en `docs/07_regulatory_and_compli
 | **Design History File** | `docs/` | 30+ plantillas regulatorias y de proceso: ISO 14971, trazabilidad SaMD, plan IEC 62304, clasificación, SOUP, evaluación/validación clínica, post-market, IFU, privacidad, runbooks. |
 | **CI/CD funcional** | `.github/workflows/` | `ci.yml`, `security-audit.yml` (Trivy+Semgrep), `nightly-mutation.yml` (Stryker). Stack de referencia React+TS / Python+FastAPI. |
 | **Ejemplo trabajado** | `examples/auralog/` | Un dispositivo Clase B ficticio (AuraLog) con su DHF rellenado — el kit en acción. |
+
+## Cómo encajan las piezas
+
+```mermaid
+flowchart TB
+    RULES["CLAUDE.md<br/>el reglamento · Regla 0"]
+    AGENTS[".claude/agents/<br/>10 especialistas por capa"]
+    WF[".claude/workflows/<br/>samd-review"]
+    CODE["app/ · frontend/ · tests/<br/>tu aplicación"]
+    DHF["docs/<br/>Design History File"]
+    CI[".github/workflows/<br/>controles de CI"]
+    RULES --> AGENTS
+    AGENTS -->|construyen| CODE
+    AGENTS -->|registran trazabilidad| DHF
+    WF -->|revisión adversarial| CODE
+    CODE --> CI
+    DHF --> CI
+    style RULES fill:#0d9488,color:#fff
+```
+
+El reglamento configura a los agentes; los agentes construyen tu código **y** mantienen el DHF sincronizado; el workflow de revisión y el CI son los controles. ¿Recién llegás? Empezá por **[`GETTING_STARTED.md`](GETTING_STARTED.md)**.
 
 ## La idea: cumplimiento por diseño, no como sprint aparte
 

@@ -22,6 +22,11 @@ Brújula del DHF de {{PROJECT_NAME}}. El **[Master Map](./00_master/MASTER_MAP.m
 - [TESTING_TOOLS](./03_software_development_plan/TESTING_TOOLS.md) — guía maestra del stack de testing (qué herramienta, cuándo, comandos).
 - [AUDIT_PROTOCOL](./03_software_development_plan/AUDIT_PROTOCOL.md) — protocolo de auditoría interna de changesets/fases.
 
+## 04 · Documentación de usuario (IEC 62366-1 · información de seguridad)
+
+- [USER_GUIDE](./04_user_documentation/USER_GUIDE.md) — manual de usuario final: qué hace y qué NO hace el producto, tareas paso a paso, alertas y qué hacer ante ellas.
+- [RELEASE_NOTES_TEMPLATE](./04_user_documentation/RELEASE_NOTES_TEMPLATE.md) — notas de versión de cara al usuario + verificación de impacto regulatorio del release.
+
 ## 05 · Decisiones de diseño (RFCs)
 
 - [RFC-TEMPLATE](./05_design_decisions/RFC-TEMPLATE.md) — plantilla para proponer una decisión estructural.

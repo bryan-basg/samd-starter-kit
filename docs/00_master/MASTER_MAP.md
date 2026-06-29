@@ -33,6 +33,7 @@ flowchart TD
 | `docs/01_governance_and_strategy/` | Visión, gobernanza, estrategia. |
 | `docs/02_architecture_and_design/` | Arquitectura, diseño detallado, diagramas. |
 | `docs/03_software_development_plan/` | Plan de desarrollo IEC 62304, estrategia de testing, guías. |
+| `docs/04_user_documentation/` | Guía de usuario (IFU), notas de versión — documentación de cara al usuario. |
 | `docs/05_design_decisions/` | RFCs (decisiones estructurales). |
 | `docs/06_operations_and_runbooks/` | Runbooks de operación, deploy, incidentes. |
 | `docs/07_regulatory_and_compliance/` | Matriz de riesgo ISO 14971, trazabilidad SaMD, validación clínica, IFU, post-market, SBOM, políticas. |

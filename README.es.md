@@ -15,7 +15,7 @@
 
 **[English](README.md) · Español**
 
-[Arranque](#arranque-en-60-segundos) · [Guía de arranque](GETTING_STARTED.md) · [Qué hay adentro](#qué-hay-adentro) · [Design History File](docs/) · [Ejemplo trabajado](examples/auralog/) · [Contribuir](CONTRIBUTING.md)
+[Arranque](#arranque-en-60-segundos) · [Guía de arranque](GETTING_STARTED.md) · [Los 10 agentes](#el-equipo-de-10-agentes) · [Design History File](docs/) · [Ejemplo trabajado](examples/auralog/) · [Contribuir](CONTRIBUTING.es.md)
 
 </div>
 
@@ -30,8 +30,8 @@ Este repositorio NO es una aplicación. Es el **andamiaje y la metodología** pa
 ```bash
 git clone https://github.com/bryan-basg/samd-starter-kit mi-dispositivo-medico
 cd mi-dispositivo-medico
-rm -rf .git && git init        # arrancá tu propia historia
-bash scripts/init_kit.sh       # rellena los marcadores {{...}} con tu proyecto
+rm -rf .git && git init -b main   # arrancá tu propia historia
+bash scripts/init_kit.sh       # interactivo y re-ejecutable: rellena los marcadores {{...}}
 ```
 
 **Después abrí [`GETTING_STARTED.md`](GETTING_STARTED.md)** — el camino guiado: clasificá tu software (A/B/C), completá los cuatro documentos base en orden, conectá tu stack y aprendé el ciclo diario con el equipo de agentes. Te dice cuáles de los 40+ documentos aplican a *tu* clase, para que no te ahogues en plantillas.
@@ -88,6 +88,21 @@ La regla central es la **Regla 0**: *toda decisión técnica se subordina al cum
 3. **Fail-safe explícito** (ISO 14971): cuando algo falla, degrada de forma segura y predecible — nunca en silencio.
 4. **Análisis de impacto antes de fixear** (§5.6): un bug se arregla tras revisar TODOS los consumidores del símbolo.
 
+## El equipo de 10 agentes
+
+| Agente | Capa | Usalo para |
+|---|---|---|
+| `backend` | API + lógica | Routers, services, schemas, auth, auditoría, fusibles de resiliencia, tests. |
+| `frontend` | UI + cliente | Componentes, hooks, DAOs, sync offline-first, tests de UI, mutation, neuro-UX. |
+| `db-architect` | Datos | Schemas, migraciones, pool de conexiones, cifrado en reposo, reglas de acceso. |
+| `cloud-ops` | Plataforma | Cómputo, BD gestionada, scheduler, gestor de secretos, hosting, CI/CD, deploys. |
+| `qa-mutation` | Testing | Olas de mutation testing, killers de mutantes, configs scoped, ratchet de score. |
+| `security-samd` | Seguridad | SAST (Trivy+Semgrep+fuzz), cifrado, gestión de claves, JWT-only, auditoría. |
+| `samd-audit-trace` | Regulatorio (audita) | Audita un changeset contra IEC 62304 §5.1/§5.7 + ISO 14971. Reporta gaps. |
+| `docs-dhf` | Regulatorio (escribe) | Materializa updates del DHF: Master Map, matriz de riesgo, trazabilidad, RFCs. |
+| `i18n-translations` | i18n | Locales en todos los idiomas, paridad de claves, anti "copiado sin traducir", glosario clínico pre-certificación. |
+| `mobile-native` | Móvil | Empaquetar el cliente web como app nativa (Capacitor/RN/equiv.), plugins/auth/persistencia nativos, push, build/firma/distribución. |
+
 ## Reglas duras que el kit hace cumplir
 
 - Nadie commitea ni pushea sin OK explícito del dueño.
@@ -120,7 +135,7 @@ Mantenido por [@bryan-basg](https://github.com/bryan-basg). Si te ahorra aprende
 
 ## Contribuir
 
-Ver [CONTRIBUTING.md](CONTRIBUTING.md). Reportes de seguridad: en privado, ver [SECURITY.md](.github/SECURITY.md).
+Ver [CONTRIBUTING.es.md](CONTRIBUTING.es.md). Reportes de seguridad: en privado, ver [SECURITY.md](.github/SECURITY.md).
 
 ## Licencia
 

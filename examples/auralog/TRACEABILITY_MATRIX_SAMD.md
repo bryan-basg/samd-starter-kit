@@ -22,7 +22,7 @@ Necesidad clínica  →  REQ (requisito)  →  Diseño (archivo:línea)  →  Ve
 | REQ-SYNC-01 | Todo registro de síntoma pasa por outbox idempotente; no se borra del cliente hasta confirmar persistencia en el servidor | Offline-first / R004 | `app/services/sync_service.py:210` | `test_sync_outbox_retains_until_confirmed` | ✓ |
 | REQ-SEC-01 | Cifrado en reposo de PII/PHI (AES-256-GCM) y redacción de PHI en logs | GDPR Art.32 / HIPAA / R005 | `app/models/types.py:33` | `test_encrypted_string_roundtrip` | ✓ |
 | REQ-SEC-02 | Identidad solo del token (JWT-only); nunca `user_id` desde body/query; verificación de propiedad por registro | R-SEC / escalada / R006 | `app/dependencies.py:57` | `test_idor_cannot_read_other_patient_logs` | ✓ |
-| REQ-UX-01 | Fail-safe empático: ningún fallo del backend expone tracebacks al paciente; mensaje claro y sin jerga técnica | ISO 14971 / IEC 62304 §5.4 | `app/middleware/error_handler.py:40` | `test_error_handler_no_traceback_to_client` | ✓ |
+| REQ-UX-01 | Fail-safe empático: ningún fallo del backend expone tracebacks al paciente; mensaje claro y sin jerga técnica | IEC 62304 §5.4 / R007 | `app/middleware/error_handler.py:40` | `test_error_handler_no_traceback_to_client` | ✓ |
 
 ## Categorías de requisitos sugeridas
 

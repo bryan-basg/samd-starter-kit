@@ -52,7 +52,7 @@ El motor fija el conteo de tests en el dry-run inicial. Tests creados DESPUÉS n
 3. **Literal inicial de `useState` sobrescrito por effect** → renderizar sin ejecutar effects (SSR `renderToString`).
 4. **StringLiteral DEFAULTS en `t(key, "Default")` i18n** → mockear `t` como spy y asertar el default.
 5. **Backend `hasattr`/duck-typing** → mock con whitelist explícita de atributos.
-6. **WebSockets** → doble (`FakeWebSocket`) sobre el orquestador, no cliente síncrono.
+6. **WebSockets** → doble propio (p. ej. `FakeWebSocket`) sobre el orquestador, no cliente síncrono.
 
 ### Mutation tests son load-bearing
 

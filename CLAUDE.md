@@ -9,6 +9,8 @@
 
 ## REGLA 0 — CUMPLIMIENTO SaMD ES LA PRIORIDAD ABSOLUTA
 
+**Uso previsto (Intended Use):** {{INTENDED_USE}} — esta declaración es la que fija la clasificación SaMD y el alcance de lo que el software puede (y NO puede) afirmar.
+
 Este software está bajo regulación **SaMD (Software as a Medical Device) Clase {{SAMD_CLASS}}** según **IEC 62304** + **ISO 14971** + **WCAG 2.1 AA** + **GDPR/HIPAA**.
 
 **TODA decisión técnica se subordina a SaMD.** Cuando una regla operativa parezca en conflicto con la conveniencia del desarrollador, el cumplimiento SaMD GANA siempre.
@@ -161,9 +163,9 @@ cd frontend && npm run test
 
 # Backend tests y tipos  ({{BACKEND_STACK}})
 # (activá el entorno virtual / toolchain correspondiente)
-npm run backend:test
-npm run backend:cov          # cobertura canónica
-# <type-checker estricto>
+pytest -q                                  # suite (esqueleto de referencia: Python/pytest)
+pytest --cov=app --cov-report=term-missing # cobertura canónica
+mypy .                                     # type-checker estricto
 
 # CI local pre-push
 bash scripts/run_local_ci.sh

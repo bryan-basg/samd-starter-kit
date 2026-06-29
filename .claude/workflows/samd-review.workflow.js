@@ -1,3 +1,6 @@
+// Las primitivas globales `agent()`, `pipeline()`, `parallel()`, `log()` y `phase()`
+// las inyecta la herramienta Workflow de Claude Code en tiempo de ejecución — NO se importan.
+// Este archivo no se ejecuta como Node standalone; corre dentro del runner de Workflow.
 export const meta = {
   name: 'samd-review',
   description: 'Revisión SaMD del diff de la rama: dimensiones de riesgo en paralelo + verificación adversarial de cada hallazgo',

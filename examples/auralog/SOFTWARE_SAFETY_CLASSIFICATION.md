@@ -100,7 +100,7 @@ Medidas que **no** residen en el software y que reducen el riesgo antes de la cl
 
 ## 7. Conclusión de la clasificación
 
-El sistema **AuraLog** se clasifica globalmente como **Clase B** bajo IEC 62304 §4.3: su fallo puede contribuir a una situación peligrosa (retraso de la consulta clínica por una alerta perdida o tardía) cuyo daño es no grave y reversible. Los ítems segregados `gamification` y `analytics_dashboard` conservan la **Clase A** por la independencia justificada en la sección 5. Las actividades del ciclo de vida aplicables a Clase B se definen en el Plan de Desarrollo de Software (`../03_software_development_plan/SOFTWARE_DEVELOPMENT_PLAN.md` §4, ejemplo).
+El sistema **AuraLog** se clasifica globalmente como **Clase B** bajo IEC 62304 §4.3: su fallo puede contribuir a una situación peligrosa (retraso de la consulta clínica por una alerta perdida o tardía) cuyo daño es no grave y reversible. Los ítems segregados `gamification` y `analytics_dashboard` conservan la **Clase A** por la independencia justificada en la sección 5. Las actividades del ciclo de vida aplicables a Clase B se definen en el Plan de Desarrollo de Software ([`docs/03_software_development_plan/SOFTWARE_DEVELOPMENT_PLAN.md`](../../docs/03_software_development_plan/SOFTWARE_DEVELOPMENT_PLAN.md) §4, plantilla del kit).
 
 ---
 

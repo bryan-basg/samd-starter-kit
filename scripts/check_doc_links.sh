@@ -13,10 +13,10 @@ while IFS= read -r line; do
     resolved=$(realpath -q --no-symlinks "$(dirname "$src")/$clean" 2>/dev/null)
     [ ! -f "$resolved" ] && { echo "BROKEN: $src -> $L"; broken=$((broken+1)); }
   done
-done < <(grep -rEn "\(\.{1,2}/[^)]+\.md[^)]*\)" docs/ 2>/dev/null)
+done < <(grep -rEn "\(\.{1,2}/[^)]+\.md[^)]*\)" docs/ examples/ ./*.md 2>/dev/null)
 
 if [ "$broken" -gt 0 ]; then
-  echo "FALLO: $broken enlaces cross-doc rotos en docs/"
+  echo "FALLO: $broken enlaces cross-doc rotos (docs/ + examples/ + raíz)"
   exit 1
 fi
 echo "OK: 0 enlaces cross-doc rotos"

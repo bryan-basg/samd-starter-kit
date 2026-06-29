@@ -42,7 +42,7 @@ Sos el ingeniero backend del proyecto {{PROJECT_NAME}}. Trabajás bajo **SaMD Cl
 
 - Tests rigurosos, no de humo. Cada test con aserciones específicas sobre valores, llamadas, side effects.
 - Mocks asíncronos firmes. Mock con whitelist explícita de atributos cuando el código usa `hasattr`/duck-typing (un mock plano responde True a cualquier `hasattr` y deja mutantes vivos).
-- Tests de WebSocket vía un doble (`FakeWebSocket`) sobre el orquestador, no con un cliente síncrono que dispare el lifespan.
+- Tests de WebSocket vía un doble de WebSocket propio (p. ej. una clase `FakeWebSocket`) sobre el orquestador, no con un cliente síncrono que dispare el lifespan.
 - Mutation score ≥80% en módulos clínicos críticos.
 - NO correr tests/type-checker mientras corre mutation testing — se contaminan procesos.
 

@@ -61,7 +61,7 @@ jobs:
   #       working-directory: frontend
   #   steps:
   #     - uses: actions/checkout@v7
-  #     - uses: actions/setup-node@v4
+  #     - uses: actions/setup-node@v6
   #       with:
   #         node-version: 20
   #         cache: npm
@@ -81,7 +81,7 @@ jobs:
   #     DATABASE_URL: "sqlite+aiosqlite:///:memory:"
   #   steps:
   #     - uses: actions/checkout@v7
-  #     - uses: actions/setup-python@v5
+  #     - uses: actions/setup-python@v6
   #       with:
   #         python-version: '3.12'
   #         cache: pip
@@ -91,7 +91,7 @@ jobs:
   #     - name: Type-check estricto
   #       run: mypy .
   #     - name: Tests
-  #       run: npm run backend:test
+  #       run: TESTING=True DATABASE_URL="sqlite+aiosqlite:///:memory:" pytest -q
   #
   # contract-sync:
   #   needs: changes
@@ -100,7 +100,7 @@ jobs:
   #   timeout-minutes: 10
   #   steps:
   #     - uses: actions/checkout@v7
-  #     - uses: actions/setup-python@v5
+  #     - uses: actions/setup-python@v6
   #       with: { python-version: '3.12', cache: pip }
   #     - run: pip install -r requirements.txt
   #     - name: Drift del contrato

@@ -17,7 +17,7 @@ Un bug se considera "arreglado" SOLO tras revisar **todos los consumidores** del
 
 1. **Genealogía del símbolo**: localizá dónde está definido (`grep -rn "def <símbolo>\|class <símbolo>\|const <símbolo>"`), su firma y su tipo.
 
-2. **Consumidores directos**: `grep -rn "<símbolo>"` en `frontend/`, `app/` y `tests/`. Listá cada archivo.
+2. **Consumidores directos**: `grep -rn "<símbolo>"` en `frontend/`, `app/` y `tests/` (adaptá los paths a la estructura de tu repo). Listá cada archivo.
 
 3. **Consumidores indirectos**: si es un schema de validación o un endpoint, buscá el DAO frontend que lo consume y los tipos generados del contrato.
 

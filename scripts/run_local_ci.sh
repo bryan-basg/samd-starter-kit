@@ -24,10 +24,10 @@ if command -v ruff >/dev/null 2>&1; then ruff check app/ --select F401,F841,F811
 if command -v mypy >/dev/null 2>&1; then mypy .; fi
 
 echo "[CI] 4/5 Backend: tests (activá el entorno virtual antes)"
-if [ -f package.json ] && grep -q '"backend:test"' package.json 2>/dev/null; then
-  TESTING=True DATABASE_URL="sqlite+aiosqlite:///:memory:" npm run backend:test
+if command -v pytest >/dev/null 2>&1 && [ -d tests ]; then
+  TESTING=True DATABASE_URL="sqlite+aiosqlite:///:memory:" pytest -q
 else
-  echo "  (sin script backend:test — omitido)"
+  echo "  (sin pytest o sin carpeta tests/ — omitido)"
 fi
 
 echo "[CI] 5/5 Trazabilidad documental (enlaces cross-doc — obligatorio)"

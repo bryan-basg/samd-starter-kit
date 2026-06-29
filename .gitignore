@@ -19,11 +19,17 @@ dist/
 build/
 *.apk
 
-# Reportes de testing / mutation
+# Reportes de testing / mutation / DAST
 frontend/reports/
+reports/
 coverage/
+.coverage
+.coverage.*
 .stryker-tmp/
 .mutmut-cache
+
+# Secretos locales para `act` (run_act.sh) — NUNCA al repo
+.secrets
 
 # IDE / SO
 .DS_Store

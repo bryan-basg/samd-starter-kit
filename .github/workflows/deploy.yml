@@ -1,0 +1,101 @@
+name: Deploy
+
+# PLANTILLA de deploy SaMD. Codifica el patrón del DEPLOY_RUNBOOK
+# (docs/06_operations_and_runbooks/DEPLOY_RUNBOOK.md):
+#   · migrar-antes-de-publicar · abortar el deploy si la migración falla
+#   · secretos desde el gestor de secretos / Secrets de GitHub (NUNCA del repo)
+#   · verificar la revisión REAL aplicada (no confiar solo en el "verde")
+#
+# NO es ejecutable tal cual: los pasos de deploy real son placeholders `<...>`.
+# Adaptá a tu nube ({{CLOUD_STACK}}) y base ({{DB_STACK}}), y ACTIVÁ poniendo la
+# variable de repo DEPLOY_ENABLED=true (Settings → Secrets and variables → Variables).
+# Mientras esté en false, los jobs se saltean (la plantilla no rompe el CI).
+#
+# Runner: GitHub-hosted a propósito — las credenciales de nube NUNCA deben tocar
+# un runner self-hosted propio.
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - "app/**"
+      - "frontend/**"
+  workflow_dispatch: {}
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false # NO cancelar un deploy a medias
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    outputs:
+      enabled: ${{ steps.c.outputs.enabled }}
+    steps:
+      - id: c
+        run: |
+          if [ "${{ vars.DEPLOY_ENABLED }}" = "true" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "DEPLOY_ENABLED != true → plantilla en modo no-op. Poné la variable para activar."
+          fi
+
+  # ── 1. Migración: corre y ESPERA el resultado. Si falla, aborta el deploy. ──
+  migrate:
+    needs: guard
+    if: needs.guard.outputs.enabled == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: production # protegé con required reviewers en Settings → Environments
+    steps:
+      - uses: actions/checkout@v7
+      # - name: Autenticar contra la nube
+      #   run: <auth con ${{ secrets.CLOUD_CREDENTIALS }}>   # desde Secrets, nunca del repo
+      - name: Migrar la BD (atómico — abortar si falla)
+        run: |
+          echo "Patrón: correr migraciones y ESPERAR el resultado (--wait)."
+          echo "Si fallan → este step falla → el deploy se ABORTA y prod queda en la versión previa."
+          # <comando-de-migración>      # ej. job que corre `alembic upgrade <target>` y espera
+          # Verificá la revisión REAL aplicada (no confíes solo en el verde del job):
+          # <comando-ver-revision>       # ej. `alembic current` vía proxy a la BD de prod
+
+  # ── 2. Backend: solo se publica si la migración pasó. ──
+  deploy-backend:
+    needs: migrate
+    if: needs.guard.outputs.enabled == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: production
+    steps:
+      - uses: actions/checkout@v7
+      - name: Publicar backend
+        run: |
+          echo "El runtime arranca con migraciones DESHABILITADAS (las corrió el job 'migrate')."
+          # CUIDADO: comandos que REEMPLAZAN toda la lista de env vars (en vez de
+          # merge) borran variables existentes. Usá la variante update/merge.
+          # <comando-deploy-backend>     # las env de prod vienen del gestor de secretos
+      - name: Healthcheck post-deploy
+        run: |
+          echo "Verificar /health OK antes de dar el deploy por bueno."
+          # curl -fsS "<URL>/health"
+
+  # ── 3. Frontend: build + publicar al hosting estático. ──
+  deploy-frontend:
+    needs: guard
+    if: needs.guard.outputs.enabled == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: production
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "20"
+      - name: Build + publicar frontend
+        run: |
+          cd frontend && npm ci && npm run build
+          # <comando-deploy-frontend>    # publicar el build a tu hosting estático

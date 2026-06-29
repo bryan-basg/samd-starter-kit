@@ -1,0 +1,53 @@
+name: Project State Audit
+
+# "Foto del estado" periódica: barre los rincones donde el trabajo terminado y la
+# deuda se esconden (ramas sin mergear, ramas solo-en-disco, stashes, worktrees,
+# cambios sin commitear, deuda abierta del DHF, enlaces cross-doc rotos) y publica
+# el resultado en un Issue para no perder el desfase entre "lo que creemos hecho"
+# y "lo que está en la rama principal". Read-only: NO muta el repo ni borra nada.
+# Corre el script ya versionado en el repo: scripts/audit_project_state.sh.
+
+on:
+  schedule:
+    - cron: "0 7 * * 1" # lunes 07:00 UTC
+  workflow_dispatch: {}
+
+concurrency:
+  group: project-state-audit
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # historia completa para `git branch --no-merged`
+
+      - name: Correr la foto del estado
+        run: bash scripts/audit_project_state.sh | tee state-audit.txt
+
+      - name: Publicar/actualizar el Issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TITLE="🔎 Project State Audit"
+          {
+            echo "Foto automática del estado del repo (read-only)."
+            echo
+            echo '```'
+            cat state-audit.txt
+            echo '```'
+          } > issue-body.md
+          NUM=$(gh issue list --state open --search "$TITLE in:title" \
+                --json number,title --jq ".[] | select(.title==\"$TITLE\") | .number" | head -1)
+          if [ -n "$NUM" ]; then
+            gh issue comment "$NUM" --body-file issue-body.md
+          else
+            gh issue create --title "$TITLE" --body-file issue-body.md
+          fi

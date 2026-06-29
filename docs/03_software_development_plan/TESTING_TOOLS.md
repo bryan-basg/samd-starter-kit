@@ -26,14 +26,14 @@ Idioma de trabajo del equipo: {{CHAT_LANG}}.
 |---|---|---|---|
 | **Unit — frontend** (Vitest) | Lógica de componentes/hooks/servicios con aserciones específicas (no humo). | En cada cambio de frontend; gate de PR. | `npm test` |
 | **Unit — backend** (pytest) | Routers, services, reglas de negocio, fail-safe; async en `asyncio_mode = auto`. | En cada cambio de backend; gate de PR. | `pytest -ra` |
-| **Coverage — backend** (coverage.py) | Cobertura de líneas/ramas; gate ≥95% global. Reproducible, en paralelo. | Gate de PR backend; nightly. | `coverage erase && pytest -n auto --cov --cov-report= && coverage combine && coverage report --fail-under=95` |
+| **Coverage — backend** (coverage.py) | Cobertura de líneas/ramas; gate ≥95% global (+ piso por capa datos/SQL). Reproducible, en paralelo. | Gate de PR backend; nightly. | `bash scripts/check_coverage.sh` |
 | **Mutation — frontend** (Stryker) | Que los tests *maten* mutantes (no solo cubran líneas); gate `break ~90`. | Nightly/semanal incremental; full periódico. Nunca en paralelo con agentes que escriben tests. | `npx stryker run` |
-| **Mutation — backend** (mutmut) | Igual que Stryker, en Python; gate de score por env var. | Nightly/semanal incremental. | `mutmut run` y luego `python scripts/check_mutmut_score.py` |
-| **DB tier** (pytest @ Postgres + pgvector) | Comportamiento real del motor (asyncpg, pgvector, defaults SQL) que SQLite oculta. | Al tocar `app/models`/migraciones; cron 3×/sem; `workflow_dispatch`. | `pytest -m postgres` (ver `.github/workflows/db-tier.yml`) |
-| **SAST** (analizador estático de seguridad) | Vulnerabilidades en código Python+TS, secretos hardcodeados, patrones inseguros. | Nightly; gate de PR sobre archivos tocados. | `<comando SAST>` |
-| **DAST** (escáner dinámico, p. ej. OWASP ZAP) | Superficie HTTP en runtime: headers, auth, inyección, exposición. | Nightly contra entorno efímero. | `<comando DAST>` |
-| **Fuzz de API** (schemathesis contra OpenAPI) | Que cada endpoint respete su contrato OpenAPI bajo entradas adversariales. | Al cambiar el esquema/API; nightly. | `<comando fuzz>` |
-| **SCA / deps** (escáner de CVEs) | CVEs en dependencias y capas de imagen Docker. | Nightly; gate de PR sobre lockfiles. | `<comando SCA>` |
+| **Mutation — backend** (mutmut) | Igual que Stryker, en Python; gate de score por env var. | Nightly/semanal incremental. | `bash scripts/run_mutmut.sh` |
+| **DB tier** (pytest @ Postgres + pgvector) | Comportamiento real del motor (asyncpg, pgvector, defaults SQL) que SQLite oculta. | Al tocar `app/models`/migraciones; cron 3×/sem; `workflow_dispatch`. | `bash scripts/run_pytest_postgres.sh` (o `.github/workflows/db-tier.yml`) |
+| **SAST** (analizador estático de seguridad) | Vulnerabilidades en código Python+TS, secretos hardcodeados, patrones inseguros. | Nightly; gate de PR sobre archivos tocados. | `bash scripts/run_semgrep.sh` |
+| **DAST** (escáner dinámico, OWASP ZAP) | Superficie HTTP en runtime: headers, auth, inyección, exposición. | Nightly contra entorno efímero. | `bash scripts/run_zap_dast.sh` |
+| **Fuzz de API** (schemathesis contra OpenAPI) | Que cada endpoint respete su contrato OpenAPI bajo entradas adversariales. | Al cambiar el esquema/API; nightly. | `bash scripts/run_schemathesis.sh` |
+| **SCA / deps** (escáner de CVEs) | CVEs en dependencias y capas de imagen Docker. | Nightly; gate de PR sobre lockfiles. | `bash scripts/run_trivy.sh` |
 | **E2E** (navegador headless) | Flujos críticos de usuario de punta a punta en un navegador real. | Pre-release; nightly. | `<comando e2e>` |
 | **Flaky check** (este kit) | Tests cuyo resultado verde↔rojo cambia entre corridas sin tocar código. | Cuando se sospecha inestabilidad; antes de cerrar una suite. | `FLAKY_RUNS=10 TEST_CMD="pytest -q" scripts/run_flaky_check.sh` |
 
@@ -76,8 +76,13 @@ Estas reglas no son negociables; son consecuencia directa de IEC 62304 §5.7.
 ## 3. Archivos del paquete de testing en este kit
 
 - `frontend/stryker.conf.json` — config de mutación frontend.
-- `scripts/check_mutmut_score.py` — gate de CI para el score de mutación backend.
+- `scripts/check_coverage.sh` — cobertura canónica con doble piso (global + capa datos/SQL).
+- `scripts/run_mutmut.sh` + `scripts/check_mutmut_score.py` — mutación backend + gate de score.
+- `scripts/run_pytest_postgres.sh` — suite contra Postgres real (self-contained, docker).
+- `scripts/run_zap_dast.sh` — DAST (OWASP ZAP) contra la app corriendo.
+- `scripts/check_translations.py` — auditor i18n (paridad de claves + "copiado sin traducir").
 - `scripts/run_flaky_check.sh` — cazador de tests inestables.
+- `scripts/run_act.sh` — corre los workflows de Actions localmente (nektos/act).
 - `pytest.ini` — config de pytest + nota de cobertura reproducible.
 - `.coveragerc` — config de cobertura en paralelo (greenlet+thread).
 - `.github/workflows/db-tier.yml` — suite contra Postgres real + pgvector.

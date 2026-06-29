@@ -1,0 +1,37 @@
+name: Stale PRs
+
+# Cierra PRs sin actividad (stale a los 21 días, close 7 días después). Housekeeping
+# de bajo costo. Solo PRs: los issues se ignoran para no presionar el backlog.
+#
+# Nota de permisos: actions/stale lista issues + PRs por la misma API, así que
+# necesita `issues: write` además de `pull-requests: write` aunque solo cierre PRs
+# (de lo contrario falla con "Resource not accessible by integration").
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # lunes 06:00 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/stale@v9
+        with:
+          days-before-pr-stale: 21
+          days-before-pr-close: 7
+          stale-pr-label: stale
+          stale-pr-message: >
+            Este PR lleva 21 días sin actividad y se marcó como stale. Comentá o
+            actualizalo para mantenerlo abierto; si no, se cerrará en 7 días.
+          close-pr-message: >
+            Cerrado por inactividad. Reabrilo cuando quieras retomarlo.
+          days-before-issue-stale: -1 # nunca tocar issues
+          days-before-issue-close: -1
+          ascending: true # procesar primero los más viejos

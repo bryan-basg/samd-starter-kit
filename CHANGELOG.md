@@ -7,6 +7,8 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 ## [Unreleased]
 
 ### Added
+- **Workflows extraídos** (generalizados, sin marca/secretos): `project-state-audit.yml` (foto semanal del estado → Issue, envuelve `audit_project_state.sh`), `openapi-contract.yml` (gate de drift del contrato, envuelve `verify_openapi_sync.py`; se saltea solo sin backend/contrato), `stale.yml` (cierra PRs abandonados), y `deploy.yml` (PLANTILLA de deploy SaMD: migrar-antes-de-publicar + abortar-si-falla + secretos desde el gestor; no-op hasta `DEPLOY_ENABLED=true`).
+- **Scripts extraídos** (generalizados, parametrizados por env): `check_translations.py` (auditor i18n — paridad + "copiado sin traducir"; lo referencia el agente i18n y antes no existía), `check_coverage.sh` (cobertura canónica con doble piso global + capa datos/SQL), `run_pytest_postgres.sh` (suite contra Postgres real, self-contained con docker), `run_zap_dast.sh` (DAST OWASP ZAP), `run_mutmut.sh` (mutación backend + gate), `run_act.sh` (correr Actions localmente).
 - **Esqueleto ejecutable** en `app/` (FastAPI) + `frontend/` (Vite + React + TS) + `tests/`: slice mínimo que cablea las reglas duras en código real — identidad solo del token (JWT), cifrado AES-256-GCM en reposo, aislamiento por dueño, fail-safe 503 + Retry-After, handler global sin traceback, UI plana/accesible con `prefers-reduced-motion`. Corre sin infra (store en memoria). Verificado: `pytest` 8/8 + mypy estricto + ruff; `vitest` 5/5 + build de producción. `requirements.txt` / `requirements-dev.txt` añadidos.
 - **`GETTING_STARTED.md`**: guía de arranque guiada (primer día) con árbol de decisión de clase A/B/C en Mermaid, los 4 documentos base en orden, el ciclo diario con los agentes y un mapa "leé por clase" para no ahogarse en las 40+ plantillas.
 - **`docs/04_user_documentation/`** (tapa el hueco de numeración 00–09): `USER_GUIDE.md` (manual de usuario final) y `RELEASE_NOTES_TEMPLATE.md`, enlazados en el índice del DHF — información de seguridad IEC 62366-1.
@@ -28,6 +30,8 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 - **`.mypy.ini`** venía roto de fábrica: el placeholder `python_version = <3.12>` y comentarios en la misma línea que el valor (`clave = True   # …`) hacían que mypy no parseara la config. Corregido a `python_version = 3.12`, comentarios movidos a su propia línea y secciones de override de ejemplo comentadas (cero ruido). Ahora `mypy` pasa estricto out-of-the-box.
 
 ### Changed
+- **`docs/.../TESTING_TOOLS.md`**: rellenados los comandos `<...>` ahora que los scripts existen (DAST, SAST, fuzz, SCA, cobertura, mutación backend, Postgres tier) + inventario de scripts del paquete de testing actualizado.
+- **`.gitignore`**: ignora `reports/`, `.coverage*` y `.secrets` (artefactos de DAST/cobertura y secretos locales de `act`).
 - **`pytest.ini`**: ignore angosto para la deprecación de `httpx` que emite el `TestClient` de Starlette (ruido de terceros; `filterwarnings = error` la convertía en fallo).
 - **`scripts/init_kit.sh`**: valida la clase de seguridad (A/B/C, normaliza mayúsculas; en `--yes` aborta si es inválida), muestra un ejemplo por campo en cada prompt e imprime los próximos pasos concretos según la clase elegida.
 - Normalizada la convención de relleno en las plantillas: el "completar después" usa `<...>`; `{{...}}` queda reservado para los 9 marcadores que rellena `init_kit.sh`.

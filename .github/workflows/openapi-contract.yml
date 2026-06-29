@@ -1,0 +1,59 @@
+name: OpenAPI Contract Drift
+
+# Candado SaMD (IEC 62304 §5.1/§5.7): falla el PR si el contrato OpenAPI
+# versionado en el repo se desincroniza del que genera el código en runtime
+# (`app.openapi()`). Corre el script ya versionado: scripts/verify_openapi_sync.py.
+#
+# Se SALTEA solo mientras el repo no tenga backend (`requirements.txt`) ni contrato
+# versionado (`frontend/src/api/openapi.json`) — así la plantilla queda en verde.
+# Anti-saturación: paths-filter + cancel-in-progress + cache pip + timeout duro.
+
+on:
+  pull_request:
+    paths:
+      - "app/**"
+      - "scripts/export_openapi.py"
+      - "scripts/verify_openapi_sync.py"
+      - "frontend/src/api/openapi.json"
+      - ".github/workflows/openapi-contract.yml"
+  push:
+    branches: [main, master]
+    paths:
+      - "app/**"
+      - "frontend/src/api/openapi.json"
+
+concurrency:
+  group: openapi-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: ¿Hay backend y contrato versionado?
+        id: guard
+        run: |
+          if [ -f requirements.txt ] && [ -f frontend/src/api/openapi.json ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "Sin requirements.txt o sin openapi.json versionado → se saltea (plantilla vacía)."
+          fi
+
+      - uses: actions/setup-python@v6
+        if: steps.guard.outputs.run == 'true'
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Instalar deps + verificar drift
+        if: steps.guard.outputs.run == 'true'
+        run: |
+          pip install -r requirements.txt
+          python scripts/verify_openapi_sync.py

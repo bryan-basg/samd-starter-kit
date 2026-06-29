@@ -14,9 +14,8 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
 [![CI](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/ci.yml)
-[![Security Audit](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/security-audit.yml/badge.svg)](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/security-audit.yml)
-[![API contract fuzzing](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/schemathesis.yml/badge.svg)](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/schemathesis.yml)
-[![OpenAPI contract drift](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/openapi-contract.yml/badge.svg)](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/openapi-contract.yml)
+[![Kit Quality](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/kit-quality.yml/badge.svg)](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/kit-quality.yml)
+[![Placeholder Guard](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/placeholder-guard.yml/badge.svg)](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/placeholder-guard.yml)
 
 **[English](README.md) · Español**
 

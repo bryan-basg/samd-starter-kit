@@ -1,0 +1,43 @@
+// devcontainer.json — entorno reproducible para GitHub Codespaces / VS Code Dev Containers.
+// Arranque en 1 clic: abrí el repo en un Codespace (o "Reopen in Container") y al
+// terminar el postCreateCommand tenés backend y frontend listos para `make dev`.
+//
+// SaMD: un entorno reproducible es parte de la gestión de configuración del software
+// (IEC 62304 §5.1 / §8). Que todo dev arranque con las MISMAS versiones de toolchain
+// reduce el "en mi máquina sí anda" — relevante para la trazabilidad de builds.
+// Los secretos NO viven acá: en prod van al gestor de secretos; en dev, en tu .env local.
+{
+  "name": "SaMD Starter Kit",
+
+  // Base con Python 3.12 (stack de referencia del backend FastAPI).
+  "image": "mcr.microsoft.com/devcontainers/python:1-3.12-bookworm",
+
+  // Node 20 para el frontend React/TS/Vite (mismo major que usa el CI: setup-node@20).
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20"
+    }
+  },
+
+  // Instala deps de backend (runtime + verificación) y de frontend de forma
+  // reproducible (npm ci respeta el lockfile, igual que el CI).
+  "postCreateCommand": "pip install --no-cache-dir -r requirements.txt -r requirements-dev.txt && cd frontend && npm ci",
+
+  // 8000 = backend (uvicorn app.main:app) · 5173 = Vite dev server.
+  "forwardPorts": [8000, 5173],
+  "portsAttributes": {
+    "8000": { "label": "backend (FastAPI)" },
+    "5173": { "label": "frontend (Vite)" }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",            // Python: debug, test, intellisense
+        "ms-python.mypy-type-checker", // type-check estricto (sin `any`) — regla del kit
+        "charliermarsh.ruff",          // lint + imports muertos (F401/F841/F811)
+        "dbaeumer.vscode-eslint"       // lint del frontend TS/React
+      ]
+    }
+  }
+}

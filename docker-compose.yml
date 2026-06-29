@@ -1,0 +1,67 @@
+# docker-compose.yml — arranque en 1 clic del stack de referencia en local.
+#
+#   docker compose up                 -> backend (8000) + frontend (5173), con hot-reload
+#   docker compose --profile full up  -> suma Postgres 16 (db, opcional)
+#
+# Las env vars salen de .env (copiá .env.example -> .env). En PRODUCCIÓN los secretos
+# viven en el gestor de secretos, NUNCA en este archivo ni en el .env del repo (que está
+# gitignoreado). Esto es solo el entorno de desarrollo local.
+
+services:
+  # --- Backend: FastAPI + uvicorn con reload ---
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    ports:
+      - "8000:8000"
+    # Hot-reload: el código local se monta encima de la imagen.
+    volumes:
+      - ./app:/app/app
+    env_file:
+      # Opcional: copiá .env.example -> .env. Si no existe, el esqueleto corre con
+      # los defaults de app/core/config.py (no rompe el arranque).
+      - path: .env
+        required: false
+    # El esqueleto corre sin BD (defaults en app/core/config.py). Si activás el
+    # profile `full`, apuntá DATABASE_URL al servicio `db` en tu .env.
+    environment:
+      TESTING: "False"
+
+  # --- Frontend: React + TS + Vite dev server ---
+  frontend:
+    image: node:20
+    working_dir: /app/frontend
+    # npm ci respeta el lockfile; --host expone el dev server fuera del contenedor.
+    command: sh -c "npm ci && npm run dev -- --host 0.0.0.0"
+    ports:
+      - "5173:5173"
+    # Hot-reload del código; node_modules como volumen anónimo para no pisar el del host.
+    volumes:
+      - ./frontend:/app/frontend
+      - /app/frontend/node_modules
+    environment:
+      # Vite necesita escuchar en todas las interfaces dentro del contenedor.
+      VITE_HOST: "0.0.0.0"
+
+  # --- Base de datos: Postgres 16 (OPCIONAL — solo con `--profile full`) ---
+  db:
+    image: postgres:16
+    profiles: [full]
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-samd}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-samd}
+      POSTGRES_DB: ${POSTGRES_DB:-samd}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-samd}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:

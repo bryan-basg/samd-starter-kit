@@ -1,0 +1,47 @@
+# Placeholder Guard — verifica que el proyecto derivado no tenga marcadores {{...}} a medio reemplazar.
+#
+# DISEÑO (leé esto antes de tocar el trigger):
+#   En el KIT SIN ADAPTAR este gate FALLA a propósito — la plantilla está llena de
+#   {{PROJECT_NAME}}, {{SAMD_CLASS}}, etc. Para no romper el CI del kit mismo, el job
+#   se SALTA salvo que exista un archivo flag `.kit-adapted` en la raíz del repo.
+#   Tu proyecto "activa" este gate creando ese flag DESPUÉS de correr init_kit.sh:
+#
+#       bash scripts/init_kit.sh        # reemplaza los {{...}} con tus valores
+#       touch .kit-adapted              # versionalo: a partir de acá el gate corre
+#       git add .kit-adapted && git commit ...
+#
+#   Así el mismo archivo de workflow sirve para el kit (gate dormido) y para el
+#   derivado (gate activo) sin editar el YAML.
+name: Placeholder Guard
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+concurrency:
+  group: placeholder-guard-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  placeholders:
+    name: Marcadores {{...}} sin reemplazar
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+
+      # Gate dormido en el kit; se despierta cuando el proyecto derivado versiona .kit-adapted.
+      - name: Detectar si el kit ya fue adaptado
+        id: adapted
+        run: |
+          if [ -f .kit-adapted ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Falta el flag .kit-adapted en la raíz — gate omitido (esto es ESPERADO en el kit sin adaptar). Creá .kit-adapted tras correr scripts/init_kit.sh."
+          fi
+
+      - name: Verificar marcadores {{...}}
+        if: steps.adapted.outputs.run == 'true'
+        run: bash scripts/check_placeholders.sh

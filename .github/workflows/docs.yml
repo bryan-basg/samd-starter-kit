@@ -48,6 +48,12 @@ jobs:
       - name: Build estricto (warnings = error)
         run: mkdocs build --strict
       - uses: actions/configure-pages@v5
+        # enablement: true => el workflow intenta ACTIVAR Pages por sí mismo en
+        # el primer run, en vez de fallar con "Get Pages site failed / Not Found".
+        # Hace el kit a prueba de balas en proyectos derivados recién clonados.
+        # (Requiere permiso `pages: write`, ya declarado en este workflow.)
+        with:
+          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site

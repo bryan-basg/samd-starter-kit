@@ -101,3 +101,42 @@ def test_failsafe_returns_503_with_retry_after(client):
     assert resp.status_code == 503
     assert resp.headers.get("Retry-After") == "30"
     assert "momento" in resp.json()["detail"].lower()
+
+
+@pytest.mark.unit
+def test_health_endpoint(client):
+    resp = client.get("/health")
+    assert resp.status_code == 200
+    assert resp.json() == {"status": "ok"}
+
+
+@pytest.mark.unit
+def test_encryption_key_length_validation(monkeypatch):
+    import base64
+    from app.core import encryption
+    # Cambiar temporalmente la key configurada por una corta (inválida)
+    monkeypatch.setattr(
+        encryption.settings,
+        "encryption_key",
+        base64.b64encode(b"short-key").decode(),
+    )
+    with pytest.raises(ValueError, match="ENCRYPTION_KEY debe decodificar a 32 bytes"):
+        encryption.encrypt("test")
+
+
+@pytest.mark.security
+def test_token_missing_sub_claim(client):
+    import jwt
+    from app.core.config import settings
+    # Generar un token firmado pero sin el claim 'sub'
+    bad_token = jwt.encode({}, settings.secret_key, algorithm="HS256")
+    resp = client.get("/notes", headers={"Authorization": f"Bearer {bad_token}"})
+    assert resp.status_code == 401
+    assert "iniciá sesión de nuevo" in resp.json()["detail"].lower()
+
+
+@pytest.mark.security
+def test_token_invalid_format(client):
+    resp = client.get("/notes", headers={"Authorization": "Bearer invalidtokenhere"})
+    assert resp.status_code == 401
+    assert "iniciá sesión de nuevo" in resp.json()["detail"].lower()

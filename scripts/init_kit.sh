@@ -79,18 +79,20 @@ for k in "${PROMPTS[@]}"; do
   # Escapar caracteres especiales de sed en el valor
   esc=$(printf '%s' "$val" | sed -e 's/[\/&]/\\&/g')
   grep -rlZ --binary-files=without-match "{{$k}}" "$ROOT" \
-    --exclude-dir=.git --exclude="init_kit.sh" 2>/dev/null \
+    --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=venv --exclude-dir=.venv \
+    --exclude-dir=.mypy_cache --exclude-dir=.pytest_cache --exclude-dir=.ruff_cache --exclude-dir=dist \
+    --exclude="init_kit.sh" 2>/dev/null \
     | xargs -0 -r sed -i "s/{{$k}}/$esc/g"
   echo "  {{$k}} -> $val"
 done
 
 echo
-remaining="$(grep -rl "{{[A-Z_]*}}" "$ROOT" --exclude-dir=.git --exclude="init_kit.sh" 2>/dev/null || true)"
+remaining="$(grep -rl "{{[A-Z_]*}}" "$ROOT" --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=venv --exclude-dir=.venv --exclude-dir=.mypy_cache --exclude-dir=.pytest_cache --exclude-dir=.ruff_cache --exclude-dir=dist --exclude="init_kit.sh" 2>/dev/null || true)"
 if [[ -n "$remaining" ]]; then
   echo "Marcadores sin reemplazar (los podés completar luego o re-correr este script):"
-  grep -rn "{{[A-Z_]*}}" "$ROOT" --exclude-dir=.git --exclude="init_kit.sh" 2>/dev/null \
+  grep -rn "{{[A-Z_]*}}" "$ROOT" --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=venv --exclude-dir=.venv --exclude-dir=.mypy_cache --exclude-dir=.pytest_cache --exclude-dir=.ruff_cache --exclude-dir=dist --exclude="init_kit.sh" 2>/dev/null \
     | sed 's/^/  /' | head -20
-  total="$(grep -rho "{{[A-Z_]*}}" "$ROOT" --exclude-dir=.git --exclude="init_kit.sh" 2>/dev/null | wc -l | tr -d ' ')"
+  total="$(grep -rho "{{[A-Z_]*}}" "$ROOT" --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=venv --exclude-dir=.venv --exclude-dir=.mypy_cache --exclude-dir=.pytest_cache --exclude-dir=.ruff_cache --exclude-dir=dist --exclude="init_kit.sh" 2>/dev/null | wc -l | tr -d ' ')"
   [[ "$total" -gt 20 ]] && echo "  ... y más (total $total ocurrencias)"
 else
   echo "✓ No quedan marcadores sin reemplazar."

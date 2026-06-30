@@ -10,7 +10,13 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
+from pathlib import Path
+
+# Agregar la raíz del proyecto al sys.path para importar 'app' correctamente
+sys.path.insert(0, os.getcwd())
+
 
 
 def main() -> int:
@@ -30,7 +36,9 @@ def main() -> int:
         return 1
 
     schema = app.openapi()
-    with open(args.out, "w", encoding="utf-8") as fh:
+    out_path = Path(args.out)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(out_path, "w", encoding="utf-8") as fh:
         json.dump(schema, fh, indent=2, ensure_ascii=False, sort_keys=True)
         fh.write("\n")
     print(f"Contrato OpenAPI exportado a {args.out}")

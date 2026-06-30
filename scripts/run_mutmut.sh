@@ -25,6 +25,15 @@ fi
 
 PATHS="${MUTMUT_PATHS:-app/}"
 echo "▶ mutmut run --paths-to-mutate $PATHS  (esto puede tardar bastante)…"
+
+# Exportar MUTMUT_BIN para que check_mutmut_score.py use el binario correcto del venv
+MUTMUT_LOCAL_BIN="$(dirname "$PYBIN")/mutmut"
+if [ -x "$MUTMUT_LOCAL_BIN" ]; then
+  export MUTMUT_BIN="${MUTMUT_BIN:-$MUTMUT_LOCAL_BIN}"
+else
+  export MUTMUT_BIN="${MUTMUT_BIN:-mutmut}"
+fi
+
 # mutmut sale !=0 cuando hay mutantes vivos; el gate de abajo decide si rompe el build.
 "$PYBIN" -m mutmut run --paths-to-mutate "$PATHS" "$@" || true
 

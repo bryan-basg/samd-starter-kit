@@ -93,7 +93,7 @@ repos:
       # ----------------------------------------------------------------------
       # - id: full-validation
       #   name: CI local completo (pre-push)
-      #   entry: bash scripts/<run_local_ci.sh>
+      #   entry: bash scripts/run_local_ci.sh
       #   language: system
       #   stages: [pre-push]
       #   pass_filenames: false

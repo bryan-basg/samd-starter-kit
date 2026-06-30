@@ -76,6 +76,7 @@ detect_venv() {
 
 # ------------------------------------------------------------------ backend
 generate_backend() {
+    detect_venv
     log "Generando SBOM del backend (Python)..."
 
     if ! command -v cyclonedx-py >/dev/null 2>&1; then
@@ -232,7 +233,6 @@ main() {
     local rc_fe=0
 
     ensure_dir
-    detect_venv
 
     case "$target" in
         --backend)

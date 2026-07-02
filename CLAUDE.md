@@ -41,10 +41,13 @@ Las secciones que siguen son **CONSECUENCIAS PRÁCTICAS** de la Regla 0.
 * **Nunca pushees a remoto sin autorización explícita**, aunque ya esté commiteado local.
 * **Operaciones destructivas** (`reset --hard`, `push --force`, borrar branches) → pedí OK aunque parezcan inocuas.
 * **Tras un push a la rama principal, no hagas un segundo push hasta que el CI del primero termine.**
+* **Commit selectivo con sesión paralela activa**: si hay otra sesión con cambios sin commitear, `git add` **EXPLÍCITO** de tus archivos (nunca `-A` / `-u`) — podés arrastrar cambios ajenos a medio terminar. Tras revertir un PR grande, verificá qué sub-cambios NO volvieron (pueden haber quedado solo en la rama revertida).
+* **Comandos que el clasificador de permisos bloquea → los corre el dueño** (con `!` o a mano): operaciones sobre secretos productivos vivos, el primer push tras un OK vago, alta de infraestructura sensible (runners, credenciales). El agente prepara el comando/YAML; el dueño lo ejecuta.
 
 ### Antes de actuar
 * **Explicá la genealogía antes de cambios no triviales**: cómo interpretás el problema, qué alternativas hay, cuál elegís y por qué, qué archivos tocás, qué riesgos. Esperá OK antes de codear.
 * **Tras un OK de plan estructurado** ("vamos por lo recomendado", "vamos con todo") → ejecutá TODOS los sub-pasos **sin re-preguntar** ni micro-confirmar.
+* **Zonas del producto marcadas off-limits por el dueño = prohibido tocar sin pedido dirigido.** Un "vamos con todo" sobre un módulo NO autoriza cruzar a una zona declarada aparte (ej. el código de cara al usuario final si el pedido era solo sobre el panel interno/admin). Si una utility global de la zona que estás tocando cae en cascada sobre una zona off-limits, avisá ANTES de aplicar el cambio.
 
 ### Diagnóstico de bugs (verificar antes de fixear)
 * **Verificá antes de fixear**: ante un bug reportado, investigá primero — no saltes a escribir código.
@@ -73,8 +76,9 @@ Cuando completes una tarea o modifiques un archivo:
 
 ## ANÁLISIS DE IMPACTO ANTES DE DECLARAR "ARREGLADO" (consecuencia SaMD §5.6)
 
-* **Búsqueda global obligatoria** cuando modifiques un parámetro, retorno, schema o constante: `grep` en todo el repo para encontrar TODOS los consumidores.
+* **Búsqueda global obligatoria** cuando modifiques un parámetro, retorno, schema o constante: `grep` en todo el repo para encontrar TODOS los consumidores. (Para el análisis de impacto de un símbolo puntual: skill `/samd-trace`.)
 * **Cambio de endpoint** → actualizá inmediatamente su consumidor en el frontend, regenerá tipos del contrato (OpenAPI u equivalente) si aplica.
+* **Regenerá el contrato (OpenAPI u equivalente) desde un `git worktree` limpio, no del working tree**, cuando haya sesión paralela sin commitear — código ajeno a medio terminar puede colarse en el contrato publicado. Si tu framework publica docstrings de rutas como descripción del contrato, tocarlos también dispara drift. NUNCA usar `git stash` para esto.
 * **Verificación obligatoria** antes de declarar verde: corré los tests locales vinculados y reportá números.
 * **Reorg de carpetas en `docs/`** → tras renombrar/mover cualquier `.md`, correr el link-checker cross-doc (`grep -rEn "\(\.{1,2}/[^)]+\.md" docs/`) y resolver enlaces rotos en el mismo PR. **Ningún PR de reorg cierra sin que el link-checker reporte 0 broken.**
 * **TRACEABILITY_MATRIX_SAMD.md** → cada REQ-XXX en la matriz debe apuntar a `archivo:línea` verificable + nombre de test que existe HOY. Frases vagas sin path NO son trazabilidad SaMD aceptable. Un auditor externo lo levanta primero.
@@ -124,14 +128,12 @@ Consultá `docs/03_software_development_plan/COMPLETE_TESTING_STRATEGY.md` antes
 * **Repartir en muchos agentes en paralelo** cuando la tarea lo permita (búsquedas anchas, mutation por archivo, auditorías, refactors multi-archivo independientes).
 * **Verificación adversarial OBLIGATORIA sobre hallazgos clínicos/seguridad** (§5.6): un hallazgo que dispara cambio en algoritmo clínico, schema, regla de negocio o flujo de seguridad debe ser refutado por otro agente independiente antes de actuar. Hallazgo no verificado ≠ "arreglado".
 * **Encadenar sub-pasos sin micro-confirmar** tras un OK de plan.
-* **`worktree`** cuando varios agentes muten archivos en paralelo y puedan pisarse.
+* **`worktree`** cuando varios agentes muten archivos en paralelo y puedan pisarse. **No dejes el `cwd` dentro de un worktree antes de lanzar agentes**: heredan el cwd y editan archivos DENTRO del worktree en vez del repo — volvé al repo raíz antes de repartir.
 * **Tamaño de ola**: escalar a lo que la tarea justifique. La calidad **no se relaja por ir más rápido**.
 
 ### Protocolo anti-drift (OBLIGATORIO con 2+ agentes)
 
-Con 2+ agentes el riesgo no es la calidad individual sino la **pérdida de cohesión**: el orquestador recibe summaries de *lo que el agente intentó*, no del *diff real*.
-**(1)** leo brief + contexto yo (delego ejecución, no entendimiento); **(2)** escribo el **contrato compartido** en el chat (campos/tipos/paths/defaults/validaciones exactos) y **espero OK** antes de lanzar; **(3)** brief a cada agente **citando el contrato literal**; **(4)** tras cada agente leo el **`git diff` REAL** (no el summary) y valido coherencia; **(5)** drift → **1 agente correctivo**, no re-lanzo a todos; **(6)** auditoría de trazabilidad; **(7)** cierro con números reales.
-* **Serializar (no paralelizar)** cuando: contrato complejo/cambiante, dependencia de tipos generados, o símbolo compartido por 3+ capas.
+Con 2+ agentes el riesgo no es la calidad individual sino la **pérdida de cohesión**: el orquestador recibe summaries de *lo que el agente intentó*, no del *diff real*. **Regla dura: escribí el contrato compartido (campos/tipos/paths/defaults exactos) con OK del dueño antes de lanzar; tras cada agente leé el `git diff` REAL, nunca el summary; drift → 1 agente correctivo (no re-lances a todos). Serializá (no paralelices) si el contrato es complejo/cambiante, hay tipos generados (OpenAPI o equivalente) o un símbolo cruza 3+ capas.** Procedimiento completo (los 7 pasos + reglas de cohesión): skill `/anti-drift`.
 
 ---
 
@@ -140,7 +142,7 @@ Con 2+ agentes el riesgo no es la calidad individual sino la **pérdida de cohes
 El proyecto tiene un equipo de agentes en `.claude/agents/`, cada uno cargado con las reglas SaMD de su capa. **Cuando la tarea encaja claramente en una capa, delegá al especialista** en vez de trabajar en el chat principal.
 
 | Agente | Capa | Invocar cuando la tarea sea sobre… |
-|---|---|---|
+| --- | --- | --- |
 | `db-architect` | Datos | Schemas, migraciones, pool de conexiones, cifrado en reposo, reglas de BD, performance de queries. |
 | `backend` | API + lógica | Routers, services, schemas, dependencias, auth, audit middleware, fusibles de resiliencia, scheduler, IA backend, tests. |
 | `frontend` | UI + cliente | Componentes, hooks, DAOs HTTP, sync offline-first, cache de datos, tests de UI, mutation, neuro-UX. |
@@ -177,9 +179,19 @@ bash scripts/run_trivy.sh        # CVEs deps + Docker
 bash scripts/run_semgrep.sh      # SAST
 ```
 
+* **Higiene de procesos dev locales**: tras levantar emuladores/servidor/frontend para una prueba, matalos y liberá los puertos que hayas ocupado. Los procesos pesados (tests, mutación, cobertura) corren en la máquina local; los agentes en la nube solo razonan.
+* Para levantar el stack local completo con datos de prueba sembrados, ver la skill `/arrancar-stack-local`.
+
+---
+
+## CI / GITHUB ACTIONS (adaptar a tu proveedor de CI real)
+
+* Optimizaciones recomendadas en todo workflow nuevo: cancelación de runs duplicados, cache de dependencias, `timeout-minutes` duro, filtros por paths cuando el repo crece.
+* **Workflow en rojo → logs FRESCOS antes de teorizar** (§5.6): reproducí lo barato en local antes de asumir bug de código o config; la caída puede ser **ambiental** (timeout, OOM del runner, flaky), no de código. Diagnóstico paso a paso: skill `/ci-rojo`.
+
 ---
 
 ## CIERRE DE BLOQUE GRANDE
 
-* Cuando se cierre un **bloque grande** (sprint, fase): patrón canónico de cierre = actualizar Audit + Spec + TECHNICAL_DEBT + Guide + RFCs + Master Map + Risk Matrix.
-* **Foto del estado obligatoria al cerrar bloque grande**: correr `bash scripts/audit_project_state.sh` ANTES de declarar cerrado — barre los rincones donde se esconden trabajo y deuda (ramas sin mergear, stashes, worktrees, PRs viejos, deuda abierta). El script solo INFORMA — borrar/archivar lo decide el dueño.
+* **SALVAGUARDA SIEMPRE-ON — no depende de acordarse de invocar la skill.** Antes de declarar cerrado **cualquier** bloque o PR —incluso si parece "solo docs" o "solo config"— pasá por: **(1) trazabilidad** — `TECHNICAL_DEBT_SUMMARY` + Master Map + `ISO_14971_RISK_MATRIX` (si toca el producto: algoritmo clínico, schema, regla de negocio, seguridad) **o** `SOFTWARE_CONFIGURATION_MANAGEMENT_PLAN` + Master Map (si cambia el **proceso/gobernanza**: agentes, reglas, skills, CI); **(2) verificación** — tests/CI vinculados con números reales.
+* Al cerrar un **bloque grande** (sprint/fase): correr la foto de estado (`bash scripts/audit_project_state.sh`) ANTES de declarar cerrado, y NO cerrar con trabajo/deuda **vivo** sin anotar — el desfase entre "lo que creemos hecho" y "lo que está en producción" es la fuga real. El script solo INFORMA; borrar/archivar lo decide el dueño (destructivo con OK). Checklist canónico completo (los docs DHF + link-checker cross-doc): skill `/cierre-bloque`.

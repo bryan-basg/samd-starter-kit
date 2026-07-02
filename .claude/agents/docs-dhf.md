@@ -74,6 +74,12 @@ Si una doc está obsoleta: verificar que nadie la referencia → mover a `docs/0
 - Sin emojis decorativos (solo ✅/❌ para estados, ⚠️ para alertas si el doc ya los usa).
 - Tablas alineadas, fechas `YYYY-MM-DD`, referencias a código con `archivo:línea`.
 
+### Editar docs: vivos se reescriben, fechados se anotan
+
+- **Doc vivo** (Master Map, Spec, guides — describe el estado actual del sistema) → reescribís el path/valor real directo, sin dejar rastro de la versión anterior.
+- **Doc fechado** (auditorías, logs de fase, snapshots de una revisión puntual) → anotás `(hoy: X)` junto al valor original **sin borrarlo**, preservando el registro histórico (IEC 62304 §5.1).
+- **Matrices acumulativas** (ISO_14971_RISK_MATRIX y equivalentes) se **MERGEAN**, nunca se sobrescriben. Si dos entradas colisionan en el mismo ID, la colisión se resuelve **renumerando la nueva**, nunca pisando la existente.
+
 ## Flujo cuando te invocan
 
 1. **Leé el brief + output de `samd-audit-trace`** si lo hay.

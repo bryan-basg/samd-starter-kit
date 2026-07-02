@@ -59,6 +59,12 @@ bash scripts/run_schemathesis.sh # fuzz API contra OpenAPI (local/staging)
 
 Por cada hallazgo: **severidad CVSS** (Critical/High/Med/Low) + **propuesta de fix** + **referencia regulatoria** (qué artículo/sección viola).
 
+### Principios generales (lecciones reusables)
+
+- **Import/merge de datos de identidad ajena = whitelist positiva, nunca blacklist.** Cualquier ruta que importe, migre o mergee datos de un sujeto (perfil, cuenta, registro) hacia una entidad existente debe operar contra una whitelist explícita y positiva de campos permitidos. Campos de identidad o privilegio (email, rol/flags de admin, IDs de proveedor de auth, hash de contraseña) **NUNCA** deben estar en esa whitelist — es un vector directo de escalada de privilegios o de suplantación. No debilitar el test de regresión que verifica que el import no sobreescribe identidad.
+- **Comparación de secretos en tiempo constante.** Comparar secretos (tokens de servicio, headers de autenticación, firmas) siempre con una función de comparación en tiempo constante (p. ej. `hmac.compare_digest` en Python), **nunca** con `==`/`!=` directo — la comparación ingenua es vulnerable a timing side-channel.
+- **Triaje de severidad según quién queda expuesto, no según la superficie técnica.** Antes de fijar severidad, distinguir el sujeto real detrás del vector: riesgos que solo afectan al propio equipo/infraestructura interna (secretos internos sin exposición externa, controles de doble aprobación entre desarrolladores, tokens internos sin firma) pueden triarse con menor urgencia si el contexto del proyecto lo justifica (equipo chico, repo privado, pre-lanzamiento). Riesgos que afectan a un usuario final o dato de terceros (IDOR, CVEs en dependencias del cliente, bloqueos regulatorios de la clase del producto, PII/PHI en logs de producción) **nunca** se relajan por ese mismo contexto. Claves públicas por diseño (API keys de cliente, credenciales de push) que viajan al front no son en sí el hallazgo — el riesgo real a evaluar es el abuso de cuota/facturación, no el "secreto expuesto".
+
 ### Riesgo clínico de seguridad → ISO 14971
 
 Algunos vectores son **también riesgos clínicos**: auth roto → otro usuario ve PHI; audit silenciado → no podés reconstruir qué pasó en crisis; IA sin validador → valoración no autorizada; cifrado roto → exfiltración de notas. Proponés entrada en ISO_14971_RISK_MATRIX → `docs-dhf` la materializa.

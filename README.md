@@ -119,6 +119,7 @@ The core rule is **Rule 0**: *every technical decision is subordinate to SaMD co
 
 The kit isn't only templates — it carries the **hard-won experience** behind them. These are based on real production incidents, generalized (no product specifics):
 
+- **[Startup discipline](docs/09_engineering_experience/STARTUP_DISCIPLINE.md)** — what to prioritize in the first days: compliance before code, memory and shipping discipline, avoiding over-building before validation, empathetic UX as a clinical decision.
 - **[Production lessons](docs/09_engineering_experience/PRODUCTION_LESSONS.md)** — what broke in production and what we learned: pool exhaustion masquerading as auth failures, the migration "green" that lies, env-var footguns, offline-first discipline, mutation tests as contracts.
 - **[Reference architecture](docs/09_engineering_experience/REFERENCE_ARCHITECTURE.md)** — the hybrid offline-first pattern (client + API + transactional DB + cloud) with the *why* behind each decision and when **not** to use it.
 - **[The "Engineers' Table" method](docs/09_engineering_experience/MULTI_AGENT_ENGINEERING_METHOD.md)** — orchestrating a team of AI agents on a regulated codebase without losing coherence: the anti-drift protocol, adversarial verification, and the hard rules a better model doesn't override.

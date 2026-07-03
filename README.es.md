@@ -119,6 +119,7 @@ La regla central es la **Regla 0**: *toda decisión técnica se subordina al cum
 
 El kit no son solo plantillas — trae la **experiencia ganada en la trinchera** que hay detrás. Basadas en incidentes reales de producción, generalizadas (sin datos del producto):
 
+- **[Disciplina de arranque](docs/09_engineering_experience/STARTUP_DISCIPLINE.md)** — qué priorizar los primeros días: cumplimiento antes que código, disciplina de memoria y de shipping, no sobre-construir antes de validar, UX empática como decisión clínica.
 - **[Lecciones de producción](docs/09_engineering_experience/PRODUCTION_LESSONS.md)** — qué rompió en producción y qué se aprendió: pool agotado disfrazado de error de auth, el "verde" de migración que miente, footguns de env vars, disciplina offline-first, tests de mutation como contratos.
 - **[Arquitectura de referencia](docs/09_engineering_experience/REFERENCE_ARCHITECTURE.md)** — el patrón híbrido offline-first (cliente + API + BD transaccional + nube) con el *porqué* de cada decisión y cuándo **no** usarlo.
 - **[Método "Mesa de Ingenieros"](docs/09_engineering_experience/MULTI_AGENT_ENGINEERING_METHOD.md)** — orquestar un equipo de agentes de IA sobre un código regulado sin perder cohesión: el protocolo anti-drift, la verificación adversarial y las reglas duras que un modelo mejor no anula.

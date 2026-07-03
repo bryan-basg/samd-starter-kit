@@ -196,6 +196,7 @@ The full rulebook is [`CLAUDE.md`](CLAUDE.md); the agent-agnostic process mirror
 | Plan the road to certification | [`CERTIFICATION_HOWTO`](docs/07_regulatory_and_compliance/CERTIFICATION_HOWTO.md) |
 | Learn the multi-agent method | [`MULTI_AGENT_ENGINEERING_METHOD`](docs/09_engineering_experience/MULTI_AGENT_ENGINEERING_METHOD.md) |
 | Avoid known production traps | [`PRODUCTION_LESSONS`](docs/09_engineering_experience/PRODUCTION_LESSONS.md) |
+| Know what to prioritize on day one | [`STARTUP_DISCIPLINE`](docs/09_engineering_experience/STARTUP_DISCIPLINE.md) |
 
 ---
 

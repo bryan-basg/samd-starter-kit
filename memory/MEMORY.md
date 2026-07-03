@@ -3,6 +3,11 @@
 > **Reglas estables del proyecto** (bugs conocidos, comandos, testing, protocolo con el dueño) viven en `CLAUDE.md`. Esta memoria es para **snapshots dinámicos** y estado puntual que cambia: estado de tests, hallazgos de sesión, lecciones puntuales, estado del plan.
 >
 > Entradas del índice = **1 línea** (`- [Título](archivo.md) — gancho`). El detalle vive en cada ficha. Mové el detalle a archivos por tema; no infles este índice.
+>
+> **¿Recién arrancás un SaMD con este kit?** Antes de crear tu primera memoria, leé
+> [`docs/09_engineering_experience/STARTUP_DISCIPLINE.md`](../docs/09_engineering_experience/STARTUP_DISCIPLINE.md) —
+> qué priorizar los primeros días (cumplimiento, memoria, shipping, UX), destilado de experiencia
+> real construyendo un SaMD.
 
 ## Cómo funciona la memoria
 
@@ -20,6 +25,7 @@ metadata:
 ```
 
 Tipos:
+
 - **user** — quién es el dueño (rol, expertise, preferencias).
 - **feedback** — guía sobre cómo trabajar (correcciones y enfoques confirmados); incluí el porqué.
 - **project** — trabajo en curso, metas, restricciones no derivables del código o git. Convertí fechas relativas a absolutas.

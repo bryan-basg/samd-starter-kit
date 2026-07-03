@@ -140,3 +140,56 @@ def test_token_invalid_format(client):
     resp = client.get("/notes", headers={"Authorization": "Bearer invalidtokenhere"})
     assert resp.status_code == 401
     assert "iniciá sesión de nuevo" in resp.json()["detail"].lower()
+
+
+@pytest.mark.security
+def test_expired_token_is_rejected(client):
+    from app.core.security import create_access_token
+
+    # Token ya vencido (exp 1 min en el pasado) => 401, no acceso.
+    expired = create_access_token("alice", expires_minutes=-1)
+    resp = client.get("/notes", headers={"Authorization": f"Bearer {expired}"})
+    assert resp.status_code == 401
+    assert "iniciá sesión de nuevo" in resp.json()["detail"].lower()
+
+
+@pytest.mark.security
+def test_secret_guard_aborts_on_dev_defaults(monkeypatch):
+    from app.core.config import settings
+    from app.main import _assert_secure_secrets
+
+    # Simular producción (TESTING off) con los defaults de dev todavía puestos.
+    monkeypatch.setattr(settings, "testing", False)
+    with pytest.raises(RuntimeError, match="fail-safe SaMD"):
+        _assert_secure_secrets()
+
+
+@pytest.mark.security
+def test_secret_guard_passes_with_real_secrets(monkeypatch):
+    import base64
+
+    from app.core.config import settings
+    from app.main import _assert_secure_secrets
+
+    # Producción con secretos reales inyectados => NO aborta.
+    monkeypatch.setattr(settings, "testing", False)
+    monkeypatch.setattr(settings, "secret_key", "a-real-injected-production-secret")
+    monkeypatch.setattr(
+        settings, "encryption_key", base64.b64encode(b"x" * 32).decode()
+    )
+    assert settings.insecure_default_secrets() == []
+    _assert_secure_secrets()  # no debe lanzar
+
+
+@pytest.mark.security
+def test_lifespan_boots_in_testing_mode(monkeypatch):
+    from fastapi.testclient import TestClient
+
+    from app.core.config import settings
+    from app.main import app
+
+    # En modo TESTING el guard se salta aunque haya defaults de dev: el lifespan
+    # arranca y la app sirve. (with => dispara startup/shutdown del lifespan.)
+    monkeypatch.setattr(settings, "testing", True)
+    with TestClient(app) as c:
+        assert c.get("/health").status_code == 200

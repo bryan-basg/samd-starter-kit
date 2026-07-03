@@ -28,3 +28,13 @@ npm run build    # tsc estricto + build de producción
 ```
 
 Cuando traigas tu cliente real, reemplazá `src/` por tu estructura (la de arriba). Los configs (`tsconfig.json`, `.eslintrc.cjs`, `stryker.conf.json`) ya están listos.
+
+### Mutation testing (opt-in)
+
+`stryker.conf.json` viene **configurado** (gate `break: 90` — el ≥90% que exige el `CLAUDE.md`), pero el **motor NO se instala por defecto**: se ata a la versión de tu test runner, así que lo elegís vos cuando traés tu app y no infla el lockfile del esqueleto desechable con ~100 dependencias de tooling. Para activarlo:
+
+```bash
+# instalá el motor que matchee tu vitest (ver compatibilidad de @stryker-mutator)
+npm i -D @stryker-mutator/core @stryker-mutator/vitest-runner
+npx stryker run     # usa stryker.conf.json; falla el build si el score < 90%
+```

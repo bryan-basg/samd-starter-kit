@@ -128,7 +128,7 @@ The `app/`, `frontend/` and `tests/` folders ship with a **minimal runnable refe
 # Backend (from the repo root)
 python -m venv venv && source venv/bin/activate
 pip install -r requirements-dev.txt
-pytest                          # 8/8 green
+pytest                          # 16/16 green
 uvicorn app.main:app --reload   # http://localhost:8000/docs
 
 # Frontend

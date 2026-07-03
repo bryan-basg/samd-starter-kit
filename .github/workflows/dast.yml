@@ -62,8 +62,8 @@ jobs:
         with:
           name: zap-dast-report
           path: |
-            audit/zap_dast_report.html
-            audit/zap_dast_report.json
-            audit/dast_backend.log
+            reports/dast/zap_dast_report.html
+            reports/dast/zap_dast_report.json
+            reports/dast/dast_backend.log
           retention-days: 14
           if-no-files-found: ignore

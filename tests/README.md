@@ -16,7 +16,7 @@ Reglas duras (ver `docs/03_software_development_plan/COMPLETE_TESTING_STRATEGY.m
 
 ```bash
 pip install -r requirements-dev.txt   # (en la raíz del repo)
-pytest                                # 8/8 verde
+pytest                                # 16/16 verde
 pytest -m security                    # solo los de seguridad
 ```
 

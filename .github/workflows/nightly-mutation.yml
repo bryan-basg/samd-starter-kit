@@ -44,7 +44,7 @@ jobs:
           else
             npx stryker run --incremental         # incremental barato
           fi
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v4.4.0
         if: always()
         with:
           name: mutation-report

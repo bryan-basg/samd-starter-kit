@@ -1,8 +1,10 @@
 # requirements.txt — dependencias de runtime del esqueleto de ejemplo (app/).
 # Esqueleto MÍNIMO para demostrar las reglas duras del kit; reemplazá por tu stack real.
-fastapi>=0.110
-uvicorn[standard]>=0.29
-pydantic>=2.6
-pydantic-settings>=2.2
-cryptography>=42
-pyjwt>=2.8
+# Techos al próximo major: una instalación fresca no debe traer un major
+# incompatible en silencio (reproducibilidad de build/SBOM en contexto regulado).
+fastapi>=0.110,<1.0
+uvicorn[standard]>=0.29,<1.0
+pydantic>=2.6,<3.0
+pydantic-settings>=2.2,<3.0
+cryptography>=42,<48
+pyjwt>=2.8,<3.0

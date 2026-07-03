@@ -58,8 +58,8 @@ bash scripts/init_kit.sh       # interactive & re-runnable: fills the {{...}} pl
 | **Memory** | `memory/MEMORY.md` | The agent's persistent memory structure. |
 | **Example RFCs** | `docs/05_design_decisions/RFC-001..003` | Three real SaMD decisions already written (encryption at rest, JWT-only identity, external scheduler). |
 | **Design History File** | `docs/` | 40+ regulatory & process templates: ISO 14971, SaMD traceability, IEC 62304 plan, safety classification, SOUP, clinical evaluation/validation, post-market, IFU, user docs, privacy, runbooks. |
-| **Working CI/CD** | `.github/workflows/` | 11 workflows: CI gates, security (Trivy+Semgrep), mutation (Stryker), API fuzz (schemathesis), DAST (OWASP ZAP), SBOM, Postgres tier, OpenAPI contract-drift, project-state audit, stale PRs, and a deploy template. Reference stack: React+TS / Python+FastAPI. |
-| **Runnable skeleton** | `app/` · `frontend/` · `tests/` | A minimal FastAPI + React/TS example wiring the hard rules (token-only identity, AES-256-GCM at rest, fail-safe, flat accessible UI). Runs with zero infra: `pytest` 8/8, `vitest` 5/5. Delete it when you bring your own app. |
+| **Working CI/CD** | `.github/workflows/` | 15 workflows — 11 inheritable gates (CI, security via Trivy+Semgrep, mutation via Stryker, API fuzz via schemathesis, DAST via OWASP ZAP, SBOM, Postgres tier, OpenAPI contract-drift, project-state audit, stale PRs, deploy template) + 4 kit-maintenance (docs, quality gates, placeholder guard, release). Reference stack: React+TS / Python+FastAPI. |
+| **Runnable skeleton** | `app/` · `frontend/` · `tests/` | A minimal FastAPI + React/TS example wiring the hard rules (token-only identity, AES-256-GCM at rest, fail-safe, flat accessible UI). Runs with zero infra: `pytest` 16/16, `vitest` 5/5. Delete it when you bring your own app. |
 | **Worked example** | `examples/auralog/` | A fictional Class B device (AuraLog) with its DHF filled in — see the kit in action. |
 
 ## How the pieces fit together

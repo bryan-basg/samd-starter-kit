@@ -168,6 +168,7 @@ nav:
       - Technical Debt Summary: 08_verification_and_audits/TECHNICAL_DEBT_SUMMARY.md
       - Technical Debt History: 08_verification_and_audits/TECHNICAL_DEBT_HISTORY.md
   - Engineering Experience:
+      - Startup Discipline: 09_engineering_experience/STARTUP_DISCIPLINE.md
       - Production Lessons: 09_engineering_experience/PRODUCTION_LESSONS.md
       - Reference Architecture: 09_engineering_experience/REFERENCE_ARCHITECTURE.md
       - Multi-Agent Engineering Method: 09_engineering_experience/MULTI_AGENT_ENGINEERING_METHOD.md

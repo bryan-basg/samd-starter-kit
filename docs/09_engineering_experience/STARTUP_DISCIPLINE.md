@@ -77,8 +77,10 @@ solo **Lección** cuando es una práctica que conviene adoptar de entrada, sin e
 
 ## Memoria: destilar, y desconfiar de tu propia nota
 
-> La mecánica de cómo escribir una memoria vive en [`MEMORY.md`](../../memory/MEMORY.md). Acá van
-> dos hábitos que la mecánica sola no te da.
+> La mecánica de cómo escribir una memoria vive en
+> [`memory/MEMORY.md`](https://github.com/bryan-basg/samd-starter-kit/blob/main/memory/MEMORY.md)
+> (fuera de `docs/`, por eso el enlace es absoluto). Acá van dos hábitos que la mecánica sola no te
+> da.
 
 ### La memoria sin destilar se vuelve un pantano
 

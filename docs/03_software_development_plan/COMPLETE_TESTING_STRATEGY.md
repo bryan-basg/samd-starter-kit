@@ -10,7 +10,7 @@
 |---|---|---|---|
 | Unit + integración | runner del stack | Cobertura GLOBAL ≥95% (capa datos/SQL ≥95%) | Cada PR (CI) + local pre-push |
 | Type checking | type-checker estricto | 0 errores | Cada PR + local |
-| Mutation testing | Stryker (FE) / mutmut (BE) o equiv. | FE global ≥90% · BE módulos clínicos ≥80% | Nightly incremental + mensual full |
+| Mutation testing | Stryker (FE) / mutmut (BE) o equiv. | FE módulos clínicos/críticos ≥90% · resto FE ≥75% piso · BE módulos clínicos ≥80% | Nightly incremental + mensual full |
 | SAST | Semgrep | 0 findings High/Critical sin waiver | Nightly + PR con paths-filter |
 | Deps / CVEs | Trivy | 0 CVE High/Critical sin waiver | Nightly + PR |
 | Fuzz de contrato | schemathesis vs OpenAPI | 0 fallos de contrato | Paths-filter API |

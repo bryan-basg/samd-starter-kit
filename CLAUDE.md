@@ -69,7 +69,7 @@ Las secciones que siguen son **CONSECUENCIAS PRÁCTICAS** de la Regla 0.
 
 Cuando completes una tarea o modifiques un archivo:
 
-* **Deja el código más limpio que lo encontraste.** Refactorizá al menos un pedazo de deuda en el archivo tocado (imports no usados, `any`, función >80 LOC sin justificación, etc).
+* **Dejá el código más limpio que lo encontraste, de forma oportunista — no es obligatorio en cada archivo.** Si ves deuda chica y evidente en el archivo tocado (imports no usados, `any`, función >80 LOC sin justificación), limpiala. **Pero si limpiarla infla el diff de un fix puntual** (extraer un archivo, tocar lógica de negocio no relacionada), NO lo hagas ahí: anotá la deuda en `TECHNICAL_DEBT_SUMMARY.md` y atacala en una sesión dedicada. Más superficie tocada = más riesgo de regresión en código médico; un "fix de lint" no debe terminar siendo un refactor de módulo. (La versión obligatoria de esta regla se probó y se descartó: empujaba refactors de más en fixes puntuales — ver `docs/09_engineering_experience/` si documentaste el caso real que te llevó a ajustarla.)
 * **Documentá y actualizá** el Master Map y el DHF. La documentación va junto con el cambio, no en sprints aparte.
 
 ---
@@ -109,7 +109,7 @@ SaMD exige verificación demostrable. Esto NO es negociable.
 ### Reglas duras
 
 * **Tests rigurosos, no de humo:** "renderiza sin crashear" NO es un test SaMD. Exigir aserciones específicas sobre valores, llamadas y side effects.
-* **Mutation score** (recomendado): Frontend GLOBAL ≥90% (Stryker o equivalente). Backend ≥80% en módulos clínicos críticos (mutmut o equivalente). Ajustá los umbrales a la criticidad de tu Clase {{SAMD_CLASS}}.
+* **Mutation score** (recomendado): **≥90% SOLO en los módulos clínicos/críticos** (ej. escalas y scoring, red de crisis, cifrado, sync offline — identificá los tuyos), **≥75% como piso en el resto** (UI general, configuración, features sin riesgo clínico directo). Backend ≥80% en los módulos clínicos críticos (mutmut o equivalente). Ajustá los umbrales a la criticidad de tu Clase {{SAMD_CLASS}}. **No pongas el mismo umbral alto a TODO el frontend por igual**: sostener ≥90% también en pantallas sin riesgo clínico cuesta más de lo que protege — es plata y tiempo de CI que no compra seguridad real. Reservá el 90% para donde un mutante vivo puede llegar a lastimar a un usuario.
 * **Mocks asíncronos firmes** + aislamiento de estado global en cada test.
 * **Si el código bajo test usa `hasattr`/duck-typing**, mockear con whitelist explícita de atributos. Un mock plano deja mutantes vivos.
 * **No correr el type-checker/tests unitarios mientras corre mutation testing** — son CPU-intensivos y los procesos se contaminan.

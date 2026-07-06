@@ -41,6 +41,6 @@ Antes de guardar, buscá un archivo que ya cubra el tema y actualizalo en vez de
 
 <!-- - [Plan principal](plan.md) — método y estado del recorrido. -->
 
-## Último cierre (YYYY-MM-DD)
+## Último cierre (2026-07-05)
 
-<!-- - [Título](archivo.md) — qué se cerró, commit, estado en prod, pendientes. -->
+- [491a9a8a](https://github.com/bryan-basg/samd-starter-kit/commit/491a9a8a) — Sincronización de reglas de Boy Scout (oportunista) y mutation score (≥90% solo en clínicos, piso de ≥75% en resto) desde el proyecto de referencia. Agregada skill y comando `commit-selectivo-parcial`. (Autor: Claude Sonnet 5).

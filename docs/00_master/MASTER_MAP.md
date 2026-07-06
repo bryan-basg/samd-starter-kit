@@ -53,6 +53,6 @@ flowchart TD
 
 | Doc | Versión | Última actualización |
 |---|---|---|
-| MASTER_MAP | vX.Y | YYYY-MM-DD |
-| ISO_14971_RISK_MATRIX | vX.Y | YYYY-MM-DD |
-| TRACEABILITY_MATRIX_SAMD | vX.Y | YYYY-MM-DD |
+| MASTER_MAP | v1.0 | 2026-07-05 |
+| ISO_14971_RISK_MATRIX | v1.0 | 2026-07-05 |
+| TRACEABILITY_MATRIX_SAMD | v1.0 | 2026-07-05 |

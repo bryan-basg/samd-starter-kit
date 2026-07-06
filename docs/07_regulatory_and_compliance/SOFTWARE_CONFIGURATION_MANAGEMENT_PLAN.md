@@ -92,6 +92,7 @@ Verificación periódica de que el estado desplegado coincide con el baseline ap
 | Versión | Fecha | Autor | Cambio |
 |---|---|---|---|
 | v1.0 | YYYY-MM-DD | {{OWNER}} | Versión inicial de plantilla. |
+| v1.1 | 2026-07-05 | Claude Sonnet 5 | Sincronización de reglas de Boy Scout (oportunista) y mutation score. Agregado comando `commit-selectivo-parcial`. |
 
 ---
 **Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

@@ -18,7 +18,7 @@ __pycache__/
 dist/
 build/
 *.apk
-site/            # output de `mkdocs build` (sitio de documentación)
+site/
 .cache/          # cache de mkdocs-material (plugins de social/optimize)
 
 # Reportes de testing / mutation / DAST

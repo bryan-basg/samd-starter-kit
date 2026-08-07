@@ -32,7 +32,7 @@ flowchart TD
 |---|---|
 | `docs/00_master/` | Master Map, brújula documental. |
 | `docs/01_governance_and_strategy/` | Visión, gobernanza, estrategia. |
-| `docs/02_architecture_and_design/` | Arquitectura, diseño detallado, diagramas. Incluye [`AGENT_TEAM_AND_FLOW`](../02_architecture_and_design/AGENT_TEAM_AND_FLOW.md) (equipo de 10 agentes por capa + flujo SaMD bajo la Regla 0). |
+| `docs/02_architecture_and_design/` | Arquitectura, diseño detallado, diagramas. Incluye [`AGENT_TEAM_AND_FLOW`](../02_architecture_and_design/AGENT_TEAM_AND_FLOW.md) (equipo de 12 agentes por capa + flujo SaMD bajo la Regla 0). |
 | `docs/03_software_development_plan/` | Plan de desarrollo IEC 62304, estrategia de testing, guías. |
 | `docs/04_user_documentation/` | Guía de usuario (IFU), notas de versión — documentación de cara al usuario. |
 | `docs/05_design_decisions/` | RFCs (decisiones estructurales). |
@@ -40,6 +40,21 @@ flowchart TD
 | `docs/07_regulatory_and_compliance/` | Matriz de riesgo ISO 14971, trazabilidad SaMD, validación clínica, IFU, post-market, SBOM, políticas, mapeos cross-framework (FDA / EU MDR / IMDRF / ISO 27001 / SOC 2). |
 | `docs/08_verification_and_audits/` | Deuda técnica, historia de deuda, auditorías, reportes de verificación. |
 | `docs/09_engineering_experience/` | Lecciones de producción, arquitectura de referencia, método multi-agente (capa de experiencia). |
+
+## Gobernanza del agente (fuera de `docs/`)
+
+El reglamento que gobierna a los agentes vive junto al código, no en el DHF:
+
+| Pieza | Path | Contenido |
+|---|---|---|
+| Core del reglamento | `CLAUDE.md` | Regla 0, preferencias del dueño, empatía, boy scout, análisis de impacto, cierre de bloque. Carga en cada turno. |
+| Reglas por capa | `.claude/rules/` | Cuatro **path-scoped** (backend, UX clínica, testing, CI) que cargan solas al tocar esa capa + cuatro transversales (orquestación, agentes, comandos, sesiones paralelas). |
+| Equipo de agentes | `.claude/agents/` | 12 especialistas por capa. Matriz de "cuándo usar cada uno": `.claude/rules/agentes.md`. |
+| Procedimientos | `.claude/commands/`, `.claude/skills/` | Skills operativas (anti-drift, cierre de bloque, mutation, diagnóstico). |
+
+> Cambios en estas piezas son **cambios de proceso/gobernanza**: se trazan en el
+> `SOFTWARE_CONFIGURATION_MANAGEMENT_PLAN` + este Master Map, no en la matriz de riesgo
+> (ver `CLAUDE.md` §CIERRE DE BLOQUE GRANDE).
 
 ## Módulos clínicos críticos
 
@@ -53,6 +68,6 @@ flowchart TD
 
 | Doc | Versión | Última actualización |
 |---|---|---|
-| MASTER_MAP | v1.0 | 2026-07-05 |
+| MASTER_MAP | v1.1 | 2026-08-07 |
 | ISO_14971_RISK_MATRIX | v1.0 | 2026-07-05 |
 | TRACEABILITY_MATRIX_SAMD | v1.0 | 2026-07-05 |

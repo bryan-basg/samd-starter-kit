@@ -19,7 +19,7 @@
 
 **[English](README.md) · Español**
 
-[Arranque](#arranque-en-60-segundos) · [Guía de arranque](GETTING_STARTED.md) · [Los 10 agentes](#el-equipo-de-10-agentes) · [Design History File](docs/) · [Ejemplo trabajado](examples/auralog/) · [Contribuir](CONTRIBUTING.es.md)
+[Arranque](#arranque-en-60-segundos) · [Guía de arranque](GETTING_STARTED.md) · [Los 12 agentes](#el-equipo-de-12-agentes) · [Design History File](docs/) · [Ejemplo trabajado](examples/auralog/) · [Contribuir](CONTRIBUTING.es.md)
 
 </div>
 
@@ -50,8 +50,9 @@ bash scripts/init_kit.sh       # interactivo y re-ejecutable: rellena los marcad
 
 | Pieza | Path | Qué es |
 |---|---|---|
-| **Reglamento del agente** | `CLAUDE.md` | La "Regla 0" (SaMD es prioridad absoluta) + cómo trabaja el agente, testing, orquestación multi-agente. |
-| **Equipo de 10 agentes** | `.claude/agents/` | Especialistas por capa: `backend`, `frontend`, `db-architect`, `cloud-ops`, `qa-mutation`, `security-samd`, `samd-audit-trace`, `docs-dhf`, `i18n-translations`, `mobile-native`. |
+| **Reglamento del agente** | `CLAUDE.md` | El **core**: la "Regla 0" (SaMD es prioridad absoluta) + cómo trabaja el agente, empatía, boy scout, análisis de impacto y cierre de bloque. |
+| **Reglas por capa** | `.claude/rules/` | El resto del reglamento, partido en ocho: cuatro **path-scoped** (backend, UX clínica, testing, CI) que cargan solas al tocar esa capa, y cuatro transversales (orquestación, agentes, comandos, sesiones paralelas). |
+| **Equipo de 12 agentes** | `.claude/agents/` | Especialistas por capa: `backend`, `frontend`, `clinical-algorithms`, `db-architect`, `cloud-ops`, `qa-mutation`, `e2e-integration`, `security-samd`, `samd-audit-trace`, `docs-dhf`, `i18n-translations`, `mobile-native`. |
 | **Comando + skill** | `.claude/commands/`, `.claude/skills/` | `samd-trace`: análisis de impacto (§5.6) antes de declarar algo "arreglado". |
 | **Workflow multi-agente** | `.claude/workflows/` | `samd-review`: revisión del diff por dimensiones de riesgo con verificación adversarial. |
 | **Protocolo de desarrollo** | `.agents/workflows/` | Espejo agnóstico al agente del proceso estable. |
@@ -67,7 +68,7 @@ bash scripts/init_kit.sh       # interactivo y re-ejecutable: rellena los marcad
 ```mermaid
 flowchart TB
     RULES["CLAUDE.md<br/>el reglamento · Regla 0"]
-    AGENTS[".claude/agents/<br/>10 especialistas por capa"]
+    AGENTS[".claude/agents/<br/>12 especialistas por capa"]
     WF[".claude/workflows/<br/>samd-review"]
     CODE["app/ · frontend/ · tests/<br/>tu aplicación"]
     DHF["docs/<br/>Design History File"]
@@ -92,15 +93,17 @@ La regla central es la **Regla 0**: *toda decisión técnica se subordina al cum
 3. **Fail-safe explícito** (ISO 14971): cuando algo falla, degrada de forma segura y predecible — nunca en silencio.
 4. **Análisis de impacto antes de fixear** (§5.6): un bug se arregla tras revisar TODOS los consumidores del símbolo.
 
-## El equipo de 10 agentes
+## El equipo de 12 agentes
 
 | Agente | Capa | Usalo para |
 |---|---|---|
 | `backend` | API + lógica | Routers, services, schemas, auth, auditoría, fusibles de resiliencia, tests. |
+| `clinical-algorithms` | Clínico (núcleo SaMD) | Escalas y cuestionarios validados, scoring y bandas de severidad, red de crisis, PHI clínica, idempotencia. |
 | `frontend` | UI + cliente | Componentes, hooks, DAOs, sync offline-first, tests de UI, mutation, neuro-UX. |
 | `db-architect` | Datos | Schemas, migraciones, pool de conexiones, cifrado en reposo, reglas de acceso. |
 | `cloud-ops` | Plataforma | Cómputo, BD gestionada, scheduler, gestor de secretos, hosting, CI/CD, deploys. |
 | `qa-mutation` | Testing | Olas de mutation testing, killers de mutantes, configs scoped, ratchet de score. |
+| `e2e-integration` | Testing E2E | Flujos de punta a punta, harness y sembrado de usuarios, workflows de humo/regresión, triage de flaky ambiental. |
 | `security-samd` | Seguridad | SAST (Trivy+Semgrep+fuzz), cifrado, gestión de claves, JWT-only, auditoría. |
 | `samd-audit-trace` | Regulatorio (audita) | Audita un changeset contra IEC 62304 §5.1/§5.7 + ISO 14971. Reporta gaps. |
 | `docs-dhf` | Regulatorio (escribe) | Materializa updates del DHF: Master Map, matriz de riesgo, trazabilidad, RFCs. |

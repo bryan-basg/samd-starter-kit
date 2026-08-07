@@ -14,8 +14,8 @@
 
 What already ships in the kit today:
 
-- **Team of 10 agents** (`.claude/agents/`) — per-layer specialists with the SaMD ruleset pre-loaded: `backend`, `frontend`, `db-architect`, `cloud-ops`, `qa-mutation`, `security-samd`, `samd-audit-trace`, `docs-dhf`, `i18n-translations`, `mobile-native`.
-- **Agent ruleset** (`CLAUDE.md`) — Rule 0 (SaMD is the absolute priority), backend/frontend standards, testing rules, and the multi-agent anti-drift protocol.
+- **Team of 12 agents** (`.claude/agents/`) — per-layer specialists with the SaMD ruleset pre-loaded: `backend`, `clinical-algorithms`, `frontend`, `db-architect`, `cloud-ops`, `qa-mutation`, `e2e-integration`, `security-samd`, `samd-audit-trace`, `docs-dhf`, `i18n-translations`, `mobile-native`.
+- **Agent ruleset** (`CLAUDE.md` + `.claude/rules/`) — a **core** holding Rule 0 (SaMD is the absolute priority), owner preferences, tutor mode, impact analysis and block closure; plus eight rules under `.claude/rules/`: four **path-scoped** (backend, clinical UX, testing, CI) that load only when that layer is touched, and four cross-cutting (orchestration, agents, commands, parallel sessions).
 - **11 working CI/CD workflows** (`.github/workflows/`) — CI gates, security audit (Trivy + Semgrep), nightly mutation (Stryker), API contract fuzzing (schemathesis), DAST (OWASP ZAP), SBOM, Postgres tier, OpenAPI contract-drift, project-state audit, stale-PR triage, and a deploy template.
 - **40+ document Design History File** (`docs/`) — ISO 14971 risk matrix, SaMD traceability matrix, IEC 62304 plan, safety classification, SOUP, clinical evaluation/validation, post-market surveillance, IFU, user docs, privacy, runbooks.
 - **Runnable skeleton** (`app/` · `frontend/` · `tests/`) — a minimal FastAPI + React/TS example wiring the hard rules (token-only identity, AES-256-GCM at rest, fail-safe, flat accessible UI). Runs with zero infra.
@@ -59,8 +59,8 @@ Ideas we're exploring; not committed, and open to community input:
 
 Lo que el kit ya trae hoy:
 
-- **Equipo de 10 agentes** (`.claude/agents/`) — especialistas por capa con el reglamento SaMD precargado: `backend`, `frontend`, `db-architect`, `cloud-ops`, `qa-mutation`, `security-samd`, `samd-audit-trace`, `docs-dhf`, `i18n-translations`, `mobile-native`.
-- **Reglamento del agente** (`CLAUDE.md`) — Regla 0 (SaMD es prioridad absoluta), estándares de backend/frontend, reglas de testing y el protocolo anti-drift multi-agente.
+- **Equipo de 12 agentes** (`.claude/agents/`) — especialistas por capa con el reglamento SaMD precargado: `backend`, `clinical-algorithms`, `frontend`, `db-architect`, `cloud-ops`, `qa-mutation`, `e2e-integration`, `security-samd`, `samd-audit-trace`, `docs-dhf`, `i18n-translations`, `mobile-native`.
+- **Reglamento del agente** (`CLAUDE.md` + `.claude/rules/`) — un **core** con la Regla 0 (SaMD es prioridad absoluta), las preferencias del dueño, el modo tutor, el análisis de impacto y el cierre de bloque; más ocho reglas en `.claude/rules/`: cuatro **path-scoped** (backend, UX clínica, testing, CI) que cargan solas al tocar esa capa y cuatro transversales (orquestación, agentes, comandos, sesiones paralelas).
 - **15 workflows de CI/CD funcionales** (`.github/workflows/`) — 11 gates heredables por el proyecto derivado (CI, auditoría de seguridad con Trivy + Semgrep, mutación nocturna con Stryker, fuzz del contrato de API con schemathesis, DAST con OWASP ZAP, SBOM, tier Postgres, drift del contrato OpenAPI, auditoría del estado del proyecto, triage de PRs viejos y una plantilla de deploy) + 4 de mantenimiento del propio kit (docs, gates de calidad, guard de placeholders, release).
 - **Design History File de 40+ documentos** (`docs/`) — matriz de riesgo ISO 14971, matriz de trazabilidad SaMD, plan IEC 62304, clasificación de seguridad, SOUP, evaluación/validación clínica, post-market, IFU, docs de usuario, privacidad, runbooks.
 - **Esqueleto ejecutable** (`app/` · `frontend/` · `tests/`) — un ejemplo mínimo FastAPI + React/TS que cablea las reglas duras (identidad solo del token, AES-256-GCM en reposo, fail-safe, UI plana y accesible). Corre sin infra.

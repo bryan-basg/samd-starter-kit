@@ -19,7 +19,7 @@
 
 **English · [Español](README.es.md)**
 
-[Quickstart](#60-second-quickstart) · [Getting started](GETTING_STARTED.md) · [The 10 agents](#the-10-agent-team) · [Design History File](docs/) · [Worked example](examples/auralog/) · [Contributing](CONTRIBUTING.md)
+[Quickstart](#60-second-quickstart) · [Getting started](GETTING_STARTED.md) · [The 12 agents](#the-12-agent-team) · [Design History File](docs/) · [Worked example](examples/auralog/) · [Contributing](CONTRIBUTING.md)
 
 </div>
 
@@ -50,8 +50,9 @@ bash scripts/init_kit.sh       # interactive & re-runnable: fills the {{...}} pl
 
 | Piece | Path | What it is |
 |---|---|---|
-| **Agent ruleset** | `CLAUDE.md` | "Rule 0" (SaMD is the absolute priority) + how the agent works, testing, multi-agent orchestration. |
-| **Team of 10 agents** | `.claude/agents/` | Per-layer specialists: `backend`, `frontend`, `db-architect`, `cloud-ops`, `qa-mutation`, `security-samd`, `samd-audit-trace`, `docs-dhf`, `i18n-translations`, `mobile-native`. |
+| **Agent ruleset** | `CLAUDE.md` | The **core**: "Rule 0" (SaMD is the absolute priority) + how the agent works, empathy, boy scout, impact analysis and block closure. |
+| **Per-layer rules** | `.claude/rules/` | The rest of the ruleset, split in eight: four **path-scoped** (backend, clinical UX, testing, CI) that load only when that layer is touched, and four cross-cutting (orchestration, agents, commands, parallel sessions). |
+| **Team of 12 agents** | `.claude/agents/` | Per-layer specialists: `backend`, `frontend`, `clinical-algorithms`, `db-architect`, `cloud-ops`, `qa-mutation`, `e2e-integration`, `security-samd`, `samd-audit-trace`, `docs-dhf`, `i18n-translations`, `mobile-native`. |
 | **Command + skill** | `.claude/commands/`, `.claude/skills/` | `samd-trace`: impact analysis (§5.6) before declaring anything "fixed". |
 | **Multi-agent workflow** | `.claude/workflows/` | `samd-review`: diff review across risk dimensions with adversarial verification. |
 | **Development protocol** | `.agents/workflows/` | Agent-agnostic mirror of the stable process. |
@@ -67,7 +68,7 @@ bash scripts/init_kit.sh       # interactive & re-runnable: fills the {{...}} pl
 ```mermaid
 flowchart TB
     RULES["CLAUDE.md<br/>the ruleset · Rule 0"]
-    AGENTS[".claude/agents/<br/>10 layer specialists"]
+    AGENTS[".claude/agents/<br/>12 layer specialists"]
     WF[".claude/workflows/<br/>samd-review"]
     CODE["app/ · frontend/ · tests/<br/>your application"]
     DHF["docs/<br/>Design History File"]
@@ -92,15 +93,17 @@ The core rule is **Rule 0**: *every technical decision is subordinate to SaMD co
 3. **Explicit fail-safe** (ISO 14971): when something fails, it degrades safely and predictably — never silently.
 4. **Impact analysis before fixing** (§5.6): a bug is fixed after reviewing ALL consumers of the symbol, not just the file where it was reported.
 
-## The 10-agent team
+## The 12-agent team
 
 | Agent | Layer | Use it for |
 |---|---|---|
 | `backend` | API + logic | Routers, services, schemas, auth, audit, resilience fuses, tests. |
+| `clinical-algorithms` | Clinical (SaMD core) | Validated scales and questionnaires, scoring and severity bands, crisis network, clinical PHI, idempotency. |
 | `frontend` | UI + client | Components, hooks, DAOs, offline-first sync, UI tests, mutation, neuro-UX. |
 | `db-architect` | Data | Schemas, migrations, connection pool, at-rest encryption, access rules. |
 | `cloud-ops` | Platform | Compute, managed DB, scheduler, secret manager, hosting, CI/CD, deploys. |
 | `qa-mutation` | Testing | Mutation testing waves, mutant killers, scoped configs, score ratchet. |
+| `e2e-integration` | E2E testing | End-to-end flows, harness and per-worker user seeding, smoke/regression workflows, environmental flaky triage. |
 | `security-samd` | Security | SAST (Trivy+Semgrep+fuzz), encryption, key management, JWT-only, audit. |
 | `samd-audit-trace` | Regulatory (audits) | Audits a changeset against IEC 62304 §5.1/§5.7 + ISO 14971. Reports gaps. |
 | `docs-dhf` | Regulatory (writes) | Materializes DHF updates: Master Map, risk matrix, traceability, RFCs. |

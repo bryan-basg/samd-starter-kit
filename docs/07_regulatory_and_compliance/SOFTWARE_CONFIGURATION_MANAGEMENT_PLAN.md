@@ -21,6 +21,8 @@ Definir cómo se identifican, controlan y versionan los elementos de configuraci
 | Esquema de BD / migraciones | {{DB_STACK}} | Revisión de migración |
 | Infraestructura como código | {{CLOUD_STACK}} | Versionado en repo |
 | Documentación regulatoria (DHF) | `docs/` | Versión semántica del doc |
+| Reglamento del agente (gobernanza) | `CLAUDE.md` (core) + `.claude/rules/` (por capa y transversales) | Repositorio + hash de commit |
+| Equipo de agentes y procedimientos | `.claude/agents/`, `.claude/commands/`, `.claude/skills/`, `.claude/workflows/` | Repositorio + hash de commit |
 | Dependencias de terceros | Manifiestos + lockfiles | Versión pineada |
 | Artefactos de release | Imágenes/binarios | Tag + digest |
 
@@ -93,6 +95,7 @@ Verificación periódica de que el estado desplegado coincide con el baseline ap
 |---|---|---|---|
 | v1.0 | YYYY-MM-DD | {{OWNER}} | Versión inicial de plantilla. |
 | v1.1 | 2026-07-05 | Claude Sonnet 5 | Sincronización de reglas de Boy Scout (oportunista) y mutation score. Agregado comando `commit-selectivo-parcial`. |
+| v1.2 | 2026-08-07 | Claude Opus 5 | El reglamento del agente pasa a ser SCI explícito (`CLAUDE.md` + `.claude/`). Reestructuración de gobernanza: core + 8 reglas en `.claude/rules/` (4 path-scoped, 4 transversales). Equipo ampliado a 12 agentes (`clinical-algorithms`, `e2e-integration`). Endurecida la regla de commit selectivo (`git commit -- <rutas>`) y agregado el presupuesto de escritura de documentos vivos. |
 
 ---
 **Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

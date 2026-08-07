@@ -1,15 +1,16 @@
 # Equipo de agentes y flujo SaMD
 
 > Plantilla del SaMD Starter Kit. Este documento es la **vista de conjunto** de cómo
-> trabaja el kit: quién hace qué (el equipo de 10 agentes, organizado por capa) y bajo
+> trabaja el kit: quién hace qué (el equipo de 12 agentes, organizado por capa) y bajo
 > qué ciclo lo hace (el flujo SaMD gobernado por la **Regla 0**). Fuente de verdad de
-> los agentes: [`CLAUDE.md`](https://github.com/bryan-basg/samd-starter-kit/blob/main/CLAUDE.md)
-> y `.claude/agents/`. Fuente de verdad del ciclo: el
+> los agentes: `.claude/rules/agentes.md` y `.claude/agents/`; el **core** del reglamento
+> es [`CLAUDE.md`](https://github.com/bryan-basg/samd-starter-kit/blob/main/CLAUDE.md).
+> Fuente de verdad del ciclo: el
 > [Plan de Desarrollo de Software](../03_software_development_plan/SOFTWARE_DEVELOPMENT_PLAN.md).
 
 ---
 
-## 1. El equipo de 10 agentes, por capa
+## 1. El equipo de 12 agentes, por capa
 
 El kit reparte el trabajo en **especialistas por capa**: cada agente carga las reglas
 SaMD de su capa y trabaja aislado del contexto de las demás (consecuencia de IEC 62304
@@ -28,6 +29,9 @@ flowchart TB
         subgraph L_API["API + lógica"]
             BE["backend<br/><small>routers · services · auth<br/>audit · fusibles · scheduler</small>"]
         end
+        subgraph L_CLIN["Clínico (núcleo SaMD)"]
+            CLIN["clinical-algorithms<br/><small>escalas · scoring · bandas<br/>red de crisis · PHI clínica</small>"]
+        end
         subgraph L_UI["UI + cliente"]
             FE["frontend<br/><small>componentes · hooks · DAOs<br/>offline-first · neuro-UX</small>"]
         end
@@ -43,6 +47,7 @@ flowchart TB
         direction LR
         subgraph L_TEST["Testing / mutation"]
             QA["qa-mutation<br/><small>olas de mutation · killers<br/>ratchet de score</small>"]
+            E2E["e2e-integration<br/><small>flujos de punta a punta<br/>harness · triage de flaky</small>"]
         end
         subgraph L_SEC["Seguridad regulatoria"]
             SEC["security-samd<br/><small>SAST · cifrado · JWT-only<br/>pentest vs OpenAPI</small>"]
@@ -63,12 +68,15 @@ flowchart TB
 
     style RULES fill:#0d9488,color:#fff
     style L_REG fill:#fef3c7
+    style L_CLIN fill:#fee2e2
 ```
 
 **Cómo leer el diagrama.** La **Regla 0** configura a todos los agentes: ninguna capa
-queda fuera del cumplimiento. Las **capas de construcción** (Datos, API, UI, Plataforma,
-Nativo) producen el software; las **capas de calidad y cumplimiento** (Testing, Seguridad,
-i18n, Regulatorio) lo verifican, lo endurecen y dejan trazabilidad. Dentro de la capa
+queda fuera del cumplimiento. Las **capas de construcción** (Datos, API, Clínico, UI,
+Plataforma, Nativo) producen el software; las **capas de calidad y cumplimiento**
+(Testing, Seguridad, i18n, Regulatorio) lo verifican, lo endurecen y dejan trazabilidad.
+La capa **Clínica** va resaltada a propósito: es el núcleo "dispositivo médico", donde un
+error no es un bug sino un riesgo clínico (ISO 14971). Dentro de la capa
 Regulatoria hay una división deliberada: `samd-audit-trace` **audita** (detecta qué falta,
 no lo escribe) y `docs-dhf` **materializa** esos updates en el DHF. Es la misma separación
 auditor/redactor que exige un sistema de gestión de calidad.
@@ -77,18 +85,21 @@ auditor/redactor que exige un sistema de gestión de calidad.
 |---|---|---|
 | `db-architect` | Datos | Schemas, migraciones, pool de conexiones, cifrado en reposo, performance de queries. |
 | `backend` | API + lógica | Routers, services, schemas, auth, audit middleware, fusibles de resiliencia, scheduler, tests. |
+| `clinical-algorithms` | Clínico (núcleo SaMD) | Escalas y cuestionarios validados, scoring y bandas de severidad, red de crisis, PHI clínica cifrada, idempotencia. |
 | `frontend` | UI + cliente | Componentes, hooks, DAOs HTTP, sync offline-first, cache, tests de UI, mutation, neuro-UX. |
 | `cloud-ops` | Plataforma | Compute, BD gestionada, scheduler, gestor de secretos, hosting, CI/CD, deploys, monitoring. |
 | `mobile-native` | Nativo móvil | Empaquetado del cliente web en app nativa, plugins nativos, push, build/firma/distribución. |
 | `qa-mutation` | Testing / mutation | Olas de mutation testing, killers de mutantes, configs scoped, ratchet de score. |
+| `e2e-integration` | Testing E2E / integración | Flujos de punta a punta, harness y sembrado de usuarios, workflows de humo/regresión, triage de flaky ambiental. |
 | `security-samd` | Seguridad regulatoria | SAST, cifrado, gestión de claves, JWT-only, audit sin PII, pentest contra el contrato OpenAPI. |
 | `i18n-translations` | Internacionalización | Locales en todos los idiomas, paridad, plurales, glosario clínico pre-certificación. |
 | `samd-audit-trace` | Regulatorio (audita) | Auditar un changeset contra IEC 62304 §5.1/§5.7 + ISO 14971 antes de cerrar fase/PR. |
 | `docs-dhf` | Regulatorio (escribe) | Materializar updates en Master Map, matrices de riesgo y trazabilidad, RFCs. Corre el link-checker. |
 
-> La tabla refleja fielmente la de [`CLAUDE.md`](https://github.com/bryan-basg/samd-starter-kit/blob/main/CLAUDE.md).
-> Si agregás, quitás o re-asignás un agente, actualizá **ambas** en la misma pasada
-> (anti-drift de la fuente de verdad).
+> La tabla refleja fielmente la de `.claude/rules/agentes.md`. Si agregás, quitás o
+> re-asignás un agente, actualizá **ambas** en la misma pasada (anti-drift de la fuente
+> de verdad). El criterio para crear un agente nuevo —los **3 síes rotundos**— y las
+> reglas A-F de diseño de equipo viven en `.claude/rules/orquestacion.md`.
 
 ---
 

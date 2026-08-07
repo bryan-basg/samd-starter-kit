@@ -15,8 +15,8 @@ grab a good first issue, or start a
 
 ## Already shipped
 
-- **Team of 10 agents** with the SaMD ruleset pre-loaded (`.claude/agents/`).
-- **Agent ruleset** (`CLAUDE.md`) — Rule 0 and the multi-agent anti-drift protocol.
+- **Team of 12 agents** with the SaMD ruleset pre-loaded (`.claude/agents/`).
+- **Agent ruleset** (`CLAUDE.md` core + `.claude/rules/`) — Rule 0, the per-layer path-scoped rules and the multi-agent anti-drift protocol.
 - **11 working CI/CD workflows** (`.github/workflows/`).
 - **40+ document Design History File** (`docs/`).
 - **Runnable skeleton** (`app/` · `frontend/` · `tests/`).

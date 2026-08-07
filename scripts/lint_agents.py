@@ -20,6 +20,12 @@ Contrato real (derivado de los archivos existentes, no inventado):
   - `.claude/skills/*/SKILL.md` → frontmatter YAML con `name` y `description`
                                 no vacíos + al menos una cabecera Markdown
                                 (`# ...`) en el cuerpo.
+  - `.claude/rules/*.md`      → dos sabores: **path-scoped** (frontmatter con
+                                `paths:` + al menos un glob) o **transversal**
+                                (sin frontmatter). Ambos con cabecera Markdown.
+                                Un frontmatter sin `paths` no acota nada: la
+                                regla cree ser por-capa y en realidad no carga
+                                donde debería.
 
 Sin dependencias externas: el frontmatter se parsea a mano (subconjunto YAML
 suficiente para `clave: valor` en bloque `---`). Si `pyyaml` está disponible se
@@ -46,6 +52,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 AGENTS_DIR = REPO_ROOT / ".claude" / "agents"
 COMMANDS_DIR = REPO_ROOT / ".claude" / "commands"
 SKILLS_DIR = REPO_ROOT / ".claude" / "skills"
+RULES_DIR = REPO_ROOT / ".claude" / "rules"
 
 # Claves obligatorias (no vacías) por tipo de artefacto.
 AGENT_REQUIRED = ("name", "description", "tools")
@@ -131,6 +138,69 @@ def check_file(path: Path, required: tuple[str, ...], *, need_heading: bool = Fa
     return errors
 
 
+def check_rule_file(path: Path) -> list[str]:
+    """Valida un archivo de `.claude/rules/`.
+
+    Las reglas vienen en dos sabores y el contrato es distinto para cada uno:
+
+    - **Path-scoped**: llevan frontmatter con `paths:` + al menos un glob. Cargan
+      solo cuando el agente toca un archivo de esa capa. Un frontmatter sin
+      `paths` no acota nada — es un archivo que cree ser path-scoped y no lo es,
+      el fallo más silencioso posible en este diseño.
+    - **Transversales**: SIN frontmatter, cargan siempre (igual que `CLAUDE.md`).
+
+    Ambos sabores deben tener cabecera Markdown; una regla sin título no se puede
+    citar desde el mapa del cerebro.
+    """
+    errors: list[str] = []
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError as exc:  # pragma: no cover - I/O del entorno
+        return [f"no se pudo leer: {exc}"]
+
+    fm, body = split_frontmatter(text)
+
+    if fm is not None:
+        fm_lines = [line.rstrip() for line in fm.splitlines() if line.strip()]
+        if not any(line.split(":")[0].strip() == "paths" for line in fm_lines):
+            errors.append(
+                "tiene frontmatter pero sin `paths:` — o le agregás los globs de "
+                "su capa, o le sacás el frontmatter para que sea transversal"
+            )
+        # Los globs son items de lista YAML (`- \"app/**/*.py\"`). Se cuentan a
+        # mano para no depender de pyyaml (que puede no estar instalado).
+        elif not any(line.lstrip().startswith("- ") for line in fm_lines):
+            errors.append("`paths:` está declarado pero no lista ningún glob")
+
+    if not any(line.lstrip().startswith("#") for line in body.splitlines()):
+        errors.append("sin cabecera Markdown (`# ...`) en el cuerpo")
+
+    return errors
+
+
+def lint_rules(files: list[Path]) -> bool:
+    """Lintea `.claude/rules/*.md` distinguiendo path-scoped de transversales."""
+    print("\n== Reglas (.claude/rules/*.md) ==")
+    if not files:
+        print("  (sin archivos — omitido)")
+        return True
+
+    ok = True
+    for path in sorted(files):
+        rel = path.relative_to(REPO_ROOT)
+        errors = check_rule_file(path)
+        scoped = path.read_text(encoding="utf-8").startswith("---")
+        kind = "path-scoped" if scoped else "transversal"
+        if errors:
+            ok = False
+            print(f"  ✗ {rel}  [{kind}]")
+            for err in errors:
+                print(f"      - {err}")
+        else:
+            print(f"  ✓ {rel}  [{kind}]")
+    return ok
+
+
 def lint_group(
     title: str,
     files: list[Path],
@@ -170,9 +240,11 @@ def main() -> int:
     agents = list(AGENTS_DIR.glob("*.md"))
     commands = list(COMMANDS_DIR.glob("*.md"))
     skills = list(SKILLS_DIR.glob("*/SKILL.md"))
+    rules = list(RULES_DIR.glob("*.md"))
 
     results = [
         lint_group("Agentes (.claude/agents/*.md)", agents, AGENT_REQUIRED),
+        lint_rules(rules),
         lint_group("Comandos (.claude/commands/*.md)", commands, COMMAND_REQUIRED),
         # Las skills pueden no existir en un proyecto recién clonado → no se
         # exige presencia, pero las que existan deben cumplir el contrato.

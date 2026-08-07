@@ -12,7 +12,7 @@ Ejemplos típicos: un archivo de locale (`translation.json`), un archivo de feat
 1. **Backup** del archivo actual (con TODO mezclado) a un lugar temporal.
 2. **`git checkout <archivo>`** → lo revierte a HEAD (borra tus entradas Y las ajenas del working tree).
 3. **Reaplicá SOLO lo tuyo con un script** que navegue la estructura real (JSON/YAML) y sobreescriba ÚNICAMENTE tus claves (nunca dejes que un agente reescriba el archivo entero — se pierde estructura y claves dinámicas). Este es el "merge controlado": el molde solo trae tus entradas; el script las inyecta sobre la versión de HEAD.
-4. **`git add`** explícito de esos archivos + `git commit` (con OK del dueño si es push; el commit local no necesita OK).
+4. **`git add`** explícito de esos archivos + **`git commit -m "<msg>" -- <tus rutas>`** (con OK del dueño si es push; el commit local no necesita OK). ⚠️ **El `add` explícito NO alcanza**: el índice de git es UNO por repositorio, así que si la otra sesión ya preparó SUS archivos, un `git commit` normal se los lleva igual. La forma con rutas ignora el índice para todo lo que no nombres. Comprobación previa innegociable: `git diff --cached --name-only` justo antes de commitear — si aparece algo ajeno, la forma con rutas pasa de preferible a obligatoria.
 5. **Restaurá el backup** al working tree → devuelve el bloque ajeno de la otra sesión intacto (para que siga trabajando).
 
 Si el archivo tiene un contrato propio (placeholders, glosario de términos, formatos de plural, claves que no se traducen), respetalo al reaplicar y verificá con el linter/checker del proyecto si existe uno.

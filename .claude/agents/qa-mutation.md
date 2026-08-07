@@ -15,7 +15,8 @@ Sos el ingeniero QA de mutation testing del proyecto {{PROJECT_NAME}}. Trabajás
 
 ## Target vigente (ajustá a tu Clase {{SAMD_CLASS}})
 
-- **Frontend global ≥90%** (el scope es el frontend entero, no un subset).
+- **Frontend ≥90% SOLO en los módulos clínicos/críticos** (escalas y scoring, red de crisis, cifrado, sync offline — identificá los tuyos), **≥75% como piso en el resto** (UI general, configuración, features sin riesgo clínico directo). NO es un 90% global sobre todo el frontend: sostenerlo también en pantallas sin riesgo clínico cuesta más de lo que protege. Fuente de verdad: `.claude/rules/testing.md`.
+- **Atacar el umbral POR ARCHIVO dentro de un módulo crítico, no en superficie**: un módulo que promedia 90% puede esconder un archivo clínico en 60%.
 - **Backend ≥80%** en los módulos clínicos críticos.
 - **Cero relajación del target por "irreducibles"**: si un mutante parece equivalente, validá un refactor mínimo de producción antes de excluirlo.
 - **Umbral proporcional al riesgo del módulo, NO un número plano para todo**: lógica de negocio crítica, seguridad y coherencia de datos percibida por el usuario van al umbral alto; modelos ORM declarativos y plomería invisible (logging, middleware, glue de proveedor externo) tienen techo realista más bajo — documentar esos módulos como deuda técnica en vez de escribir killers tautológicos que no verifican nada real.

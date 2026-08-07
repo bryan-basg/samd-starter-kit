@@ -115,6 +115,13 @@ solo **Lección** cuando es una práctica que conviene adoptar de entrada, sin e
 - **Causa:** agregar "todo" al staging en vez de listar archivos explícitos.
 - **Lección:** si el árbol tiene cambios de otra sesión sin commitear, agregá EXPLÍCITAMENTE tus
   archivos, nunca "agregar todo". Tras un revert grande, verificá qué NO volvió a producción.
+- **Y el `add` explícito no alcanza — esto es mecánica de git, no descuido:** el índice es **uno por
+  repositorio**. Si la otra sesión ya preparó sus archivos, un `commit` normal se los lleva igual,
+  dentro de un commit cuyo mensaje no los describe. La forma que sí protege nombra las rutas en el
+  propio commit (`git commit -m "<msg>" -- <tus rutas>`), que ignora el índice para todo lo demás.
+  Comprobalo con `git diff --cached --name-only` justo antes de confirmar. Ojo con el alcance: esto
+  protege lo tuyo de irse, **no impide** que la otra sesión se lo lleve con un "agregar todo" —
+  desde una sola ventana no se puede garantizar en ambos sentidos.
 
 ### Las operaciones sin vuelta atrás piden confirmación explícita, sí o sí
 

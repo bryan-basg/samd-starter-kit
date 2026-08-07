@@ -103,6 +103,40 @@ def test_failsafe_returns_503_with_retry_after(client):
     assert "momento" in resp.json()["detail"].lower()
 
 
+@pytest.mark.security
+def test_malformed_body_gets_an_empathetic_message_not_the_framework_default(client):
+    """Cuerpo ilegible → 400 con mensaje humano, nunca el texto del framework.
+
+    Lo destapó el fuzz de contrato (schemathesis), no una revisión a ojo: sin el
+    handler, la librería respondía `"There was an error parsing the body"` — en
+    inglés y en jerga técnica, justo lo que §5.4 prohíbe mostrarle a un usuario.
+    """
+    resp = client.post(
+        "/notes",
+        content=b"\x80\x81 esto no es json",
+        headers={**auth("alice"), "Content-Type": "application/json"},
+    )
+    assert resp.status_code == 400
+    detail = resp.json()["detail"]
+    # Mensaje empático y en español...
+    assert "no pudimos leer" in detail.lower()
+    # ...y NADA del default técnico del framework.
+    for leak in ("parsing", "body", "JSON decode", "Traceback"):
+        assert leak.lower() not in detail.lower()
+
+
+@pytest.mark.security
+def test_invalid_payload_shape_is_422_and_still_empathetic(client):
+    """Un cuerpo JSON válido pero con forma inválida sigue siendo 422, no 400.
+
+    Ancla que el handler distingue "no pude parsear" (400) de "parseé pero no
+    valida" (422): colapsar ambos en un solo código le mentiría al contrato.
+    """
+    resp = client.post("/notes", json={"text": 12345678}, headers=auth("alice"))
+    assert resp.status_code == 422
+    assert "no pudimos leer" in resp.json()["detail"].lower()
+
+
 @pytest.mark.unit
 def test_health_endpoint(client):
     resp = client.get("/health")

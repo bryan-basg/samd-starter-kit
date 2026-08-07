@@ -1,17 +1,21 @@
 {
   "components": {
     "schemas": {
-      "HTTPValidationError": {
+      "ErrorOut": {
+        "description": "Forma ÚNICA de todo error que sale de la API.\n\nEl default del framework para un 422 es `detail: [ {loc, msg, type}, … ]` —\nuna lista de errores de validación con rutas de campo y nombres de tipo, o\nsea jerga técnica que §5.4 prohíbe mostrarle a un usuario. Los handlers de\n`app/main.py` devuelven en su lugar UNA frase empática, así que el contrato\ntiene que declarar esa forma: si el contrato promete una lista y la app manda\ntexto, el cliente generado rompe.\n\nLo cazó el fuzz de contrato al validar la respuesta contra su propio esquema.",
         "properties": {
           "detail": {
-            "items": {
-              "$ref": "#/components/schemas/ValidationError"
-            },
+            "examples": [
+              "No pudimos leer los datos que enviaste."
+            ],
             "title": "Detail",
-            "type": "array"
+            "type": "string"
           }
         },
-        "title": "HTTPValidationError",
+        "required": [
+          "detail"
+        ],
+        "title": "ErrorOut",
         "type": "object"
       },
       "NoteIn": {
@@ -45,46 +49,6 @@
           "text"
         ],
         "title": "NoteOut",
-        "type": "object"
-      },
-      "ValidationError": {
-        "properties": {
-          "ctx": {
-            "title": "Context",
-            "type": "object"
-          },
-          "input": {
-            "title": "Input"
-          },
-          "loc": {
-            "items": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "integer"
-                }
-              ]
-            },
-            "title": "Location",
-            "type": "array"
-          },
-          "msg": {
-            "title": "Message",
-            "type": "string"
-          },
-          "type": {
-            "title": "Error Type",
-            "type": "string"
-          }
-        },
-        "required": [
-          "loc",
-          "msg",
-          "type"
-        ],
-        "title": "ValidationError",
         "type": "object"
       }
     },
@@ -175,6 +139,16 @@
               }
             },
             "description": "Successful Response"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Falta el token o no es válido."
           }
         },
         "security": [
@@ -207,15 +181,35 @@
             },
             "description": "Successful Response"
           },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "El cuerpo enviado no es JSON válido."
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorOut"
+                }
+              }
+            },
+            "description": "Falta el token o no es válido."
+          },
           "422": {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
+                  "$ref": "#/components/schemas/ErrorOut"
                 }
               }
             },
-            "description": "Validation Error"
+            "description": "Los datos enviados no son válidos."
           }
         },
         "security": [

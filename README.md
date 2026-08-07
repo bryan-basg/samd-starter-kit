@@ -16,6 +16,8 @@
 [![CI](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/ci.yml)
 [![Kit Quality](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/kit-quality.yml/badge.svg)](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/kit-quality.yml)
 [![Placeholder Guard](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/placeholder-guard.yml/badge.svg)](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/placeholder-guard.yml)
+[![Security Audit](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/security-audit.yml/badge.svg)](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/security-audit.yml)
+[![API Fuzzing](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/schemathesis.yml/badge.svg)](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/schemathesis.yml)
 
 **English · [Español](README.es.md)**
 

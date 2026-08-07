@@ -19,18 +19,23 @@ name: Schemathesis (API contract fuzzing)
 #   - acciones pineadas a SHA.
 
 on:
-  # Triggers automáticos COMENTADOS hasta que tu API exista. Descomentá al agregarla.
-  # pull_request:
-  #   branches: [main, master]
-  #   paths:
-  #     - 'app/routers/**'
-  #     - 'app/schemas/**'
-  #     - 'app/main.py'
-  #     - 'app/dependencies.py'
-  #     - 'scripts/run_schemathesis.sh'
-  #     - '.github/workflows/schemathesis.yml'
-  # schedule:
-  #   - cron: '0 4 1,15 * *'   # días 1 y 15, 04:00 UTC
+  # ACTIVOS: el script levanta el backend solo (TESTING=True, sin infra externa),
+  # así que este gate corre sin necesidad de nada desplegado. Al encenderlo destapó
+  # que la API respondía en inglés técnico ante un cuerpo malformado y que el
+  # contrato no declaraba 400/401 ni la forma real del 422.
+  pull_request:
+    branches: [main, master]
+    paths:
+      - 'app/routers/**'
+      - 'app/schemas.py'
+      - 'app/schemas/**'
+      - 'app/main.py'
+      - 'app/dependencies.py'
+      - 'scripts/run_schemathesis.sh'
+      - 'scripts/sast.sh'
+      - '.github/workflows/schemathesis.yml'
+  schedule:
+    - cron: '0 4 1,15 * *'   # días 1 y 15, 04:00 UTC
   workflow_dispatch:
     inputs:
       examples:

@@ -3,16 +3,19 @@
 name: Security Audit
 
 on:
-  # Triggers automáticos COMENTADOS hasta que tu código de app exista. Descomentá al agregarlo.
-  # schedule:
-  #   - cron: '0 3 * * *'   # nightly 03:00 UTC
-  # pull_request:
-  #   paths:
-  #     - 'app/**'
-  #     - 'frontend/src/**'
-  #     - 'requirements*.txt'
-  #     - 'frontend/package*.json'
-  #     - 'Dockerfile'
+  # ACTIVOS: el esqueleto del kit es código real y este gate lo escanea de verdad.
+  # En su primera corrida encontró el Dockerfile corriendo como root (DS-0002, HIGH).
+  # Si adaptás el kit a otro stack, ajustá los paths; no los comentes.
+  schedule:
+    - cron: '0 3 * * *'   # nightly 03:00 UTC
+  pull_request:
+    paths:
+      - 'app/**'
+      - 'frontend/src/**'
+      - 'requirements*.txt'
+      - 'frontend/package*.json'
+      - 'Dockerfile'
+      - '.github/workflows/security-audit.yml'
   workflow_dispatch:
 
 concurrency:

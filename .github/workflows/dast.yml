@@ -16,13 +16,18 @@ name: DAST (OWASP ZAP)
 # retención acotada de artifacts.
 
 on:
-  # Triggers automáticos COMENTADOS hasta que tu backend exista. Descomentá al agregarlo.
-  # schedule:
-  #   - cron: '0 6 * * 1'   # lunes 06:00 UTC
-  # push:
-  #   paths:
-  #     - 'scripts/run_zap_dast.sh'
-  #     - '.github/workflows/dast.yml'
+  # ACTIVOS: el script levanta el backend en el runner, así que no hace falta nada
+  # desplegado. Antes de encenderlo daba un VERDE FALSO — escaneaba la raíz `/`,
+  # que en una API no existe, y aprobaba habiendo mirado tres 404. Ahora el script
+  # exige que el objetivo responda 200 antes de escanear y que el reporte exista
+  # después; sin eso el gate no aprueba.
+  schedule:
+    - cron: '0 6 * * 1'   # lunes 06:00 UTC
+  push:
+    paths:
+      - 'app/**'
+      - 'scripts/run_zap_dast.sh'
+      - '.github/workflows/dast.yml'
   workflow_dispatch:
 
 concurrency:

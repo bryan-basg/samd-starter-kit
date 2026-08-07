@@ -51,9 +51,31 @@ además un resumen Markdown legible por humanos.
 
 ## 4. Procedimiento de generación
 
-1. **Local**: `bash scripts/generate_sbom.sh` (requiere venv activo + lockfile
-   del frontend íntegro). Salida a `sbom/` con archivos fechados + punteros
+1. **Local**: `bash scripts/generate_sbom.sh` (requiere venv + lockfile del
+   frontend íntegro). Salida a `sbom/` con archivos fechados + punteros
    estables `sbom-latest-{backend,frontend}.json`.
+
+   ⚠️ **NO generes el SBOM desde tu venv de desarrollo.** El script enumera el
+   entorno **real** (`cyclonedx-py environment`), así que todo lo que tengas
+   instalado para trabajar —el generador de docs, el motor de tests, el
+   type-checker, el linter— entra al SBOM como si fuera dependencia del
+   dispositivo. Medido en este repo: **96 componentes desde el venv de
+   desarrollo contra 56 desde uno limpio** — 40 paquetes que inflaban la
+   superficie declarada y habrían mandado a revisar CVEs de herramientas que el
+   producto no embarca. Usá un venv limpio con **solo `requirements.txt`** y
+   apuntá el script ahí:
+
+   ```bash
+   python3 -m venv /tmp/venv-sbom
+   source /tmp/venv-sbom/bin/activate
+   pip install -r requirements.txt && pip install cyclonedx-bom
+   deactivate
+   VENV_DIR=/tmp/venv-sbom bash scripts/generate_sbom.sh
+   ```
+
+   El workflow de CI ya lo hace bien (crea un virtualenv desde cero); la trampa
+   es exclusiva del camino local. `cyclonedx-bom` está en `requirements-dev.txt`
+   para que el procedimiento funcione en un clone nuevo.
 2. **CI**: el workflow `.github/workflows/sbom.yml` regenera el SBOM ante
    cualquier cambio de lockfiles (paths-filter) + cron semanal de detección de
    drift. Falla si el SBOM sale vacío (guard de 0 componentes).

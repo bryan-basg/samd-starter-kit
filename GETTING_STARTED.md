@@ -12,7 +12,7 @@ This kit is **scaffolding + methodology**, not an application. It gives you:
 
 - A **team of AI agents** (in `.claude/agents/`) pre-loaded with the compliance rules of each layer.
 - A complete **Design History File (DHF)** — 40+ regulatory & process templates with `{{placeholders}}` ready to fill.
-- The **rules** (`CLAUDE.md`), a **multi-agent review workflow**, and **working CI**.
+- The **rules** (`CLAUDE.md` core + `.claude/rules/` per layer), a **multi-agent review workflow**, and **working CI**.
 - A **worked example** ([`examples/auralog/`](examples/auralog/)) showing the templates filled in.
 
 You bring your application code into `app/` (backend), `frontend/` (client) and `tests/`. The kit handles the *process* around it that **IEC 62304 + ISO 14971** demand.
@@ -23,11 +23,12 @@ You bring your application code into `app/` (backend), `frontend/` (client) and 
 
 ```
 my-medical-device/
-├── CLAUDE.md            ← the ruleset the agents obey (Rule 0)
+├── CLAUDE.md            ← the ruleset core the agents obey (Rule 0)
 ├── GETTING_STARTED.md   ← you are here
 ├── CONTRIBUTING.md      ← workflow, Definition of Done, hard rules
 ├── .claude/
-│   ├── agents/          ← 10 layer specialists (backend, frontend, db, …)
+│   ├── rules/           ← the rest of the ruleset: 4 path-scoped (load per layer) + 4 cross-cutting
+│   ├── agents/          ← 12 layer specialists (backend, clinical, frontend, db, …)
 │   ├── commands/ skills/← samd-trace: impact analysis (§5.6)
 │   └── workflows/       ← samd-review: multi-agent diff review
 ├── .agents/workflows/   ← agent-agnostic mirror of the process
@@ -139,11 +140,11 @@ npm run dev                     # http://localhost:5173
 
 **Delete the example when you bring your own app** — it's clearly marked. Then bring your code in, honoring the hard rules:
 
-- **`app/`** — your backend. Hard rules: identity from the token only, fully async, strict typing, no tracebacks to the user, fail-safe with `503 + Retry-After`. See [`.claude/agents/backend.md`](.claude/agents/backend.md).
-- **`frontend/`** — your client. Hard rules: offline-first, flat design (no glassmorphism), `prefers-reduced-motion` honored, accessible labels. See [`.claude/agents/frontend.md`](.claude/agents/frontend.md).
-- **`tests/`** — rigorous assertions, not smoke tests. See [`COMPLETE_TESTING_STRATEGY`](docs/03_software_development_plan/COMPLETE_TESTING_STRATEGY.md).
+- **`app/`** — your backend. Hard rules: identity from the token only, fully async, strict typing, no tracebacks to the user, fail-safe with `503 + Retry-After`. See [`.claude/rules/backend.md`](.claude/rules/backend.md) (loads automatically when the agent touches this layer) and [`.claude/agents/backend.md`](.claude/agents/backend.md).
+- **`frontend/`** — your client. Hard rules: offline-first, `prefers-reduced-motion` honored unconditionally, WCAG AA contrast, canonical overlays, accessible labels. See [`.claude/rules/frontend-ux.md`](.claude/rules/frontend-ux.md) and [`.claude/agents/frontend.md`](.claude/agents/frontend.md).
+- **`tests/`** — rigorous assertions, not smoke tests. See [`.claude/rules/testing.md`](.claude/rules/testing.md) and [`COMPLETE_TESTING_STRATEGY`](docs/03_software_development_plan/COMPLETE_TESTING_STRATEGY.md).
 
-The reference stack is React+TS / Python+FastAPI, but the rules are stack-agnostic — adapt the commands in `CLAUDE.md` to yours.
+The reference stack is React+TS / Python+FastAPI, but the rules are stack-agnostic — adapt the `paths:` globs and the commands in [`.claude/rules/`](.claude/rules/) to yours (the layer rules live there; `CLAUDE.md` keeps only what applies on every turn).
 
 ### Step 4 — The daily loop
 
@@ -170,7 +171,7 @@ flowchart LR
 5. CI checks lint, types, tests, contract drift and traceability.
 6. Nothing is "done" until tests are green **with numbers reported** — and **nobody commits without your OK**.
 
-The full rulebook is [`CLAUDE.md`](CLAUDE.md); the agent-agnostic process mirror is [`.agents/workflows/protocolo_desarrollo.md`](.agents/workflows/protocolo_desarrollo.md).
+The full rulebook is [`CLAUDE.md`](CLAUDE.md) (core) plus [`.claude/rules/`](.claude/rules/) (per layer — start at the "MAPA DE ESTE CEREBRO" section of `CLAUDE.md`, which says what loads when); the agent-agnostic process mirror is [`.agents/workflows/protocolo_desarrollo.md`](.agents/workflows/protocolo_desarrollo.md).
 
 ---
 
@@ -190,7 +191,7 @@ The full rulebook is [`CLAUDE.md`](CLAUDE.md); the agent-agnostic process mirror
 
 | You want to… | Go to |
 |---|---|
-| Understand the rules the agents enforce | [`CLAUDE.md`](CLAUDE.md) |
+| Understand the rules the agents enforce | [`CLAUDE.md`](CLAUDE.md) + [`.claude/rules/`](.claude/rules/) |
 | Navigate the whole DHF | [`docs/README.md`](docs/README.md) |
 | See the templates filled in | [`examples/auralog/`](examples/auralog/) |
 | Plan the road to certification | [`CERTIFICATION_HOWTO`](docs/07_regulatory_and_compliance/CERTIFICATION_HOWTO.md) |

@@ -35,7 +35,8 @@
 
 ## Documentos de referencia
 
-- **`CLAUDE.md`** — reglamento del agente: Regla 0, estándares de backend/frontend, orquestación multi-agente, testing.
+- **`CLAUDE.md`** — **core** del reglamento del agente: Regla 0, cómo trabajar con el dueño, empatía, boy scout, análisis de impacto y cierre de bloque. Carga en cada turno.
+- **`.claude/rules/`** — el resto del reglamento: cuatro reglas **path-scoped** que cargan solas al tocar esa capa (`backend`, `frontend-ux`, `testing`, `github-actions`) y cuatro transversales (`orquestacion`, `agentes`, `comandos`, `sesiones-paralelas`). Regla nueva de capa → va acá; regla que aplica siempre → va al core.
 - **`.agents/workflows/protocolo_desarrollo.md`** — el proceso de desarrollo estable, agnóstico al agente.
 - **`docs/03_software_development_plan/DEVELOPMENT_GUIDE_COMPLETE.md`** — guía completa: setup, comandos, estándares, flujo de PR.
 - **`docs/03_software_development_plan/COMPLETE_TESTING_STRATEGY.md`** — estrategia de verificación SaMD-grade.

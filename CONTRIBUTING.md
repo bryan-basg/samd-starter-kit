@@ -35,7 +35,8 @@
 
 ## Reference documents
 
-- **`CLAUDE.md`** — the agent ruleset: Rule 0, backend/frontend standards, multi-agent orchestration, testing.
+- **`CLAUDE.md`** — the agent ruleset **core**: Rule 0, how to work with the owner, empathy, boy scout, impact analysis and block closure. Loads on every turn.
+- **`.claude/rules/`** — the rest of the ruleset: four **path-scoped** rules that load only when that layer is touched (`backend`, `frontend-ux`, `testing`, `github-actions`) plus four cross-cutting ones (`orquestacion`, `agentes`, `comandos`, `sesiones-paralelas`). A new layer rule goes here; a rule that always applies goes in the core.
 - **`.agents/workflows/protocolo_desarrollo.md`** — the stable, agent-agnostic development process.
 - **`docs/03_software_development_plan/DEVELOPMENT_GUIDE_COMPLETE.md`** — the complete guide: setup, commands, standards, PR flow.
 - **`docs/03_software_development_plan/COMPLETE_TESTING_STRATEGY.md`** — the SaMD-grade verification strategy.

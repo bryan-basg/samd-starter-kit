@@ -47,6 +47,8 @@ La sobrecarga de coordinar crece rápido (aprox. N²: más agentes = más decisi
 - **Cuál elegir en solapamiento:** gana el más específico (un especialista de mutation > el de backend para una tarea de mutation). Empate → el más regulatorio.
 - **Cuándo NO delegar:** tarea que cruza 4+ capas con dependencias; diagnóstico abierto sin hipótesis; iteración de UX en vivo con el dueño; cambio de 1-2 líneas. Eso lo hace el chat principal.
 - **Señales de equipo inflado (parar y consolidar):** pasás más tiempo decidiendo *cuál* agente que trabajando; dos agentes editan el mismo archivo; el dueño pierde el hilo; la síntesis de los diffs deja de ser manejable.
+- **El tamaño del equipo no es la única palanca de costo — el *mix* de modelos es la otra:** no todo agente necesita el modelo tope. Los sub-pasos mecánicos y de alto volumen van a un modelo económico, el grueso agéntico a uno intermedio, y el modelo más capaz se reserva para lo clínico/crítico y la recuperación de errores. Recortar agentes cuando el problema real era enrutar mal el modelo es apagar capacidad sin necesidad.
+- **Un tope numérico fijo de agentes es arbitrario y envejece mal.** Tener un archivo de agente en disco no cuesta por sí solo: el costo real es el *solapamiento* y el tiempo de decidir cuál. Reemplazá el número por el portón de los tres síes de arriba y por las señales de equipo inflado. Lo que sí conviene acotar es cuántos corren **en paralelo por turno**, que es donde pega la sobrecarga N².
 
 ## Las reglas duras que un modelo mejor NO anula
 

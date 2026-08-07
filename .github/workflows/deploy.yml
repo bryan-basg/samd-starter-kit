@@ -52,7 +52,7 @@ jobs:
     timeout-minutes: 15
     environment: production # protegé con required reviewers en Settings → Environments
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       # - name: Autenticar contra la nube
       #   run: <auth con ${{ secrets.CLOUD_CREDENTIALS }}>   # desde Secrets, nunca del repo
       - name: Migrar la BD (atómico — abortar si falla)
@@ -71,7 +71,7 @@ jobs:
     timeout-minutes: 15
     environment: production
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Publicar backend
         run: |
           echo "El runtime arranca con migraciones DESHABILITADAS (las corrió el job 'migrate')."
@@ -91,8 +91,8 @@ jobs:
     timeout-minutes: 15
     environment: production
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
         with:
           node-version: "20"
       - name: Build + publicar frontend

@@ -105,6 +105,7 @@ Verificación periódica de que el estado desplegado coincide con el baseline ap
 | v1.0 | YYYY-MM-DD | {{OWNER}} | Versión inicial de plantilla. |
 | v1.1 | 2026-07-05 | Claude Sonnet 5 | Sincronización de reglas de Boy Scout (oportunista) y mutation score. Agregado comando `commit-selectivo-parcial`. |
 | v1.2 | 2026-08-07 | Claude Opus 5 | El reglamento del agente pasa a ser SCI explícito (`CLAUDE.md` + `.claude/`). Reestructuración de gobernanza: core + 8 reglas en `.claude/rules/` (4 path-scoped, 4 transversales). Equipo ampliado a 12 agentes (`clinical-algorithms`, `e2e-integration`). Endurecida la regla de commit selectivo (`git commit -- <rutas>`) y agregado el presupuesto de escritura de documentos vivos. |
+| v1.3 | 2026-08-23 | Claude Opus 5 | Sincronización de gobernanza con el proyecto de referencia. **Corregido un control que no controlaba**: el link-checker cross-doc que el reglamento mandaba correr (`grep` de enlaces) no verificaba nada — los 5 sitios pasan a invocar `scripts/check_doc_links.sh`, que es el mismo verificador que corre el CI. Nuevas skills `/tandas-agentes` (presupuesto y parada obligatoria entre tandas de subagentes) y `/memoria`. `github-actions.md` suma §Los rojos que NO se ven (job centinela, relojes anidados, `cancel-in-progress` gateado por evento, `continue-on-error`) y §Mediciones y umbrales. Seis workflows con `schedule` dejaban de cancelar sus propias corridas programadas. |
 
 ---
 **Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

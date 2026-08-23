@@ -35,7 +35,11 @@ on:
 # Cancel superseded runs on the same ref to save runner minutes.
 concurrency:
   group: db-tier-${{ github.ref }}
-  cancel-in-progress: true
+  # Gateado por evento a propósito: este workflow trae un `schedule` COMENTADO arriba y, al
+  # descomentarlo, un `true` incondicional cancelaría la corrida programada — que es la única
+  # muestra del período — dejándola como `cancelled`, que no se lee como rojo
+  # (.claude/rules/github-actions.md §Los rojos que NO se ven).
+  cancel-in-progress: ${{ github.event_name == 'pull_request' || github.event_name == 'push' }}
 
 permissions:
   contents: read

@@ -32,7 +32,9 @@ on:
 
 concurrency:
   group: dast-${{ github.ref }}
-  cancel-in-progress: true
+  # Un cron cancelado pierde la ÚNICA muestra del día Y queda como `cancelled`, que no se lee como rojo
+  # (.claude/rules/github-actions.md §Los rojos que NO se ven). Solo se cancelan las corridas de push/PR.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' || github.event_name == 'push' }}
 
 permissions:
   contents: read

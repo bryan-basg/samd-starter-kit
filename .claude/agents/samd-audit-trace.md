@@ -43,17 +43,9 @@ Sos un auditor SaMD especializado en trazabilidad documental (IEC 62304 §5.1 §
 
 6. **Validar enlaces cross-doc**:
    ```bash
-   while IFS= read -r line; do
-     src=$(echo "$line" | cut -d: -f1)
-     link=$(echo "$line" | grep -oE "\(\.{1,2}/[^)]+\.md[^)]*\)" | tr -d '()')
-     for L in $link; do
-       clean=$(echo "$L" | sed 's/#.*//')
-       resolved=$(realpath -q --no-symlinks "$(dirname "$src")/$clean" 2>/dev/null)
-       [ ! -f "$resolved" ] && echo "BROKEN: $src → $L"
-     done
-   done < <(grep -rEn "\(\.{1,2}/[^)]+\.md[^)]*\)" docs/)
+   bash scripts/check_doc_links.sh   # exit 1 si hay rotos; barre docs/ + examples/ + raíz
    ```
-   **Cualquier enlace roto = BLOQUEANTE.**
+   Es la **misma** herramienta que corren `.github/workflows/ci.yml` y `kit-quality.yml`: una sola fuente de verdad, sin copia del bucle acá (una copia se queda vieja sola). ⚠️ **Un `grep` de enlaces NO es un link-checker** — lista los relativos, rotos y sanos por igual, y da un verde vacío. **Cualquier enlace roto = BLOQUEANTE.**
 
 7. **Verificar drift `.env.example`** si el changeset toca config o introduce lectura de entorno: var nueva en código sin documentar en `.env.example` = bloqueante de onboarding.
 

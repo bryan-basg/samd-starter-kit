@@ -8,7 +8,7 @@ Este documento captura el método que funcionó en un proyecto SaMD real para te
 
 ## La postura: paralelismo agresivo con cohesión
 
-Repartir en muchos agentes en paralelo cuando la tarea lo permite (búsquedas anchas, auditorías, mutation por archivo, refactors multi-archivo independientes). Lanzar agentes en la nube no consume la máquina propia → no hay que pedir permiso por cada ola. Pero la calidad **no se relaja por ir más rápido**.
+Repartir en muchos agentes en paralelo cuando la tarea lo permite (búsquedas anchas, auditorías, mutation por archivo, refactors multi-archivo independientes). Lanzar agentes en la nube no consume la máquina propia — esa es la mecánica que los saca de la categoría "proceso pesado", y por eso **dentro de una ola no se pide permiso por cada agente**. Pero sí consumen la **cuota de tokens** del dueño, que es un costo distinto y se gobierna aparte (ver *El otro costo* más abajo). Y la calidad **no se relaja por ir más rápido**.
 
 ## El protocolo anti-drift (obligatorio con 2+ agentes)
 
@@ -49,6 +49,18 @@ La sobrecarga de coordinar crece rápido (aprox. N²: más agentes = más decisi
 - **Señales de equipo inflado (parar y consolidar):** pasás más tiempo decidiendo *cuál* agente que trabajando; dos agentes editan el mismo archivo; el dueño pierde el hilo; la síntesis de los diffs deja de ser manejable.
 - **El tamaño del equipo no es la única palanca de costo — el *mix* de modelos es la otra:** no todo agente necesita el modelo tope. Los sub-pasos mecánicos y de alto volumen van a un modelo económico, el grueso agéntico a uno intermedio, y el modelo más capaz se reserva para lo clínico/crítico y la recuperación de errores. Recortar agentes cuando el problema real era enrutar mal el modelo es apagar capacidad sin necesidad.
 - **Un tope numérico fijo de agentes es arbitrario y envejece mal.** Tener un archivo de agente en disco no cuesta por sí solo: el costo real es el *solapamiento* y el tiempo de decidir cuál. Reemplazá el número por el portón de los tres síes de arriba y por las señales de equipo inflado. Lo que sí conviene acotar es cuántos corren **en paralelo por turno**, que es donde pega la sobrecarga N².
+
+## El otro costo: la cuota (tandas, no olas encadenadas)
+
+El diseño del equipo controla el costo de **coordinación**. Falta el otro: el **consumo**. Una ola encadenada tras otra sin preguntar quema la cuota del dueño en una tarde, y el modo de fallo no es "sale caro" — es que **el límite se agote a mitad de una ola y los agentes mueran con el trabajo escrito y sin verificar**, que es el peor estado posible porque *parece* hecho.
+
+Tres reglas, aprendidas midiendo:
+
+1. **El tope de paralelo por turno cuenta TODOS los agentes**, los que trabajan y los que verifican. Un pipeline de 12 ítems con 2 revisores cada uno son **36 agentes**, no 12 — leído como "12 tareas", el tope se cruza sin darse cuenta.
+2. **Entre tanda y tanda se para y se pregunta**, con el costo real de la anterior sobre la mesa. Un "vamos con todo" del dueño autoriza el **plan**, no el **gasto** de cada tanda — exactamente igual que no autoriza los procesos pesados implícitos.
+3. **El tipo de brief pesa más que el número de agentes.** Un brief mecánico (aplicar un patrón conocido) cuesta del orden de la mitad que uno que exige **verificar la premisa antes de obedecer** (leer el caso entero, reproducir el defecto, intentar refutar el arreglo propuesto). Ese sobrecosto **se paga solo**: es justamente el brief caro el que caza las premisas falsas — incluidas las del propio orquestador — antes de que se conviertan en arreglos plausibles sobre diagnósticos equivocados.
+
+La consecuencia práctica: se estima el costo **antes** de lanzar y se le dice al dueño; si el trabajo pide más de dos tandas, se le dice **antes de la primera**, para que decida el alcance sabiendo el precio y no a mitad de camino. En el kit esto vive en la skill `/tandas-agentes`.
 
 ## Las reglas duras que un modelo mejor NO anula
 

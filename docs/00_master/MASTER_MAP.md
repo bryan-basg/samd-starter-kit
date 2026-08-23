@@ -50,7 +50,7 @@ El reglamento que gobierna a los agentes vive junto al código, no en el DHF:
 | Core del reglamento | `CLAUDE.md` | Regla 0, preferencias del dueño, empatía, boy scout, análisis de impacto, cierre de bloque. Carga en cada turno. |
 | Reglas por capa | `.claude/rules/` | Cuatro **path-scoped** (backend, UX clínica, testing, CI) que cargan solas al tocar esa capa + cuatro transversales (orquestación, agentes, comandos, sesiones paralelas). |
 | Equipo de agentes | `.claude/agents/` | 12 especialistas por capa. Matriz de "cuándo usar cada uno": `.claude/rules/agentes.md`. |
-| Procedimientos | `.claude/commands/`, `.claude/skills/` | Skills operativas (anti-drift, cierre de bloque, mutation, diagnóstico). |
+| Procedimientos | `.claude/commands/`, `.claude/skills/` | Skills operativas (anti-drift y **tandas de agentes** — cohesión y costo, las dos caras de orquestar—, cierre de bloque, mutation, diagnóstico, memoria del agente). |
 
 > Cambios en estas piezas son **cambios de proceso/gobernanza**: se trazan en el
 > `SOFTWARE_CONFIGURATION_MANAGEMENT_PLAN` + este Master Map, no en la matriz de riesgo
@@ -68,6 +68,6 @@ El reglamento que gobierna a los agentes vive junto al código, no en el DHF:
 
 | Doc | Versión | Última actualización |
 |---|---|---|
-| MASTER_MAP | v1.1 | 2026-08-07 |
+| MASTER_MAP | v1.2 | 2026-08-23 |
 | ISO_14971_RISK_MATRIX | v1.0 | 2026-07-05 |
 | TRACEABILITY_MATRIX_SAMD | v1.0 | 2026-07-05 |

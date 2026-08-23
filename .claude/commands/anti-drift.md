@@ -4,6 +4,9 @@ description: Protocolo anti-drift para orquestar 2+ subagentes en paralelo sin p
 
 Sos el orquestador de una tarea con 2+ subagentes en paralelo en el proyecto {{PROJECT_NAME}}. El riesgo NO es la calidad individual (cada agente trae sus reglas duras precargadas) sino la **PÉRDIDA DE COHESIÓN**: recibís summaries de *lo que el agente intentó*, no del *diff real*.
 
+> **Skill hermana — `/tandas-agentes`.** Esta ataca la **cohesión**; aquella ataca el **consumo** (tandas de ≤12 agentes contando verificadores, parada y OK del dueño entre tanda y tanda, presupuesto estimado antes de lanzar). Si el trabajo no cabe en una sola tanda, empezá por `/tandas-agentes` y aplicá los pasos de abajo **dentro** de cada tanda.
+
+
 ## Los 7 pasos (obligatorios)
 
 1. **Leo el brief + contexto yo** — delego la ejecución, no el entendimiento.

@@ -20,7 +20,7 @@ Sos el que cierra un **bloque grande** (sprint, fase) del proyecto {{PROJECT_NAM
 
 2. **Patrón canónico de cierre — actualizá**: `TECHNICAL_DEBT_SUMMARY` + Master Map + `ISO_14971_RISK_MATRIX` (si el bloque tocó producto: algoritmo clínico, schema, regla de negocio o seguridad) y cualquier plan/guide/RFC que el bloque haya vuelto obsoleto.
 
-3. **Link-checker cross-doc** tras mover/renombrar cualquier `.md`: `grep -rEn "\(\.{1,2}/[^)]+\.md" docs/` y resolver los rotos en el mismo PR → **0 broken**. Una reorg de documentación no muestra sus propios enlaces rotos en el archivo que tocaste — hace falta el barrido global sobre todo `docs/` para verlos.
+3. **Link-checker cross-doc** tras mover/renombrar cualquier `.md`: **`bash scripts/check_doc_links.sh`** → **0 broken** (sale con exit 1 si hay rotos), y resolvelos en el mismo PR. ⚠️ **No sirve un `grep` pelado de enlaces**: eso LISTA los enlaces — sanos y rotos por igual —, no los verifica; el script resuelve cada uno contra el disco con `realpath`. Una reorg de documentación no muestra sus propios enlaces rotos en el archivo que tocaste — hace falta el barrido global sobre todo `docs/` para verlos.
 
 4. **Cerrá con números reales** (tests, coverage) — no se declara "verde" sin haber corrido los tests vinculados al bloque y reportado los números (consecuencia directa de la verificación obligatoria de IEC 62304 §5.7).
 

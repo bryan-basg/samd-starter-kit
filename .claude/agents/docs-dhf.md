@@ -43,9 +43,11 @@ Si la verificación falla → NO escribís la entrada. Reportás que el REQ est�
 
 Tras renombrar/mover/eliminar **cualquier** `.md` de `docs/`, corrés:
 ```bash
-grep -rEn "\(\.{1,2}/[^)]+\.md" docs/
+bash scripts/check_doc_links.sh   # exit 1 si hay rotos; barre docs/ + examples/ + raíz
 ```
 y resolvés cada enlace roto en el mismo PR. **Ningún update tuyo cierra sin link-checker reportando 0 broken.**
+
+⚠️ **Nunca lo sustituyas por un `grep` de enlaces.** Un `grep -rEn "\(\.{1,2}/[^)]+\.md" docs/` LISTA los enlaces relativos —rotos y sanos por igual— y **no verifica nada**: cantar "0 broken" con esa salida es un verde vacío. El script resuelve cada destino contra el disco con `realpath`; es el mismo que corren `.github/workflows/ci.yml` y `kit-quality.yml`, así que tu verificación local y la del CI son la misma.
 
 ### Patrón canónico de cierre de bloque grande
 

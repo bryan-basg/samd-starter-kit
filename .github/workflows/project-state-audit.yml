@@ -14,7 +14,9 @@ on:
 
 concurrency:
   group: project-state-audit
-  cancel-in-progress: true
+  # Solo se dispara por cron y a mano, y el group no lleva `ref`: con `true`, una corrida manual
+  # cancelaba la programada (y al revés), perdiendo la única muestra semanal como `cancelled`.
+  cancel-in-progress: false
 
 permissions:
   contents: read

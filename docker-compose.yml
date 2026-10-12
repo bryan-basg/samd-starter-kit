@@ -31,7 +31,7 @@ services:
 
   # --- Frontend: React + TS + Vite dev server ---
   frontend:
-    image: node:20
+    image: node:24
     working_dir: /app/frontend
     # npm ci respeta el lockfile; --host expone el dev server fuera del contenedor.
     command: sh -c "npm ci && npm run dev -- --host 0.0.0.0"

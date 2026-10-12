@@ -22,23 +22,19 @@ updates:
     # (no agregar `versions:` a estas reglas, porque esa clave sí alcanzaría a las de seguridad).
     #  - typescript: @typescript-eslint 8 declara `typescript <6.1`; Dependabot no puede
     #    resolver ese choque de dependencias de pares y la corrida de npm quedaba en rojo.
-    #  - vitest 5, @types/node 26, jsdom 30 y @testing-library/jest-dom 7: exigen Node 22+; el
-    #    CI, el deploy, docker-compose y el devcontainer usan Node 20 (sin soporte desde el
-    #    30-abr-2026). npm solo AVISA de esa exigencia (no bloquea la instalación), así que
-    #    sus PRs salen verdes sin haber probado nada sobre Node 20.
-    # Condición para quitar los cinco: subir Node a 22 en todos esos sitios (y, para typescript,
-    # un @typescript-eslint que acepte la versión nueva). react 19 y eslint 10 NO se ignoran:
-    # son deuda real y su PR en rojo es la señal visible.
+    #  - @types/node: los tipos deben seguir el major de Node que el proyecto USA (24: CI,
+    #    deploy, docker-compose y devcontainer), no el último que exista; un @types/node más
+    #    nuevo que el runtime deja pasar APIs que en producción no están.
+    # Condición para quitar `typescript`: un @typescript-eslint que acepte la versión nueva.
+    # Condición para quitar `@types/node`: subir Node a ese major en los mismos cuatro sitios.
+    # vitest, jsdom y @testing-library/jest-dom estuvieron aquí mientras el proyecto usaba
+    # Node 20 (sus majors nuevos exigen Node 22+; npm solo AVISA y sus PRs salían verdes sin
+    # haber probado nada); con Node 24 ya se proponen, y el CI los prueba de verdad.
+    # react 19 y eslint 10 NO se ignoran: son deuda real y su PR en rojo es la señal visible.
     ignore:
       - dependency-name: "typescript"
         update-types: ["version-update:semver-major"]
-      - dependency-name: "vitest"
-        update-types: ["version-update:semver-major"]
       - dependency-name: "@types/node"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "jsdom"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "@testing-library/jest-dom"
         update-types: ["version-update:semver-major"]
   - package-ecosystem: "pip"
     directory: "/"

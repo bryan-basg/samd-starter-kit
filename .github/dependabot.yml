@@ -1,22 +1,27 @@
 # Dependabot — vigila dependencias vulnerables y propone updates (seguridad por diseño).
 #
-# Los ecosistemas npm y pip están COMENTADOS porque la plantilla todavía no tiene
-# manifiestos (frontend/package.json, requirements.txt) — Dependabot fallaría si no
-# los encuentra. DESCOMENTALOS cuando agregues tu app real.
+# Tres ecosistemas activos: github-actions (workflows), npm (frontend/) y pip (requirements*.txt
+# de la raíz). Si quitás un manifiesto, comentá su bloque: Dependabot falla si no lo encuentra.
+#
+# TODOS los bloques llevan la etiqueta `dependencies` a propósito: `stale.yml` exime de cierre
+# automático a los PRs con esa etiqueta (`exempt-pr-labels`). Cerrar un PR de Dependabot le
+# dice «esta versión no la quiero» y no vuelve a proponerla; una actualización de una pieza
+# externa (IEC 62304 §8) no puede perderse en silencio por inactividad. No existe una etiqueta
+# `security` en el repo (Dependabot no la crea), por eso no se usa.
 version: 2
 updates:
-  # - package-ecosystem: "npm"
-  #   directory: "/frontend"
-  #   schedule:
-  #     interval: "weekly"
-  #   open-pull-requests-limit: 5
-  #   labels: ["dependencies", "security"]
-  # - package-ecosystem: "pip"
-  #   directory: "/"
-  #   schedule:
-  #     interval: "weekly"
-  #   open-pull-requests-limit: 5
-  #   labels: ["dependencies", "security"]
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels: ["dependencies"]
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels: ["dependencies"]
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:

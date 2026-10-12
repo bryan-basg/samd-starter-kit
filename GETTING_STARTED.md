@@ -1,6 +1,6 @@
 # Getting Started
 
-> Your first hour with the SaMD Starter Kit. This page is the **guided path**: what to do, in what order, and which of the 40+ documents actually apply to *your* device. Read it top to bottom once — then come back to it as a map.
+> Your first hour with the SaMD Starter Kit. This page is the **guided path**: what to do, in what order, and which of the 50+ documents actually apply to *your* device. Read it top to bottom once — then come back to it as a map.
 
 **English · this is the onboarding front-door. The Design History File under [`docs/`](docs/) is written in Spanish (it's the regulatory record); this guide bridges into it.**
 

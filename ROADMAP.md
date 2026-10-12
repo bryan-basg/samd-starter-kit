@@ -23,7 +23,7 @@ What already ships in the kit today:
 - **Cross-framework regulatory coverage** — U.S. FDA, EU MDR, IMDRF, ISO 27001 / SOC 2 mapped to the existing DHF templates, so the kit reads cleanly beyond the EU lens.
 - **Documentation site** — a browsable MkDocs Material site over `docs/`, published on GitHub Pages.
 - **Public project signals** — roadmap, sponsorship template, good-first-issue path, and live CI status badges.
-- **40+ document Design History File** (`docs/`) — ISO 14971 risk matrix, SaMD traceability matrix, IEC 62304 plan, safety classification, SOUP, clinical evaluation/validation, post-market surveillance, IFU, user docs, privacy, runbooks.
+- **50+ document Design History File** (`docs/`) — ISO 14971 risk matrix, SaMD traceability matrix, IEC 62304 plan, safety classification, SOUP, clinical evaluation/validation, post-market surveillance, IFU, user docs, privacy, runbooks.
 - **Runnable skeleton** (`app/` · `frontend/` · `tests/`) — a minimal FastAPI + React/TS example wiring the hard rules (token-only identity, AES-256-GCM at rest, fail-safe, flat accessible UI). Runs with zero infra.
 - **Worked example** (`examples/auralog/`) — a fictional Class B device (AuraLog) with its DHF filled in, so you can see the kit in action.
 - **Command, skill & review workflow** (`.claude/`) — `samd-trace` impact analysis (§5.6) and the `samd-review` adversarial diff review.
@@ -69,7 +69,7 @@ Lo que el kit ya trae hoy:
 - **Cobertura regulatoria cross-framework** — FDA (EE. UU.), MDR (UE), IMDRF e ISO 27001 / SOC 2 mapeados a las plantillas existentes del DHF, para que el kit lea bien más allá del lente europeo.
 - **Sitio de documentación** — un sitio navegable MkDocs Material sobre `docs/`, publicado en GitHub Pages.
 - **Señales de proyecto público** — roadmap, plantilla de sponsorship, camino de good-first-issue y badges de estado de CI en vivo.
-- **Design History File de 40+ documentos** (`docs/`) — matriz de riesgo ISO 14971, matriz de trazabilidad SaMD, plan IEC 62304, clasificación de seguridad, SOUP, evaluación/validación clínica, post-market, IFU, docs de usuario, privacidad, runbooks.
+- **Design History File de 50+ documentos** (`docs/`) — matriz de riesgo ISO 14971, matriz de trazabilidad SaMD, plan IEC 62304, clasificación de seguridad, SOUP, evaluación/validación clínica, post-market, IFU, docs de usuario, privacidad, runbooks.
 - **Esqueleto ejecutable** (`app/` · `frontend/` · `tests/`) — un ejemplo mínimo FastAPI + React/TS que cablea las reglas duras (identidad solo del token, AES-256-GCM en reposo, fail-safe, UI plana y accesible). Corre sin infra.
 - **Ejemplo trabajado** (`examples/auralog/`) — un dispositivo Clase B ficticio (AuraLog) con su DHF rellenado, para ver el kit en acción.
 - **Comando, skill y workflow de revisión** (`.claude/`) — el análisis de impacto `samd-trace` (§5.6) y la revisión adversarial de diff `samd-review`.

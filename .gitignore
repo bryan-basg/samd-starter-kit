@@ -32,6 +32,8 @@ coverage/
 .mutmut-cache
 # cache de corridas del fuzz de contrato
 .schemathesis/
+# reporte local de run_gitleaks.sh (audit/gitleaks_report.json): salida de una corrida, no código
+audit/
 
 # Secretos locales para `act` (run_act.sh) — NUNCA al repo
 .secrets

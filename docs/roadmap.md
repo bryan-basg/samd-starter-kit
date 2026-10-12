@@ -19,7 +19,7 @@ grab a good first issue, or start a
 - **Agent ruleset** (`CLAUDE.md` core + `.claude/rules/`) — Rule 0, the per-layer path-scoped rules and the multi-agent anti-drift protocol.
 - **15 working CI/CD workflows** (`.github/workflows/`) — 11 inherited by the derived project + 4 that maintain the kit itself.
 - **A CI that actually verifies** — dead imports, strict types and tests on both layers, plus OpenAPI contract-drift, on every push.
-- **40+ document Design History File** (`docs/`).
+- **50+ document Design History File** (`docs/`).
 - **Runnable skeleton** (`app/` · `frontend/` · `tests/`).
 - **Documentation site** (this site) and **one-click developer experience** (devcontainer, compose, Makefile).
 - **Worked example** (`examples/auralog/`) — a fictional Class B device.

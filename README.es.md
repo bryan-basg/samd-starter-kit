@@ -40,7 +40,7 @@ rm -rf .git && git init -b main   # arrancá tu propia historia
 bash scripts/init_kit.sh       # interactivo y re-ejecutable: rellena los marcadores {{...}}
 ```
 
-**Después abrí [`GETTING_STARTED.md`](GETTING_STARTED.md)** — el camino guiado: clasificá tu software (A/B/C), completá los cuatro documentos base en orden, conectá tu stack y aprendé el ciclo diario con el equipo de agentes. Te dice cuáles de los 40+ documentos aplican a *tu* clase, para que no te ahogues en plantillas.
+**Después abrí [`GETTING_STARTED.md`](GETTING_STARTED.md)** — el camino guiado: clasificá tu software (A/B/C), completá los cuatro documentos base en orden, conectá tu stack y aprendé el ciclo diario con el equipo de agentes. Te dice cuáles de los 50+ documentos aplican a *tu* clase, para que no te ahogues en plantillas.
 
 ## ¿Para quién es?
 

@@ -40,7 +40,7 @@ rm -rf .git && git init -b main   # start your own history
 bash scripts/init_kit.sh       # interactive & re-runnable: fills the {{...}} placeholders
 ```
 
-**Then open [`GETTING_STARTED.md`](GETTING_STARTED.md)** — the guided path: classify your software (A/B/C), fill the four foundation documents in order, wire your stack, and learn the daily loop with the agent team. It tells you which of the 40+ documents actually apply to *your* class, so you don't drown in templates.
+**Then open [`GETTING_STARTED.md`](GETTING_STARTED.md)** — the guided path: classify your software (A/B/C), fill the four foundation documents in order, wire your stack, and learn the daily loop with the agent team. It tells you which of the 50+ documents actually apply to *your* class, so you don't drown in templates.
 
 ## Who is this for?
 

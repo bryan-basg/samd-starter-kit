@@ -14,13 +14,14 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "lint": "eslint src --ext .ts,.tsx"
+    "lint": "eslint src"
   },
   "dependencies": {
     "react": "^19.3.0",
     "react-dom": "^19.3.0"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@testing-library/jest-dom": "^6.4.6",
     "@testing-library/react": "^16.0.0",
     "@testing-library/user-event": "^14.5.2",
@@ -30,8 +31,9 @@
     "@typescript-eslint/eslint-plugin": "^8.71.2",
     "@typescript-eslint/parser": "^8.71.2",
     "@vitejs/plugin-react": "^6.1.2",
-    "eslint": "^8.57.0",
+    "eslint": "^10.12.0",
     "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.13.0",
     "jsdom": "^24.1.0",
     "typescript": "^5.4.5",
     "vite": "^8.3.4",

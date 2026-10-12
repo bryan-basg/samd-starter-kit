@@ -6,6 +6,11 @@ name: Stale PRs
 # Nota de permisos: actions/stale lista issues + PRs por la misma API, así que
 # necesita `issues: write` además de `pull-requests: write` aunque solo cierre PRs
 # (de lo contrario falla con "Resource not accessible by integration").
+#
+# Los PRs con la etiqueta `dependencies` (los de Dependabot, ver dependabot.yml) están
+# EXENTOS. Cerrar uno hace que Dependabot lo lea como "esta versión no la quiero" y no
+# vuelva a proponerla hasta que salga otra: una actualización de una pieza externa
+# (IEC 62304 §8) se perdía en silencio solo porque nadie llegó a revisarla a tiempo.
 
 on:
   schedule:
@@ -22,11 +27,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/stale@1e223db275d687790206a7acac4d1a11bd6fe629 # v10.4.0
+      - uses: actions/stale@4391f3da665fdf50b6810c1a66712fb9ba21aa93 # v11.0.0
         with:
           days-before-pr-stale: 21
           days-before-pr-close: 7
           stale-pr-label: stale
+          exempt-pr-labels: dependencies
           stale-pr-message: >
             Este PR lleva 21 días sin actividad y se marcó como stale. Comentá o
             actualizalo para mantenerlo abierto; si no, se cerrará en 7 días.

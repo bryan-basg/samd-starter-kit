@@ -102,7 +102,7 @@ run_schemathesis() {
   echo "== schemathesis: fuzz de contrato contra $OPENAPI_URL =="
   echo "  (local/staging OK sin pedir; contra PRODUCCIÓN requiere OK explícito)"
   if ! command -v schemathesis >/dev/null 2>&1; then
-    missing_tool schemathesis "pip install schemathesis"
+    missing_tool schemathesis "pip install -r requirements-fuzz.txt"
     return
   fi
   if ! ensure_backend; then

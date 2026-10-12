@@ -1,0 +1,16 @@
+# Herramienta del fuzz de contrato (Schemathesis) — VERSIÓN FIJADA.
+#
+# Uso:
+#   pip install -r requirements-fuzz.txt
+#   bash scripts/run_schemathesis.sh
+#
+# Por qué está fijada (IEC 62304 §8, gestión de SOUP): sin fijar, cada corrida bajaba
+# "la última" y el gate cambiaba de criterio sin que cambiara el código. Entre la
+# corrida verde del 15/ago (4.24.3) y la del 1/sep (4.30.1) pasó a exigir un `Allow`
+# completo en los 405, y el workflow quedó en rojo tres corridas programadas seguidas
+# sin que nadie lo viera.
+#
+# Subir la versión es una decisión deliberada: cambiá este número, corré el fuzz y
+# leé lo que reporte en el MISMO PR. Dependabot no lo vigila (su ecosistema `pip` está
+# apagado en .github/dependabot.yml), así que revisalo a mano de vez en cuando.
+schemathesis==4.30.1

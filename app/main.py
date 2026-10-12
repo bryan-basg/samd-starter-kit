@@ -11,10 +11,11 @@ import logging
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
+from starlette.routing import Match
 
 from app.core.config import settings
 from app.routers import notes
@@ -102,9 +103,36 @@ async def validation_exception_handler(
     return JSONResponse(status_code=422, content={"detail": _CUERPO_ILEGIBLE})
 
 
+_METODOS_HTTP = ("GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+
+
+def _metodos_permitidos(request: Request) -> str | None:
+    """Valor del `Allow` de un 405: TODOS los métodos que el path sí atiende.
+
+    Starlette atiende cada decorador (`@router.get`, `@router.post`) como una ruta
+    aparte y, ante un método no soportado, responde con la PRIMERA coincidencia
+    parcial: `/notes` anunciaba solo `POST` aunque también acepta `GET`. RFC 9110
+    §15.5.6 pide que `Allow` liste lo que el recurso soporta.
+
+    Se le pregunta al router, método por método, si hay coincidencia COMPLETA, en
+    vez de leer `route.methods`: FastAPI reciente agrupa los routers incluidos en un
+    objeto interno sin `methods` (y con prefijos), y esa estructura cambia entre
+    versiones. `matches()` es el contrato público y estable.
+    """
+    permitidos = [
+        metodo
+        for metodo in _METODOS_HTTP
+        if any(
+            ruta.matches({**request.scope, "method": metodo})[0] is Match.FULL
+            for ruta in request.app.router.routes
+        )
+    ]
+    return ", ".join(permitidos) or None
+
+
 @app.exception_handler(StarletteHTTPException)
 async def http_exception_handler(
-    _request: Request, exc: StarletteHTTPException
+    request: Request, exc: StarletteHTTPException
 ) -> JSONResponse:
     """Traduce los errores que el FRAMEWORK emite en inglés, sin pisar los nuestros.
 
@@ -121,11 +149,16 @@ async def http_exception_handler(
     """
     detalle = _DETALLES_DEL_FRAMEWORK.get(str(exc.detail))
     if detalle is None:
+        headers = getattr(exc, "headers", None)
+        if exc.status_code == status.HTTP_405_METHOD_NOT_ALLOWED and (
+            allow := _metodos_permitidos(request)
+        ):
+            headers = {**(headers or {}), "Allow": allow}
         # Excepción propia de la app: su mensaje ya está redactado con cuidado.
         return JSONResponse(
             status_code=exc.status_code,
             content={"detail": exc.detail},
-            headers=getattr(exc, "headers", None),
+            headers=headers,
         )
     logger.info("Cuerpo ilegible rechazado: %s", exc.detail)
     return JSONResponse(status_code=exc.status_code, content={"detail": detalle})

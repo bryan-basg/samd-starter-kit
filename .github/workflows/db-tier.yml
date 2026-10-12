@@ -56,7 +56,11 @@ jobs:
         image: pgvector/pgvector:pg16
         env:
           POSTGRES_USER: testuser
-          POSTGRES_PASSWORD: testpass
+          # Sin contraseña a propósito: esta base vive solo dentro del runner
+          # desechable de este job. Una clave "de juguete" escrita en el repo
+          # no protege nada y es justo lo que `audit_hallucinations.py` marca;
+          # sin clave no queda nada que filtrar ni que copiar a otro lado.
+          POSTGRES_HOST_AUTH_METHOD: trust
           POSTGRES_DB: testdb
         ports:
           - 5432:5432
@@ -68,12 +72,12 @@ jobs:
           --health-retries 10
 
     env:
-      # The app reads this; placeholder creds for CI only — never real secrets.
-      DATABASE_URL: postgresql+asyncpg://testuser:testpass@localhost:5432/testdb
+      # The app reads this. No password: the service above uses trust auth and
+      # only exists inside this throwaway runner — never point this at a real DB.
+      DATABASE_URL: postgresql+asyncpg://testuser@localhost:5432/testdb
       PGHOST: localhost
       PGPORT: "5432"
       PGUSER: testuser
-      PGPASSWORD: testpass
       PGDATABASE: testdb
 
     steps:
@@ -99,7 +103,7 @@ jobs:
       - name: Enable pgvector extension
         # The extension ships in the image but must be created in the database.
         run: |
-          PGPASSWORD="${PGPASSWORD}" psql \
+          psql \
             -h "${PGHOST}" -p "${PGPORT}" -U "${PGUSER}" -d "${PGDATABASE}" \
             -v ON_ERROR_STOP=1 \
             -c "CREATE EXTENSION IF NOT EXISTS vector;"

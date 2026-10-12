@@ -33,6 +33,7 @@ on:
       - 'app/dependencies.py'
       - 'scripts/run_schemathesis.sh'
       - 'scripts/sast.sh'
+      - 'requirements-fuzz.txt'
       - '.github/workflows/schemathesis.yml'
   schedule:
     - cron: '0 4 1,15 * *'   # días 1 y 15, 04:00 UTC
@@ -73,7 +74,9 @@ jobs:
           pip install -r requirements.txt
           # requirements-dev.txt opcional (helpers de test); ignorar si no existe.
           [ -f requirements-dev.txt ] && pip install -r requirements-dev.txt || true
-          pip install schemathesis
+          # Versión FIJADA en requirements-fuzz.txt: una herramienta de verificación sin
+          # fijar cambia de criterio sola (así se puso rojo este gate sin tocar el código).
+          pip install -r requirements-fuzz.txt
 
       - name: Run schemathesis via script
         env:

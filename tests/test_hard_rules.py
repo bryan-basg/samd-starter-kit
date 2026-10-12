@@ -138,6 +138,63 @@ def test_invalid_payload_shape_is_422_and_still_empathetic(client):
 
 
 @pytest.mark.unit
+def test_405_allow_header_lists_every_method_of_the_path(client):
+    """Un 405 declara en `Allow` TODOS los métodos que la ruta sí acepta.
+
+    Lo destapó el fuzz de contrato (schemathesis 4.30): `/notes` tiene un GET y un
+    POST, y Starlette las atiende como rutas separadas — responde con la primera
+    que encuentra, así que `Allow` decía solo `POST` y le mentía al cliente sobre
+    el `GET` (RFC 9110 §15.5.6). Se asserta el CONJUNTO, no un texto: el orden de
+    los métodos no es contrato.
+    """
+    resp = client.options("/notes")
+    assert resp.status_code == 405
+    allow = {m.strip() for m in resp.headers["Allow"].split(",")}
+    assert allow == {"GET", "POST"}
+
+
+@pytest.mark.unit
+def test_405_allow_header_survives_a_router_prefix():
+    """El caso real de una app: routers incluidos con prefijo, no rutas sueltas.
+
+    FastAPI reciente agrupa un router incluido en un objeto interno; leer
+    `route.methods` del nivel de arriba no veía nada. Se arma una app aparte con
+    prefijo para anclar que el arreglo no depende de esa estructura.
+    """
+    from fastapi import APIRouter, FastAPI
+    from fastapi.testclient import TestClient
+    from starlette.exceptions import HTTPException as StarletteHTTPException
+
+    from app.main import http_exception_handler
+
+    router = APIRouter(prefix="/v1")
+
+    @router.get("/recurso")
+    def _leer() -> dict[str, str]:
+        return {}
+
+    @router.put("/recurso")
+    def _reemplazar() -> dict[str, str]:
+        return {}
+
+    local = FastAPI()
+    local.add_exception_handler(StarletteHTTPException, http_exception_handler)
+    local.include_router(router)
+
+    resp = TestClient(local).post("/v1/recurso")
+    assert resp.status_code == 405
+    assert {m.strip() for m in resp.headers["Allow"].split(",")} == {"GET", "PUT"}
+
+
+@pytest.mark.unit
+def test_405_allow_header_on_a_single_method_path_is_unchanged(client):
+    """Ancla de no-regresión: una ruta de un solo método sigue anunciando solo ese."""
+    resp = client.options("/health")
+    assert resp.status_code == 405
+    assert resp.headers["Allow"] == "GET"
+
+
+@pytest.mark.unit
 def test_health_endpoint(client):
     resp = client.get("/health")
     assert resp.status_code == 200

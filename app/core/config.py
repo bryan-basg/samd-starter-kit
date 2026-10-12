@@ -16,7 +16,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 # Defaults de DEV — PÚBLICOS a propósito (para que el ejemplo corra sin setup).
 # NUNCA usar en producción: cualquiera que lea el repo los conoce.
 _DEV_ENCRYPTION_KEY = base64.b64encode(b"samd-starter-kit-dev-key-32bytes").decode()
-_DEV_SECRET_KEY = "dev-only-insecure-secret-change-me"
+# Mínimo 32 bytes: HS256 lo exige (RFC 7518 §3.2) y PyJWT avisa por debajo.
+_DEV_SECRET_KEY = "dev-only-insecure-public-secret-key"
 
 
 class Settings(BaseSettings):

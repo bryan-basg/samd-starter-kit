@@ -21,10 +21,15 @@ IMAGE="${POSTGRES_IMAGE:-postgres:16-alpine}"
 PORT="${PG_PORT:-5433}"
 NAME="samd-pg-test-$$"
 
-echo "▶ Levantando $IMAGE en :$PORT…"
+# Clave aleatoria POR CORRIDA (hex: no necesita escape en la URL). Una clave fija en el
+# repo es justo lo que `audit_hallucinations.py` marca, y además el puerto se publicaba
+# en TODAS las interfaces: mientras corría, cualquiera en la misma red entraba con ella.
+PGPASS="$(od -An -N16 -tx1 /dev/urandom | tr -d ' \n')"
+
+echo "▶ Levantando $IMAGE en 127.0.0.1:$PORT…"
 docker run -d --rm --name "$NAME" \
-  -e POSTGRES_USER=test -e POSTGRES_PASSWORD=test -e POSTGRES_DB=test \
-  -p "$PORT:5432" "$IMAGE" >/dev/null
+  -e POSTGRES_USER=test -e POSTGRES_PASSWORD="$PGPASS" -e POSTGRES_DB=test \
+  -p "127.0.0.1:$PORT:5432" "$IMAGE" >/dev/null
 trap 'docker rm -f "$NAME" >/dev/null 2>&1 || true' EXIT
 
 echo "▶ Esperando que Postgres esté listo…"
@@ -36,7 +41,7 @@ for i in $(seq 1 30); do
   [ "$i" = "30" ] && { echo "✗ Postgres no levantó a tiempo."; exit 1; }
 done
 
-export DATABASE_URL="${DATABASE_URL:-postgresql+asyncpg://test:test@localhost:$PORT/test}"
+export DATABASE_URL="${DATABASE_URL:-postgresql+asyncpg://test:${PGPASS}@127.0.0.1:$PORT/test}"
 export TESTING=True
 
 PYBIN="$( [ -x ./venv/bin/python ] && echo ./venv/bin/python || echo python3 )"

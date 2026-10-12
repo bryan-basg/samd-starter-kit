@@ -22,10 +22,11 @@ updates:
     # (no agregar `versions:` a estas reglas, porque esa clave sí alcanzaría a las de seguridad).
     #  - typescript: @typescript-eslint 8 declara `typescript <6.1`; Dependabot no puede
     #    resolver ese choque de dependencias de pares y la corrida de npm quedaba en rojo.
-    #  - vitest 5, @types/node 26 y jsdom 30: exigen Node 22+; el CI, el deploy, docker-compose
-    #    y el devcontainer usan Node 20. npm solo AVISA de esa exigencia (no bloquea la
-    #    instalación), así que sus PRs salen verdes sin haber probado nada sobre Node 20.
-    # Condición para quitar los cuatro: subir Node a 22 en todos esos sitios (y, para typescript,
+    #  - vitest 5, @types/node 26, jsdom 30 y @testing-library/jest-dom 7: exigen Node 22+; el
+    #    CI, el deploy, docker-compose y el devcontainer usan Node 20 (sin soporte desde el
+    #    30-abr-2026). npm solo AVISA de esa exigencia (no bloquea la instalación), así que
+    #    sus PRs salen verdes sin haber probado nada sobre Node 20.
+    # Condición para quitar los cinco: subir Node a 22 en todos esos sitios (y, para typescript,
     # un @typescript-eslint que acepte la versión nueva). react 19 y eslint 10 NO se ignoran:
     # son deuda real y su PR en rojo es la señal visible.
     ignore:
@@ -36,6 +37,8 @@ updates:
       - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
       - dependency-name: "jsdom"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@testing-library/jest-dom"
         update-types: ["version-update:semver-major"]
   - package-ecosystem: "pip"
     directory: "/"

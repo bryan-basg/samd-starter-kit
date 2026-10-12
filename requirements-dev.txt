@@ -1,6 +1,6 @@
 # requirements-dev.txt — runtime + herramientas de verificación (tests, lint, tipos).
 -r requirements.txt
-pytest>=8
+pytest>=9.1.1
 pytest-asyncio>=1.4.0
 httpx>=0.27          # lo usa fastapi.testclient.TestClient
 # Cobertura reproducible en paralelo (el comando canónico de TESTING_TOOLS.md:

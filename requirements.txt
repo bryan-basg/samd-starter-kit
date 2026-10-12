@@ -3,7 +3,7 @@
 # Techos al próximo major: una instalación fresca no debe traer un major
 # incompatible en silencio (reproducibilidad de build/SBOM en contexto regulado).
 fastapi>=0.143.0,<1.0
-uvicorn[standard]>=0.29,<1.0
+uvicorn[standard]>=0.54.0,<1.0
 pydantic>=2.14.0,<3.0
 pydantic-settings>=2.15.0,<3.0
 cryptography>=50.0.2,<51

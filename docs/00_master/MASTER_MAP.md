@@ -57,6 +57,16 @@ El reglamento que gobierna a los agentes vive junto al código, no en el DHF:
 > `SOFTWARE_CONFIGURATION_MANAGEMENT_PLAN` + este Master Map, no en la matriz de riesgo
 > (ver `CLAUDE.md` §CIERRE DE BLOQUE GRANDE).
 
+## Dependencias de terceros (SOUP)
+
+| Pieza | Path | Contenido |
+|---|---|---|
+| Vigilancia | `.github/dependabot.yml` | `npm` (`frontend/`), `pip` (raíz) y `github-actions`; excepciones con motivo y grupo `react`. |
+| Versiones fijadas | `frontend/package-lock.json`, `requirements*.txt` | Lockfile del frontend (npm 11) y pisos/techos del backend. |
+| Runtime | `.github/workflows/`, `docker-compose.yml`, `.devcontainer/` | Un solo major de Node (24) en todos los sitios. |
+
+> Política completa en el [`SOFTWARE_CONFIGURATION_MANAGEMENT_PLAN` §7.1](../07_regulatory_and_compliance/SOFTWARE_CONFIGURATION_MANAGEMENT_PLAN.md). Es un cambio de **proceso**: se traza ahí y en este mapa, no en la matriz de riesgo.
+
 ## Módulos clínicos críticos
 
 > Listá acá los módulos cuyo fallo tiene impacto clínico (motor de riesgo, crisis, scheduler, dispatcher, validador de IA…). Cada uno debe tener fail-safe explícito + entrada en la Risk Matrix + cobertura de tests verificada.
@@ -69,6 +79,7 @@ El reglamento que gobierna a los agentes vive junto al código, no en el DHF:
 
 | Doc | Versión | Última actualización |
 |---|---|---|
-| MASTER_MAP | v1.3 | 2026-10-12 |
+| MASTER_MAP | v1.4 | 2026-10-12 |
+| SOFTWARE_CONFIGURATION_MANAGEMENT_PLAN | v1.5 | 2026-10-12 |
 | ISO_14971_RISK_MATRIX | v1.0 | 2026-07-05 |
 | TRACEABILITY_MATRIX_SAMD | v1.0 | 2026-07-05 |

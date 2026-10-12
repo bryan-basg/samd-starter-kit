@@ -27,7 +27,7 @@ npm test         # verificación: 5/5 verde
 npm run build    # tsc estricto + build de producción
 ```
 
-Cuando traigas tu cliente real, reemplazá `src/` por tu estructura (la de arriba). Los configs (`tsconfig.json`, `.eslintrc.cjs`, `stryker.conf.json`) ya están listos.
+Cuando traigas tu cliente real, reemplazá `src/` por tu estructura (la de arriba). Los configs (`tsconfig.json`, `eslint.config.js`, `stryker.conf.json`) ya están listos.
 
 ### Mutation testing (opt-in)
 

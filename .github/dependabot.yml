@@ -30,12 +30,22 @@ updates:
     # vitest, jsdom y @testing-library/jest-dom estuvieron aquí mientras el proyecto usaba
     # Node 20 (sus majors nuevos exigen Node 22+; npm solo AVISA y sus PRs salían verdes sin
     # haber probado nada); con Node 24 ya se proponen, y el CI los prueba de verdad.
-    # react 19 y eslint 10 NO se ignoran: son deuda real y su PR en rojo es la señal visible.
+    # eslint 10 NO se ignora: es deuda real y su PR en rojo es la señal visible.
     ignore:
       - dependency-name: "typescript"
         update-types: ["version-update:semver-major"]
       - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
+    # react, react-dom y sus tipos se actualizan SIEMPRE juntos: cada uno declara como
+    # dependencia de pares a los otros, así que subir uno solo hace fallar `npm ci` (ERESOLVE).
+    # Con PRs separados (como pasó con react 19: #33 y #34) ninguno puede quedar verde.
+    groups:
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
   - package-ecosystem: "pip"
     directory: "/"
     schedule:

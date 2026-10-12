@@ -17,4 +17,4 @@ vulture
 # porque el SBOM_MANAGEMENT_PLAN §4.1 documenta la generación LOCAL como
 # procedimiento: sin esta línea, `bash scripts/generate_sbom.sh` falla en un clone
 # nuevo aunque el workflow de CI sí lo instale a mano.
-cyclonedx-bom>=4
+cyclonedx-bom>=7.5.0

@@ -13,4 +13,4 @@
 # Subir la versión es una decisión deliberada: cambiá este número, corré el fuzz y
 # leé lo que reporte en el MISMO PR. Dependabot no lo vigila (su ecosistema `pip` está
 # apagado en .github/dependabot.yml), así que revisalo a mano de vez en cuando.
-schemathesis==4.30.1
+schemathesis==4.31.1

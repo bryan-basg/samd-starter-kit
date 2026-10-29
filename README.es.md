@@ -149,4 +149,4 @@ Ver [CONTRIBUTING.es.md](CONTRIBUTING.es.md). Reportes de seguridad: en privado,
 
 ## Licencia
 
-[MIT](LICENSE).
+[MIT](LICENSE). Alcance de lo que este kit es y no es: ver [NOTICE.md](NOTICE.md).

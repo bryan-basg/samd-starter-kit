@@ -149,4 +149,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md). Security reports: privately, see [SECURI
 
 ## License
 
-[MIT](LICENSE). Built distilling the experience of a real Class B SaMD project.
+[MIT](LICENSE). Built distilling the experience of a real Class B SaMD project. Scope of what this kit is and is not: see [NOTICE.md](NOTICE.md).

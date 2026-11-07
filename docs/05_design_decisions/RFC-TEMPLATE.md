@@ -23,7 +23,7 @@
 
 ## 1. Contexto
 
-> Estado actual, restricciones, y qué motiva considerar un cambio. Referenciar código con `archivo:línea` cuando aplique.
+> Estado actual, restricciones, y qué motiva considerar un cambio. Referenciar código con `ruta/archivo.py::símbolo` cuando aplique.
 
 ## 2. Problema
 
@@ -55,7 +55,7 @@
 |---|---|
 | Requisito(s) | REQ-XXX |
 | Riesgo(s) ISO 14971 | R0XX |
-| Código | `archivo:línea` |
+| Código | `ruta/archivo.py::símbolo` |
 | Test(s) de verificación | `nombre_del_test` en `archivo` |
 | Entrada en Master Map | _(versión vMM.mm)_ |
 

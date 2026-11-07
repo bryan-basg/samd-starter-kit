@@ -52,7 +52,7 @@ Cuando exista una obligación legal de conservación o un litigio en curso (lega
 
 | Control | Mecanismo | Frecuencia |
 |---|---|---|
-| Job de borrado programado | `archivo:línea` | <completar> |
+| Job de borrado programado | `ruta/archivo.py::símbolo` | <completar> |
 | Revisión de cumplimiento de plazos | Auditoría interna | <completar> |
 
 ---

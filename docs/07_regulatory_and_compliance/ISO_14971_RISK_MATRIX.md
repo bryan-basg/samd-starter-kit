@@ -2,7 +2,7 @@
 
 **Proyecto:** {{PROJECT_NAME}} · **Clase SaMD:** {{SAMD_CLASS}} · **Versión:** vX.Y · **Fecha:** YYYY-MM-DD
 
-> Mantenida por `docs-dhf`. Cada control de riesgo se vincula a evidencia verificable (`test:archivo:línea`). Un riesgo sin control implementado y verificado NO se considera mitigado.
+> Mantenida por `docs-dhf`. Cada control de riesgo se vincula a evidencia verificable (`ruta/test_archivo.py::test_nombre`). Un riesgo sin control implementado y verificado NO se considera mitigado.
 
 ## 1. Política de aceptabilidad del riesgo
 
@@ -25,7 +25,7 @@
 
 ## 2. Registro de riesgos
 
-| ID | Peligro / situación peligrosa | Daño potencial | Sev. | Prob. | Riesgo inicial | Control de riesgo | Evidencia (`test:archivo:línea`) | Riesgo residual | Estado |
+| ID | Peligro / situación peligrosa | Daño potencial | Sev. | Prob. | Riesgo inicial | Control de riesgo | Evidencia (`ruta/test_archivo.py::test_nombre`) | Riesgo residual | Estado |
 |---|---|---|---|---|---|---|---|---|---|
 | R001 | <ej. el motor de riesgo falla y no detecta crisis> | <daño> | Crítica | Ocasional | INACEPTABLE | <fail-safe: degrada a fallback seguro> | `test_...:app/services/...:NN` | ALARP | Abierto |
 | R002 | <ej. otro usuario accede a PHI por escalada de identidad> | <daño> | Crítica | Remota | INACEPTABLE | JWT-only; user_id solo del token | `test_idor_...` | Aceptable | Abierto |

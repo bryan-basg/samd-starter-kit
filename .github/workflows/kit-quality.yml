@@ -30,3 +30,5 @@ jobs:
         run: bash scripts/check_doc_links.sh
       - name: Anclas internas (#sección) de la documentación
         run: python scripts/check_doc_anchors.py
+      - name: Citas al código (ruta/archivo.py::símbolo) de la documentación
+        run: python scripts/check_doc_citations.py

@@ -64,7 +64,7 @@ Detalles de construcción:
 |---|---|
 | Requisito(s) | REQ-SYNC-02 — Entrega fiable y no duplicada de avisos/jobs periódicos (notificaciones clínicas) |
 | Riesgo(s) ISO 14971 | R-NOTIF-01 — Saturación del pool de BD por jobs multiplicados → servicio caído / aviso clínico perdido o duplicado (Sev. Seria × Prob. Ocasional → INACEPTABLE → residual ALARP) |
-| Código | `ENABLE_INTERNAL_SCHEDULER` (default `false`) en `app/core/config.py:NN`; endpoint disparador en `app/api/notifications.py:NN`; cron del {{CLOUD_STACK}} en infra/IaC |
+| Código | `ENABLE_INTERNAL_SCHEDULER` (default `false`) en `app/core/config.py::<símbolo>`; endpoint disparador en `app/api/notifications.py::<símbolo>`; cron del {{CLOUD_STACK}} en infra/IaC |
 | Test(s) de verificación | `test_internal_scheduler_disabled_by_default`, `test_process_queue_is_idempotent`, `test_process_queue_requires_auth` en `tests/test_external_scheduler.py` |
 | Entrada en Master Map | v1.0 |
 

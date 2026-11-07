@@ -23,7 +23,7 @@
 
 ## 1. Contexto
 
-El backend {{BACKEND_STACK}} expone endpoints que leen y mutan PHI de un sujeto concreto (p. ej. `GET /records/me`, `POST /scales/{id}/answers`). Cada request autenticado llega con un token (JWT) emitido por el proveedor de identidad, que el backend verifica y decodifica en una dependencia de autenticación (`app/dependencies.py:NN`, `get_current_user`).
+El backend {{BACKEND_STACK}} expone endpoints que leen y mutan PHI de un sujeto concreto (p. ej. `GET /records/me`, `POST /scales/{id}/answers`). Cada request autenticado llega con un token (JWT) emitido por el proveedor de identidad, que el backend verifica y decodifica en una dependencia de autenticación (`app/dependencies.py::<símbolo>`, `get_current_user`).
 
 El riesgo aparece cuando un endpoint, por conveniencia, acepta **además** un identificador de usuario desde el cuerpo, el query string o un header (`?user_id=...`, `{"user_id": ...}`). En ese momento el cliente puede declarar ser cualquiera.
 
@@ -45,7 +45,7 @@ Si cualquier endpoint deriva la identidad del sujeto desde un dato controlado po
 Se adopta la **Alternativa B: JWT-only**. La identidad del sujeto se deriva **exclusivamente** del token decodificado y verificado, nunca de body, query ni header.
 
 Detalles de construcción:
-- **Verificación del token** en `app/dependencies.py:NN` (`get_current_user`): firma válida contra la clave del emisor, `audience` esperado, `issuer` esperado y expiración no vencida. Cualquier fallo → 401 (sin filtrar el motivo técnico).
+- **Verificación del token** en `app/dependencies.py::<símbolo>` (`get_current_user`): firma válida contra la clave del emisor, `audience` esperado, `issuer` esperado y expiración no vencida. Cualquier fallo → 401 (sin filtrar el motivo técnico).
 - **Regla dura**: ninguna firma de endpoint ni schema de entrada acepta `user_id`/`subject_id`. El identificador que cuenta es el del claim del token. Un test de contrato verifica que ningún router lo expone.
 - **Autorización por recurso**: para acceder a un recurso, el `owner_id` del recurso debe coincidir con el sujeto del token; si no, 404/403 (preferentemente 404 para no filtrar existencia).
 - **Multi-sujeto** (cuando aplica, p. ej. roles distintos): la resolución del tipo de sujeto también parte del token + lookup server-side, nunca de un campo declarado por el cliente.
@@ -64,7 +64,7 @@ Detalles de construcción:
 |---|---|
 | Requisito(s) | REQ-SEC-02 — Identidad solo del token (JWT-only) |
 | Riesgo(s) ISO 14971 | R-SEC-02 (≅ R002) — Escalada horizontal: otro usuario accede a PHI ajena por suplantación de identidad (Sev. Crítica × Prob. Remota → INACEPTABLE → residual Aceptable) |
-| Código | `app/dependencies.py:NN` (`get_current_user`); regla "sin `user_id` de entrada" aplicada en routers |
+| Código | `app/dependencies.py::<símbolo>` (`get_current_user`); regla "sin `user_id` de entrada" aplicada en routers |
 | Test(s) de verificación | `test_idor_rejects_foreign_user_id`, `test_endpoint_ignores_body_user_id`, `test_jwt_validates_audience_and_issuer` en `tests/test_identity_jwt_only.py` |
 | Entrada en Master Map | v1.0 |
 

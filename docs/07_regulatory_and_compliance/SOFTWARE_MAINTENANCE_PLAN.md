@@ -26,7 +26,7 @@ El mantenimiento comienza tras la primera liberación (§5.8) y se extiende dura
 | Aspecto | Definición |
 |---|---|
 | Canales de recepción de retroalimentación | `<soporte, telemetría/observabilidad, reportes de usuarios/profesionales, avisos de SOUP>` |
-| Registro de incidencias | `<sistema de tickets / issue tracker; archivo:línea o repositorio>` |
+| Registro de incidencias | `<sistema de tickets / issue tracker; archivo::símbolo o repositorio>` |
 | Criterio para tratar una incidencia como problema | `<umbral que convierte feedback en problema formal>` |
 | Vínculo con vigilancia post-comercialización | `<proceso ISO 13485 / regulatorio aplicable>` |
 

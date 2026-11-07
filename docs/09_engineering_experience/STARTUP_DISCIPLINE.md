@@ -36,7 +36,7 @@ solo **Lección** cuando es una práctica que conviene adoptar de entrada, sin e
 - **Lección:** cada cambio en algoritmo clínico, esquema de datos, regla de negocio o flujo de
   seguridad se registra en tus documentos regulatorios (matriz de riesgos, deuda técnica, mapa
   maestro) **en el mismo cambio**, no en un sprint aparte. Cada requisito debe apuntar a
-  `archivo:línea` verificable y a un test que existe HOY — "validado por [autoridad]" sin ruta no es
+  `ruta/archivo.py::símbolo` verificable y a un test que existe HOY — "validado por [autoridad]" sin ruta no es
   trazabilidad aceptable ante un auditor.
 
 ### El código es la fuente de verdad; los documentos lo citan, no lo copian

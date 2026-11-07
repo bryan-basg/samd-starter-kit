@@ -18,26 +18,26 @@ const DIMENSIONS = [
       'Revisá el diff de la rama actual (git diff vs la rama principal) SOLO por vulnerabilidades de seguridad regulatoria: ' +
       'user_id aceptado desde body/query/header (escalada), tracebacks o internals filtrados al cliente, ' +
       'PII/PHI en logs, secretos hardcodeados, claves de cifrado reusadas, falta de validación de audience/issuer del token. ' +
-      'Por cada hallazgo: archivo:línea, severidad CVSS, referencia regulatoria (GDPR Art.32 / HIPAA / OWASP).',
+      'Por cada hallazgo: archivo::símbolo, severidad CVSS, referencia regulatoria (GDPR Art.32 / HIPAA / OWASP).',
   },
   {
     key: 'failsafe',
     prompt:
       'Revisá el diff SOLO por fail-safe clínico (ISO 14971): módulos clínicos que al fallar (red/BD/IA) degradan en silencio, ' +
-      'propagan 500 en vez de 503+Retry-After, o exponen el error al usuario en crisis. Por cada hallazgo: archivo:línea + el modo de fallo concreto.',
+      'propagan 500 en vez de 503+Retry-After, o exponen el error al usuario en crisis. Por cada hallazgo: archivo::símbolo + el modo de fallo concreto.',
   },
   {
     key: 'traceability',
     prompt:
       'Revisá el diff SOLO por trazabilidad (IEC 62304 §5.1/§5.7): cambios en algoritmo clínico/schema/seguridad SIN entrada en ' +
-      'TECHNICAL_DEBT_SUMMARY ni ISO_14971_RISK_MATRIX, REQ-XXX sin archivo:línea + test real, endpoints cambiados sin regenerar tipos del contrato. ' +
+      'TECHNICAL_DEBT_SUMMARY ni ISO_14971_RISK_MATRIX, REQ-XXX sin archivo::símbolo + test real, endpoints cambiados sin regenerar tipos del contrato. ' +
       'Por cada hallazgo: qué doc falta actualizar.',
   },
   {
     key: 'neuro-ux',
     prompt:
       'Revisá el diff SOLO por neuro-UX (WCAG 2.1 AA): contraste fg/bg insuficiente, animaciones que ignoran prefers-reduced-motion, ' +
-      'emoji en aria-labels críticos, mensajes de error con jerga técnica, overlays fuera del modal canónico. Por cada hallazgo: archivo:línea.',
+      'emoji en aria-labels críticos, mensajes de error con jerga técnica, overlays fuera del modal canónico. Por cada hallazgo: archivo::símbolo.',
   },
 ]
 

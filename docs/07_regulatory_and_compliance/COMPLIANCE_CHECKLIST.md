@@ -4,7 +4,7 @@
 
 > Checklist operativo **control-por-control** para **{{PROJECT_NAME}}** (SaMD
 > {{SAMD_CLASS}}, uso previsto: {{INTENDED_USE}}). Cada salvaguarda lista
-> **dónde se verifica en el código** mediante un placeholder `<archivo:línea>`
+> **dónde se verifica en el código** mediante un placeholder `<ruta/archivo.py::símbolo>`
 > que el equipo rellena al implementar. Responsable: {{OWNER}}.
 >
 > Estados: `[ ]` pendiente · `[~]` parcial · `[x]` verificado.
@@ -18,37 +18,37 @@
 ### A.1 Seudonimización y cifrado (Art.32.1.a)
 
 - [ ] **Cifrado en reposo** de datos personales/de salud (AES-256 o superior).
-  Verificación: `<app/models/types.py:línea>` (tipo `EncryptedString` o equivalente).
+  Verificación: `<app/models/types.py::símbolo>` (tipo `EncryptedString` o equivalente).
 - [ ] **Cifrado en tránsito** TLS 1.2+ forzado; sin downgrade a HTTP.
-  Verificación: `<app/main.py:línea>` (HSTS / redirect) + config {{CLOUD_STACK}}.
+  Verificación: `<app/main.py::símbolo>` (HSTS / redirect) + config {{CLOUD_STACK}}.
 - [ ] **Gestión de claves** vía secret manager (NUNCA hardcodeadas ni reusando
-  el `SECRET_KEY` de la app). Verificación: `<app/core/config.py:línea>`.
+  el `SECRET_KEY` de la app). Verificación: `<app/core/config.py::símbolo>`.
 - [ ] **Seudonimización** antes de enviar datos a terceros (IA, analytics).
-  Verificación: `<app/services/<pseudonymize>.py:línea>`.
+  Verificación: `<app/services/<pseudonymize>.py::símbolo>`.
 
 ### A.2 Confidencialidad, integridad, disponibilidad, resiliencia (Art.32.1.b)
 
 - [ ] **Identidad desde el token verificado**, nunca desde body/query.
-  Verificación: `<app/dependencies.py:línea>` (`get_current_user`).
+  Verificación: `<app/dependencies.py::símbolo>` (`get_current_user`).
 - [ ] **Autorización por recurso** (anti-IDOR): cada acceso valida ownership.
-  Verificación: `<app/routers/<recurso>.py:línea>`.
+  Verificación: `<app/routers/<recurso>.py::símbolo>`.
 - [ ] **Fail-safe explícito** ante fallo de dependencia (BD/IA/red): degradación
-  predecible, sin tracebacks al cliente. Verificación: `<app/core/error_handlers.py:línea>`.
+  predecible, sin tracebacks al cliente. Verificación: `<app/core/error_handlers.py::símbolo>`.
 - [ ] **Rate limiting / circuit breakers** en endpoints sensibles.
-  Verificación: `<app/middleware/<rate_limit>.py:línea>`.
+  Verificación: `<app/middleware/<rate_limit>.py::símbolo>`.
 - [ ] **Cabeceras de seguridad** (CSP, COOP, Permissions-Policy, X-Content-Type-Options).
-  Verificación: `<app/middleware.py:línea>`.
+  Verificación: `<app/middleware.py::símbolo>`.
 
 ### A.3 Restauración de disponibilidad (Art.32.1.c)
 
 - [ ] **Backups** automáticos de la BD con restauración probada.
-  Verificación: config {{CLOUD_STACK}} (`<infra/backup.*:línea>`).
+  Verificación: config {{CLOUD_STACK}} (`<infra/backup.*::símbolo>`).
 - [ ] **Migraciones reversibles** y aplicadas antes de publicar.
-  Verificación: `<scripts/run_migrations.py:línea>` + workflow de deploy.
+  Verificación: `<scripts/run_migrations.py::símbolo>` + workflow de deploy.
 
 ### A.4 Proceso de verificación y evaluación regular (Art.32.1.d)
 
-- [ ] **SAST** (Semgrep) en CI. Verificación: `<.github/workflows/security-audit.yml:línea>`.
+- [ ] **SAST** (Semgrep) en CI. Verificación: `<.github/workflows/security-audit.yml::símbolo>`.
 - [ ] **SCA / CVEs** (Trivy + Dependabot) + **SBOM**. Verificación:
   `.github/workflows/sbom.yml` + [`SBOM_MANAGEMENT_PLAN.md`](./SBOM_MANAGEMENT_PLAN.md).
 - [ ] **DAST** (OWASP ZAP). Verificación: `.github/workflows/dast.yml`.
@@ -61,7 +61,7 @@
 - [ ] **Análisis de riesgo** vinculado a cada control en
   [`ISO_14971_RISK_MATRIX.md`](./ISO_14971_RISK_MATRIX.md).
 - [ ] **No exposición accidental** de datos en logs (redacción de PII/PHI).
-  Verificación: `<app/core/logging_conf.py:línea>`.
+  Verificación: `<app/core/logging_conf.py::símbolo>`.
 
 ---
 
@@ -72,9 +72,9 @@
 - [ ] **Análisis de riesgo** documentado (§164.308(a)(1)(ii)(A)).
   Verificación: [`ISO_14971_RISK_MATRIX.md`](./ISO_14971_RISK_MATRIX.md).
 - [ ] **Gestión de accesos** por rol (§164.308(a)(4)).
-  Verificación: `<app/dependencies.py:línea>` (roles / scopes).
+  Verificación: `<app/dependencies.py::símbolo>` (roles / scopes).
 - [ ] **Registro de auditoría** de accesos y mutaciones a PHI (§164.308(a)(1)(ii)(D)).
-  Verificación: `<app/middleware/audit.py:línea>`.
+  Verificación: `<app/middleware/audit.py::símbolo>`.
 - [ ] **Plan de respuesta a incidentes** (§164.308(a)(6)).
   Verificación: [`INCIDENT_RESPONSE_PLAN.md`](./INCIDENT_RESPONSE_PLAN.md).
 
@@ -88,19 +88,19 @@
 ### B.3 Salvaguardas técnicas (§164.312)
 
 - [ ] **Control de acceso único** por usuario (§164.312(a)(2)(i)).
-  Verificación: `<app/dependencies.py:línea>` (identidad por token).
+  Verificación: `<app/dependencies.py::símbolo>` (identidad por token).
 - [ ] **Logoff automático** / expiración de sesión (§164.312(a)(2)(iii)).
-  Verificación: `<frontend/src/<auth>/session.ts:línea>` + TTL del token.
+  Verificación: `<frontend/src/<auth>/session.ts::símbolo>` + TTL del token.
 - [ ] **Cifrado/descifrado de PHI** (§164.312(a)(2)(iv)).
-  Verificación: `<app/models/types.py:línea>`.
+  Verificación: `<app/models/types.py::símbolo>`.
 - [ ] **Controles de auditoría** (§164.312(b)).
-  Verificación: `<app/middleware/audit.py:línea>`.
+  Verificación: `<app/middleware/audit.py::símbolo>`.
 - [ ] **Integridad** — detección de alteración no autorizada de PHI (§164.312(c)(1)).
-  Verificación: `<app/services/<integrity>.py:línea>` o checksums de BD.
+  Verificación: `<app/services/<integrity>.py::símbolo>` o checksums de BD.
 - [ ] **Autenticación de entidad** (§164.312(d)).
-  Verificación: `<app/dependencies.py:línea>` (verificación del token).
+  Verificación: `<app/dependencies.py::símbolo>` (verificación del token).
 - [ ] **Seguridad en transmisión** — cifrado de PHI en tránsito (§164.312(e)(1)).
-  Verificación: `<app/main.py:línea>` (TLS/HSTS).
+  Verificación: `<app/main.py::símbolo>` (TLS/HSTS).
 
 ### B.4 Notificación de brechas (Breach Notification Rule, §164.400-414)
 
@@ -111,7 +111,7 @@
 
 ## C. Cómo usar este checklist
 
-1. Reemplazar cada `<archivo:línea>` por la referencia real al implementar el control.
+1. Reemplazar cada `<ruta/archivo.py::símbolo>` por la referencia real al implementar el control.
 2. Marcar el estado (`[ ]`/`[~]`/`[x]`) en cada revisión.
 3. Todo control en `[ ]` o `[~]` debe tener una entrada de deuda asociada en el DHF.
 4. Re-revisar el checklist completo en cada release y ante cambios normativos.

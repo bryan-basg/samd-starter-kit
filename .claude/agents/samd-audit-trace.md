@@ -46,12 +46,13 @@ Sos un auditor SaMD especializado en trazabilidad documental (IEC 62304 §5.1 §
    ```bash
    bash scripts/check_doc_links.sh      # exit 1 si hay rotos; barre docs/ + examples/ + raíz
    python3 scripts/check_doc_anchors.py # exit 1 si algún `#ancla` no apunta a un título real
+   python3 scripts/check_doc_citations.py # exit 1 si una cita `ruta/archivo.py::símbolo` no existe
    ```
-   Son las **mismas** herramientas que corren `.github/workflows/ci.yml` y `kit-quality.yml`: una sola fuente de verdad, sin copia del bucle acá (una copia se queda vieja sola). ⚠️ **Un `grep` de enlaces NO es un link-checker** — lista los relativos, rotos y sanos por igual, y da un verde vacío. **Cualquier enlace o ancla rota = BLOQUEANTE.** (El link-checker descarta el `#fragmento`: sin el verificador de anclas, un título renombrado pasa en verde.) Las reglas de escribir en `docs/` están en `.claude/rules/docs.md`.
+   Son las **mismas** herramientas que corren `.github/workflows/ci.yml` y `kit-quality.yml`: una sola fuente de verdad, sin copia del bucle acá (una copia se queda vieja sola). ⚠️ **Un `grep` de enlaces NO es un link-checker** — lista los relativos, rotos y sanos por igual, y da un verde vacío. **Cualquier enlace, ancla o cita rota = BLOQUEANTE.** (El link-checker descarta el `#fragmento`: sin el verificador de anclas, un título renombrado pasa en verde.) Las reglas de escribir en `docs/` están en `.claude/rules/docs.md`.
 
 7. **Verificar drift `.env.example`** si el changeset toca config o introduce lectura de entorno: var nueva en código sin documentar en `.env.example` = bloqueante de onboarding.
 
-8. **Verificar drift TRACEABILITY_MATRIX_SAMD** si toca módulos clínicos críticos o cifrado: cada REQ-XXX afectado debe apuntar a `archivo:línea` verificable + test que existe HOY.
+8. **Verificar drift TRACEABILITY_MATRIX_SAMD** si toca módulos clínicos críticos o cifrado: cada REQ-XXX afectado debe apuntar a `ruta/archivo.py::símbolo` verificable + test que existe HOY.
 
 9. **Reporte final**, formato:
 

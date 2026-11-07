@@ -2,7 +2,7 @@
 
 **Proyecto:** {{PROJECT_NAME}} · **Clase SaMD:** {{SAMD_CLASS}} · **Versión:** vX.Y · **Fecha:** YYYY-MM-DD
 
-> Documento maestro del proceso de desarrollo conforme a **IEC 62304 §5.1** (Planificación del desarrollo de software). Define el ciclo de vida, las actividades exigidas por la clase de seguridad, los roles, los entregables, las herramientas y los mecanismos de trazabilidad y verificación. Toda fila marcada con `<...>`, `YYYY-MM-DD` o `archivo:línea` es un placeholder que el equipo debe completar.
+> Documento maestro del proceso de desarrollo conforme a **IEC 62304 §5.1** (Planificación del desarrollo de software). Define el ciclo de vida, las actividades exigidas por la clase de seguridad, los roles, los entregables, las herramientas y los mecanismos de trazabilidad y verificación. Toda fila marcada con `<...>`, `YYYY-MM-DD` o `ruta/archivo.py::símbolo` es un placeholder que el equipo debe completar.
 
 ---
 
@@ -159,13 +159,13 @@ Leyenda: ● obligatorio · ○ no exigido por la norma (puede adoptarse volunta
 
 Se mantiene una matriz de trazabilidad bidireccional que enlaza:
 
-`Riesgo (ISO 14971) → Requisito → Diseño → Código (archivo:línea) → Prueba (nombre de test que existe HOY)`
+`Riesgo (ISO 14971) → Requisito → Diseño → Código (archivo::símbolo) → Prueba (nombre de test que existe HOY)`
 
 | ID Requisito | Riesgo asociado | Diseño | Código | Prueba | Estado |
 |---|---|---|---|---|---|
-| REQ-`<nnn>` | R`<nn>` | `<ref diseño>` | `archivo:línea` | `<nombre_test>` | `<verificado/pendiente>` |
+| REQ-`<nnn>` | R`<nn>` | `<ref diseño>` | `ruta/archivo.py::símbolo` | `<nombre_test>` | `<verificado/pendiente>` |
 
-> Cada entrada debe apuntar a un `archivo:línea` verificable y a un test existente. Frases genéricas sin path no constituyen trazabilidad aceptable.
+> Cada entrada debe apuntar a un `ruta/archivo.py::símbolo` verificable y a un test existente. Frases genéricas sin path no constituyen trazabilidad aceptable.
 
 ---
 

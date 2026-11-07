@@ -64,7 +64,7 @@ La segregación permite asignar clases distintas a ítems de software dentro del
 | `<módulo / servicio>` | `<descripción>` | `<A/B/C>` | `<cómo se garantiza la independencia frente a ítems de clase superior>` |
 | `<módulo / servicio>` | `<descripción>` | `<A/B/C>` | `<...>` |
 
-**Mecanismos de segregación aplicados:** `<p. ej. separación de procesos, aislamiento de datos, validación en frontera, ausencia de dependencias compartidas; referenciar archivo:línea cuando exista>`.
+**Mecanismos de segregación aplicados:** `<p. ej. separación de procesos, aislamiento de datos, validación en frontera, ausencia de dependencias compartidas; referenciar archivo::símbolo cuando exista>`.
 
 > Si no se aplica segregación, todos los ítems heredan la clase global {{SAMD_CLASS}} y esta tabla lo declara explícitamente.
 

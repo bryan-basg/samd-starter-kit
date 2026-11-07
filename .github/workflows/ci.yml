@@ -35,6 +35,11 @@ jobs:
       - name: Anclas internas (#sección) de la documentación
         run: python3 scripts/check_doc_anchors.py
 
+      # Las citas al código van por NOMBRE (`ruta/archivo.py::símbolo`): un número de
+      # línea caduca con el siguiente commit; un nombre renombrado lo caza este paso.
+      - name: Citas al código (ruta/archivo.py::símbolo) de la documentación
+        run: python3 scripts/check_doc_citations.py
+
   # ---- Reparto: qué capas tocó el cambio (evita correr backend si solo cambió UI) ----
   changes:
     name: Qué capas cambiaron

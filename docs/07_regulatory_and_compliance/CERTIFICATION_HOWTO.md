@@ -52,7 +52,7 @@ La Clase determina el rigor de verificación y la documentación exigida. **A** 
 6. **Verificación** — tests con aserciones reales; cobertura/mutation según política; números registrados.
 7. **Usabilidad IEC 62366** — análisis de tareas, evaluación formativa y sumativa.
 8. **Evidencia clínica** — según vía y clase; puede requerir estudio.
-9. **Trazabilidad cerrada** — cada REQ ↔ Riesgo ↔ Código (`archivo:línea`) ↔ Test existente.
+9. **Trazabilidad cerrada** — cada REQ ↔ Riesgo ↔ Código (`ruta/archivo.py::símbolo`) ↔ Test existente.
 10. **Vigilancia post-mercado** — plan de monitoreo, reporte de incidentes, mejora continua.
 11. **Sumisión** — armar el expediente técnico según la vía elegida.
 
@@ -64,7 +64,7 @@ La Clase determina el rigor de verificación y la documentación exigida. **A** 
 |---|---|---|
 | **Usabilidad (IEC 62366)** subestimada | Suele faltar evaluación sumativa con usuarios representativos | Planificar tempranamente; presupuestar reclutamiento |
 | **Evidencia clínica** insuficiente | Claims sin respaldo proporcional al riesgo | Definir estrategia clínica al fijar el uso previsto |
-| **Trazabilidad débil** | Frases genéricas ("validado por X") sin `archivo:línea` ni test | Cada REQ apunta a código + test que existe HOY |
+| **Trazabilidad débil** | Frases genéricas ("validado por X") sin `ruta/archivo.py::símbolo` ni test | Cada REQ apunta a código + test que existe HOY |
 | **SOUP sin gestionar** | Dependencias de terceros sin análisis ni control de CVEs | Inventario + escaneo continuo de CVEs |
 | **Ciberseguridad** tardía | Cifrado/gestión de claves/control de acceso como afterthought | Diseñar desde el inicio; SAST/DAST en CI |
 | **Claims fuera del uso previsto** | El producto afirma función no certificada | Glosario controlado; revisar todo texto de cara al usuario |

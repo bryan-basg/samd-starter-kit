@@ -15,7 +15,7 @@
 | Stack base de datos | {{DB_STACK}} |
 | Plataforma cloud | {{CLOUD_STACK}} |
 | Criterio de inclusión | Todo componente de terceros que ejecute en producción o en la cadena de build/verificación cuyo fallo pueda afectar el comportamiento del dispositivo. |
-| Fuente de versiones | `<lockfiles, manifiestos de dependencias; archivo:línea>` |
+| Fuente de versiones | `<lockfiles, manifiestos de dependencias; archivo::símbolo>` |
 | Monitoreo de CVEs | `<herramienta SCA / fuente de avisos>` |
 
 ---

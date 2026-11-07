@@ -30,7 +30,7 @@ Cada fila declara su **cubo** — la pregunta que lo decide es *«si esto sigue 
 
 | Código | Cubo | Descripción | Impacto SaMD | Severidad | Riesgo asociado | Estado |
 |---|---|---|---|---|---|---|
-| D-XXX-01 | 🔴/🟡 | <descripción concreta con `archivo:línea`> | <§5.x / control de riesgo> | <Crítica/Alta/Media/Baja> | R-XXX-NN | Abierta |
+| D-XXX-01 | 🔴/🟡 | <descripción concreta con `ruta/archivo.py::símbolo`> | <§5.x / control de riesgo> | <Crítica/Alta/Media/Baja> | R-XXX-NN | Abierta |
 
 ## Deudas cerradas recientes
 

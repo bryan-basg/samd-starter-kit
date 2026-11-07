@@ -11,7 +11,7 @@ Este método sirve para que {{OWNER}} (dev principal, a menudo abrumado por el t
 
 - {{OWNER}} quiere atacar deuda técnica de fondo por capas, no arreglar un bug puntual.
 - {{OWNER}} pide explícitamente "pensar como varios ingenieros" sobre una sección de la app.
-- Se quiere abrir un "cajón" (backend+datos, frontend, seguridad+tests, infraestructura, regulatorio/DHF, síntesis cross-capa) de forma sistemática, con evidencia `archivo:línea` y elección explícita del dueño.
+- Se quiere abrir un "cajón" (backend+datos, frontend, seguridad+tests, infraestructura, regulatorio/DHF, síntesis cross-capa) de forma sistemática, con evidencia `ruta/archivo.py::símbolo` y elección explícita del dueño.
 - Ya existe un plan de ejecución versionado (`ENGINEERING_ROUNDTABLE_EXECUTION_PLAN.md` o similar) y toca continuar/retomar una sección.
 
 ## El método (una sección/cajón por sesión)
@@ -24,7 +24,7 @@ Este método sirve para que {{OWNER}} (dev principal, a menudo abrumado por el t
    5. camino a certificarte (DHF / regulatorio)
    6. síntesis cross-capa
 
-2. **Generar el menú**: lanzá los agentes especialistas de ESA capa (ej. `backend` + `db-architect` para la 1; `frontend` ×N para la 2; `security-samd` + `qa-mutation` para la 3; `cloud-ops` para la 4; `samd-audit-trace` + `docs-dhf` para la 5). **Tope duro: 12 agentes por tanda, contando verificadores** (regla B de `.claude/rules/orquestacion.md`); si la capa pide más, van en tandas y **entre tanda y tanda se PARA y se PREGUNTA** con el costo real de la anterior — skill `/tandas-agentes`. Cada uno **lee código real** y trae **4-6 mejoras de FONDO (no parches)**, cada una con **evidencia `archivo:línea`**. Agrupá el menú por riesgo (verde/candado/rumbo/higiene).
+2. **Generar el menú**: lanzá los agentes especialistas de ESA capa (ej. `backend` + `db-architect` para la 1; `frontend` ×N para la 2; `security-samd` + `qa-mutation` para la 3; `cloud-ops` para la 4; `samd-audit-trace` + `docs-dhf` para la 5). **Tope duro: 12 agentes por tanda, contando verificadores** (regla B de `.claude/rules/orquestacion.md`); si la capa pide más, van en tandas y **entre tanda y tanda se PARA y se PREGUNTA** con el costo real de la anterior — skill `/tandas-agentes`. Cada uno **lee código real** y trae **4-6 mejoras de FONDO (no parches)**, cada una con **evidencia `ruta/archivo.py::símbolo`**. Agrupá el menú por riesgo (verde/candado/rumbo/higiene).
 
 3. **Verificación adversarial ANTES de ejecutar lo clínico/seguridad** (SaMD §5.6): un hallazgo que dispara cambio en algoritmo de riesgo, schema, regla de negocio o flujo de seguridad debe ser refutado por otro agente independiente antes de tocar código. Este paso existe para cazar falsos positivos (hallazgos que parecen bugs pero son premisas equivocadas) y para no "arreglar" algo que no estaba roto.
 

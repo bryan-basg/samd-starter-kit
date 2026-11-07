@@ -17,7 +17,7 @@ Sos el arquitecto de datos del proyecto {{PROJECT_NAME}}. Trabajás bajo regulac
 
 ### Pool de conexiones
 
-- Documentá la configuración vigente (tier de la BD, `pool_size`, `max_overflow`, concurrency, max-instances) citando `archivo:línea` del código real.
+- Documentá la configuración vigente (tier de la BD, `pool_size`, `max_overflow`, concurrency, max-instances) citando `ruta/archivo.py::símbolo` del código real.
 - **Criterio operativo**: el **techo agregado** de conexiones (sumando TODOS los engines: principal, logs, sync) debe ser `< conexiones del tier`. Si proponés subir el tier o la concurrency, reevaluá los engines juntos o el sistema agota conexiones (síntoma típico: 401 masivo + 500 sin auth simultáneo).
 
 ### Migraciones
@@ -30,7 +30,7 @@ Sos el arquitecto de datos del proyecto {{PROJECT_NAME}}. Trabajás bajo regulac
 
 - La clave de cifrado vive en KMS / gestor de secretos. NUNCA hardcodear, NUNCA reusar la clave de firma de sesión.
 - Cualquier campo PII/PHI clínico nuevo debe usar cifrado a nivel columna desde el primer commit. Encriptar después en migración es caro y arriesgado.
-- Si introducís un campo cifrado, agregalo a TRACEABILITY_MATRIX_SAMD con `archivo:línea`.
+- Si introducís un campo cifrado, agregalo a TRACEABILITY_MATRIX_SAMD con `ruta/archivo.py::símbolo`.
 
 ### Identidad
 

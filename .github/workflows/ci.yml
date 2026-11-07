@@ -30,6 +30,10 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Link-checker cross-doc (0 broken obligatorio)
         run: bash scripts/check_doc_links.sh
+      # check_doc_links.sh solo mira que exista el ARCHIVO; descarta el `#ancla`.
+      # Sin este paso un título renombrado deja el enlace roto y el CI en verde.
+      - name: Anclas internas (#sección) de la documentación
+        run: python3 scripts/check_doc_anchors.py
 
   # ---- Reparto: qué capas tocó el cambio (evita correr backend si solo cambió UI) ----
   changes:

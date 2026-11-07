@@ -30,7 +30,8 @@ else
   echo "  (sin pytest o sin carpeta tests/ — omitido)"
 fi
 
-echo "[CI] 5/5 Trazabilidad documental (enlaces cross-doc — obligatorio)"
+echo "[CI] 5/5 Trazabilidad documental (enlaces cross-doc + anclas — obligatorio)"
 bash scripts/check_doc_links.sh
+python3 scripts/check_doc_anchors.py
 
 echo "[CI] OK"

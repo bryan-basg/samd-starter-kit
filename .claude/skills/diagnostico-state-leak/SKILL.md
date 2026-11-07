@@ -20,6 +20,7 @@ Diagnostica un flaky de tests que se sospecha es state-leak (backend o frontend)
 - **Si cada corrida full falla tests DISTINTOS** (una vez un archivo, otra otro, otra un grupo de componentes) → state-leak entre archivos, orden-dependiente. Hipótesis primera: un mock global se aplicó persistentemente y un archivo posterior lo heredó.
 - **Si "primera mitad pasa" Y "segunda mitad pasa" pero "ambas juntas fallan"** → es acumulación/interacción, NO un archivo contaminante único.
 - Un cambio de ORDEN (merge que agrega archivos, paralelización con workers, desactivar aleatorización) puede DETONAR un leak latente sin que cambie el código de producción.
+- **Si pasa aislado en milisegundos pero en la suite vence un timeout largo (p. ej. 5 s) → no es lentitud: es un flujo async del test anterior que sigue vivo.** Un archivo que corre en decenas de ms aislado no es «lento». **Subir el timeout es la teoría equivocada**: no cura nada y entierra la causa.
 
 ## Procedimiento
 
@@ -41,6 +42,7 @@ Diagnostica un flaky de tests que se sospecha es state-leak (backend o frontend)
 
 - Mocks de módulos globales (router, i18n, data-fetching) con **closure local** (p.ej. una función de navegación mockeada) que persisten entre archivos del mismo worker.
 - **Limpieza robusta obligatoria después de cada test**: resetear timers, volver a timers reales, y desmontar el DOM/componentes montados.
+- **Test que cierra SIN esperar el final de su propio flujo** (un listener de auth, una escritura a la BD local del navegador, un timer): deja un efecto tardío que escribe estado en el test siguiente, y este vence esperando algo que ya fue pisado. Cura: cada test espera el final de su flujo antes de terminar (`await` del efecto, `waitFor` del estado final). Se confirma con un detector de fugas: con el arreglo pasa; con el sabotaje (quitar la espera) falla.
 - **Cura de raíz**: NO re-mockear lo que ya está en el setup global de tests. Preferir un wrapper real (p.ej. un router real en memoria) en vez de mockear el módulo completo. Si el leak no se ubica en un tiempo razonable, revertir los tests nuevos y dejar la deuda anotada explícitamente en el registro de deuda técnica del proyecto.
 
 ## Reglas duras

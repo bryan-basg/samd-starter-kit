@@ -16,8 +16,15 @@ Reglas duras (ver `docs/03_software_development_plan/COMPLETE_TESTING_STRATEGY.m
 
 ```bash
 pip install -r requirements-dev.txt   # (en la raíz del repo)
-pytest                                # 16/16 verde
+pytest                                # todo verde (el resumen final trae el conteo real)
 pytest -m security                    # solo los de seguridad
 ```
 
 Usá estos tests como plantilla del nivel de rigor esperado; reemplazalos por los de tu app real.
+
+## Guardianes del propio kit (NO los borres al traer tu app)
+
+Estos dos archivos no prueban `app/`: **vigilan que una regla del kit se siga cumpliendo**. Una regla escrita en prosa que nada comprueba se erosiona sin ruido; un guardián la vuelve verificable (IEC 62304 §5.7).
+
+- `test_workflows_pineados_a_sha.py` — toda acción de `.github/workflows/` pineada a un SHA de 40 caracteres (cadena de suministro, SOUP §8), con una sola versión por acción y la versión legible en comentario. Se deriva de los workflows en disco: uno nuevo entra solo. Si adaptás el kit a menos acciones, bajá `MINIMO_DE_REFERENCIAS`; su trabajo es no aprobar por vacío.
+- `test_mutmut_gate.py` — el gate de mutación backend (`scripts/check_mutmut_score.py`), el runner de pytest para mutmut y el cableado de `scripts/run_mutmut.sh` (flag `--CI`, sin `|| true`, versión fijada igual a `requirements-dev.txt`). Si quitás la mutación backend de tu proyecto, quitá este archivo junto con los tres scripts.

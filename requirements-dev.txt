@@ -12,6 +12,11 @@ greenlet>=3.5.6          # requerido por concurrency=greenlet del .coveragerc (b
 ruff
 mypy
 vulture
+# Mutation testing del backend. FIJADO a 2.5.1 a propósito (no `>=`): mutmut 3.x eliminó
+# `--paths-to-mutate` y `--runner` (los usa scripts/run_mutmut.sh) y cambió el formato del
+# cache que lee scripts/check_mutmut_score.py. Subir de major = migrar ambos scripts.
+# El mismo número vive en MUTMUT_PIN de run_mutmut.sh; tests/test_mutmut_gate.py los ancla.
+mutmut==2.5.1
 # SBOM del backend (CycloneDX). El paquete pip es `cyclonedx-bom`; el binario que
 # instala se llama `cyclonedx-py`, y es el que usa scripts/generate_sbom.sh. Va acá
 # porque el SBOM_MANAGEMENT_PLAN §4.1 documenta la generación LOCAL como

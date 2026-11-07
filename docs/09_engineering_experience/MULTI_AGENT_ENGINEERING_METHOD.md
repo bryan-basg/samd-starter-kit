@@ -8,7 +8,7 @@ Este documento captura el método que funcionó en un proyecto SaMD real para te
 
 ## La postura: paralelismo agresivo con cohesión
 
-Repartir en muchos agentes en paralelo cuando la tarea lo permite (búsquedas anchas, auditorías, mutation por archivo, refactors multi-archivo independientes). Lanzar agentes en la nube no consume la máquina propia — esa es la mecánica que los saca de la categoría "proceso pesado", y por eso **dentro de una ola no se pide permiso por cada agente**. Pero sí consumen la **cuota de tokens** del dueño, que es un costo distinto y se gobierna aparte (ver *El otro costo* más abajo). Y la calidad **no se relaja por ir más rápido**.
+Repartir en muchos agentes en paralelo cuando la tarea lo permite (búsquedas anchas, auditorías, mutation por archivo, refactors multi-archivo independientes). **Lanzar** un agente no consume la máquina propia, y por eso **dentro de una ola no se pide permiso por cada agente**. Ojo: ese matiz es sobre el costo de *lanzar*, no sobre lo que el agente hace después. Un subagente que corre `Bash` trabaja en la máquina del dueño, y si dispara una suite completa o un proceso pesado cae en la misma regla que la sesión principal: pide OK (`.claude/rules/orquestacion.md`, regla dura 2; el candado mecánico es `.claude/scripts/candado_suite_completa.py`). Los agentes sí consumen la **cuota de tokens** del dueño, que es un costo distinto y se gobierna aparte (ver *El otro costo* más abajo). Y la calidad **no se relaja por ir más rápido**.
 
 ## El protocolo anti-drift (obligatorio con 2+ agentes)
 

@@ -1,6 +1,6 @@
 # COMANDOS CORE
 
-> Regla **transversal** del cerebro SaMD, en archivo aparte solo por legibilidad del core — **NO lleva `paths:`**, así que carga en cada sesión igual que `CLAUDE.md`. Mapa completo: `CLAUDE.md` §MAPA DE ESTE CEREBRO. Guía completa de la suite: `docs/04_user_documentation/TESTING_TOOLS.md`.
+> Regla **transversal** del cerebro SaMD, en archivo aparte solo por legibilidad del core — **NO lleva `paths:`**, así que carga en cada sesión igual que `CLAUDE.md`. Mapa completo: `CLAUDE.md` §MAPA DE ESTE CEREBRO. Guía completa de la suite: `docs/03_software_development_plan/TESTING_TOOLS.md`.
 >
 > **Adaptá los comandos a tu stack real** (`{{FRONTEND_STACK}}` / `{{BACKEND_STACK}}`).
 

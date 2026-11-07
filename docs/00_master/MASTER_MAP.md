@@ -47,10 +47,11 @@ El reglamento que gobierna a los agentes vive junto al código, no en el DHF:
 
 | Pieza | Path | Contenido |
 |---|---|---|
-| Core del reglamento | `CLAUDE.md` | Regla 0, preferencias del dueño, empatía, boy scout, análisis de impacto, cierre de bloque. Carga en cada turno. |
+| Core del reglamento | `CLAUDE.md` | Regla 0, preferencias del dueño, empatía, boy scout, **arreglar no envolver**, análisis de impacto, cierre de bloque, instrucciones de compactación. Carga en cada turno. |
+| Entrada para otras herramientas | `AGENTS.md` | Apunta a `CLAUDE.md` y `.claude/` para las herramientas que leen `AGENTS.md` (Codex y similares); no agrega reglas. |
 | Reglas por capa | `.claude/rules/` | Cuatro **path-scoped** (backend, UX clínica, testing, CI) que cargan solas al tocar esa capa + cuatro transversales (orquestación, agentes, comandos, sesiones paralelas). |
 | Equipo de agentes | `.claude/agents/` | 12 especialistas por capa, cada uno con `model:` en el frontmatter (palanca de costo/velocidad — ver `.claude/rules/orquestacion.md`). Matriz de "cuándo usar cada uno": `.claude/rules/agentes.md`. |
-| Procedimientos | `.claude/commands/`, `.claude/skills/` | Skills operativas (anti-drift y **tandas de agentes** — cohesión y costo, las dos caras de orquestar—, **ola de auditoría** — veracidad del hallazgo—, cierre de bloque, mutation, diagnóstico, memoria del agente). |
+| Procedimientos | `.claude/commands/`, `.claude/skills/` | Skills operativas (anti-drift y **tandas de agentes** — cohesión y costo, las dos caras de orquestar—, **ola de auditoría** — veracidad del hallazgo—, **arreglar no envolver** — arreglar en vez de tapar—, cierre de bloque, mutation, diagnóstico, memoria del agente). |
 | Hooks mecánicos | `.claude/settings.json`, `.claude/scripts/` | Candados que no dependen de que el agente se acuerde: `PreToolUse` sobre `Bash` deniega a un SUBAGENTE correr la suite completa o un proceso pesado (`.claude/rules/orquestacion.md`, regla dura 2). |
 
 > Cambios en estas piezas son **cambios de proceso/gobernanza**: se trazan en el
@@ -61,9 +62,10 @@ El reglamento que gobierna a los agentes vive junto al código, no en el DHF:
 
 | Pieza | Path | Contenido |
 |---|---|---|
-| Vigilancia | `.github/dependabot.yml` | `npm` (`frontend/`), `pip` (raíz) y `github-actions`; excepciones con motivo y grupo `react`. |
-| Versiones fijadas | `frontend/package-lock.json`, `requirements*.txt` | Lockfile del frontend (npm 11) y pisos/techos del backend. |
+| Vigilancia | `.github/dependabot.yml` | `npm` (`frontend/`), `pip` (raíz) y `github-actions`; `cooldown` de 14 días; excepciones con motivo y grupo `react`. |
+| Versiones fijadas | `frontend/package-lock.json`, `requirements*.txt` | Lockfile del frontend (npm 11), pisos/techos del backend y `mutmut==2.5.1` (anclado por `tests/test_mutmut_gate.py`). |
 | Runtime | `.github/workflows/`, `docker-compose.yml`, `.devcontainer/` | Un solo major de Node (24) en todos los sitios. |
+| Guardián de la cadena de suministro del CI | `tests/test_workflows_pineados_a_sha.py` | Toda acción de `.github/workflows/` pineada a SHA de 40 caracteres, una sola versión por acción. |
 
 > Política completa en el [`SOFTWARE_CONFIGURATION_MANAGEMENT_PLAN` §7.1](../07_regulatory_and_compliance/SOFTWARE_CONFIGURATION_MANAGEMENT_PLAN.md). Es un cambio de **proceso**: se traza ahí y en este mapa, no en la matriz de riesgo.
 
@@ -79,7 +81,7 @@ El reglamento que gobierna a los agentes vive junto al código, no en el DHF:
 
 | Doc | Versión | Última actualización |
 |---|---|---|
-| MASTER_MAP | v1.4 | 2026-10-12 |
-| SOFTWARE_CONFIGURATION_MANAGEMENT_PLAN | v1.5 | 2026-10-12 |
+| MASTER_MAP | v1.5 | 2026-11-07 |
+| SOFTWARE_CONFIGURATION_MANAGEMENT_PLAN | v1.6 | 2026-11-07 |
 | ISO_14971_RISK_MATRIX | v1.0 | 2026-07-05 |
 | TRACEABILITY_MATRIX_SAMD | v1.0 | 2026-07-05 |

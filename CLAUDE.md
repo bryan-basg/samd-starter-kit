@@ -112,6 +112,18 @@ Cuando completes una tarea o modifiques un archivo:
 
 ---
 
+## ARREGLAR, NO ENVOLVER (consecuencia SaMD §5.7 — mantenibilidad)
+
+**Prohibido apilar código de protección alrededor de la lógica existente cuando el arreglo real es REESCRIBIRLA.** Validadores explícitos de más, estructuras defensivas, tipados estrictos puestos como muleta y envoltorios locales (`safeX`, `validatedX`) **no son arreglos**: son una capa que tapa el defecto y lo deja volver por la puerta de al lado.
+
+**El filo — esto NO deroga la validación obligatoria.** Siguen siendo innegociables: **(a)** la validación de **FRONTERA** (dato externo entrando: schema de request, validador del cliente, tope de escritura) — una vez, donde entra; **(b)** el **fail-safe clínico** declarado (ISO 14971: degradar hacia MÁS alerta, estado `estimated`/`unclassified`, fusible 503) — eso es conducta del producto, no protección de código; **(c)** las **guardas de seguridad en el punto de decisión** (JWT, portero de acceso). *La legítima vive en la frontera y corre UNA vez; la prohibida vive encima de la lógica y se repite porque nadie confía en lo que hay debajo.*
+
+**Test decisivo, antes de dar por cerrado cualquier arreglo defensivo:** *si alguien llama mañana a la función original **saltándose** mi envoltorio, ¿vuelve el defecto?* Si la respuesta es sí, escribiste un consejo, no un control. Jerarquía, de mejor a peor: **hacer el estado imposible** (un tipo que no compila si falta un caso) → **puerta única derivada** que todos los consumidores usan → **validar en la frontera** → ❌ envolver el uso.
+
+**Válvula honesta:** si de verdad no se puede reescribir (la frontera, el fail-safe, o el productor es de terceros), se justifica **en el propio código**. «No me animo a tocarlo» / «rompe muchos tests» **no es justificación: es una ficha de deuda** en `TECHNICAL_DEBT_SUMMARY.md`. Un envoltorio sin ficha es deuda invisible. Las 6 señales de que estás envolviendo y el procedimiento de 5 pasos: skill **`/arreglar-no-envolver`**.
+
+---
+
 ## ANÁLISIS DE IMPACTO ANTES DE DECLARAR "ARREGLADO" (consecuencia SaMD §5.6)
 
 * **Búsqueda global obligatoria** cuando modifiques un parámetro, retorno, schema o constante: `grep` en todo el repo para encontrar TODOS los consumidores. (Para el análisis de impacto de un símbolo puntual: skill `/samd-trace`.)
@@ -144,3 +156,11 @@ Podar lo viejo mientras cada lote añade decenas de líneas nuevas es vaciar con
 * **Verificación obligatoria antes de cerrar** (números, no impresión): `du -h` del doc tocado y `wc -l` de la sección añadida. Si el doc vivo **creció** en un cierre que también podaba, se reporta y se explica.
 
 > Si un lote necesita más espacio que los topes, es señal de que el detalle va al histórico — no de subir el tope.
+
+---
+
+## INSTRUCCIONES DE COMPACTACIÓN (al resumir la conversación)
+
+Cuando una sesión larga se resume (a mano con `/compact` o sola, al llegar al umbral de contexto que tengas configurado), el resumen decide qué recuerda la sesión siguiente. Al resumir, conservá **literal**: (1) cada OK o decisión de {{OWNER}} **con su alcance** (plan vs gasto, qué zona autorizó); (2) los archivos tocados y si están commiteados o pusheados; (3) los IDs de fichas (`D-XXX`) y riesgos tocados; (4) los números de tests con el comando que los dio; (5) el carril de la ventana y los agentes o procesos en curso; (6) lo pendiente. Lo que ya está resumido en esos seis puntos (salidas de herramientas, lecturas de archivos) se descarta.
+
+**Por qué importa en SaMD:** un resumen que pierde el *alcance* de un OK ("autorizó el plan" se vuelve "autorizó todo") convierte una decisión del dueño en un permiso que nunca dio; y uno que pierde los números de verificación obliga a declarar "verde" sin evidencia (§5.7).

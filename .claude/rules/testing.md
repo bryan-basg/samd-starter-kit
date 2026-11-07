@@ -29,7 +29,10 @@ SaMD Clase {{SAMD_CLASS}} exige verificación demostrable. Esto NO es negociable
 * **No correr el type-checker/tests unitarios mientras corre mutation testing** — son CPU-intensivos y los procesos se contaminan.
 * **No improvisar detección de imports muertos a ojo** — usar el linter (riesgo de borrar imports usados vía side effects).
 * **Un test que falla solo en la suite completa es state-leak, no flaky "de la vida"**: ver la skill `/diagnostico-state-leak` antes de tocar un fixture global.
+* **Un límite de tiempo en un test se mide en CPU, no en reloj de pared.** El reloj de pared (`perf_counter`) cuenta también la espera por la CPU que se llevan los otros jobs o workers de la misma máquina: un test «responde rápido» pasa en tu equipo y rojea en el CI sin que el código haya empeorado. Medí con `time.process_time()` y quedate con el **mínimo de hasta N corridas** (cortando en cuanto una baja del límite): una regresión real gasta CPU en TODAS las corridas, el ruido del planificador solo en algunas. Verificación obligatoria por **sabotaje** (meté ~1 s de CPU en la función y confirmá que rojea): un test al que le aflojaste el reloj tiene que seguir cazando la regresión real.
+* **Una aserción sobre logs depende del nivel de log que heredó el proceso.** Un test que compara la lista exacta de trazas puede ver (o no) las de INFO del constructor según el nivel que dejó el test anterior o el reparto de tests del CI: verde en local, rojo en el CI. Fijá el nivel (`caplog.set_level`) **antes** de construir el objeto y llamá `caplog.clear()` justo antes de la acción que medís; verificalo corriendo el archivo con `--log-level` en INFO, WARNING y DEBUG.
+* **Buscar un valor con una cifra o palabra pelada da falsos rojos (aserción negativa) y falsos verdes (positiva).** «El valor `300` no aparece en la fila cifrada» choca con cualquier otro campo que lo contenga (un timestamp en milisegundos, un id). Buscá el valor **con su contexto** (`"dosis":300`), no la subcadena corta.
 
 ## Estrategia
 
-Consultá `docs/03_software_development_plan/COMPLETE_TESTING_STRATEGY.md` y `docs/04_user_documentation/TESTING_TOOLS.md` antes de tocar la suite.
+Consultá `docs/03_software_development_plan/COMPLETE_TESTING_STRATEGY.md` y `docs/03_software_development_plan/TESTING_TOOLS.md` antes de tocar la suite.

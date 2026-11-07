@@ -71,7 +71,7 @@ Consecuencias prácticas (no son reglas opcionales):
 | Agente | Capa | Función |
 |---|---|---|
 | `samd-audit-trace` | Regulatorio (audita) | Detecta gaps de trazabilidad IEC 62304 §5.1/§5.7 + ISO 14971. No los escribe. |
-| `docs-dhf` | Regulatorio (escribe) | Materializa Master Map, deuda técnica, matriz de riesgos, RFCs. Verifica `archivo:línea` + tests reales. |
+| `docs-dhf` | Regulatorio (escribe) | Materializa Master Map, deuda técnica, matriz de riesgos, RFCs. Verifica `ruta/archivo.py::símbolo` + tests reales. |
 
 ---
 

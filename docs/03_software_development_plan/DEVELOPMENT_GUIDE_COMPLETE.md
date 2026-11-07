@@ -93,7 +93,7 @@ Una tarea está "lista" solo si cumple TODO:
 - [ ] Fail-safe verificado para los modos de fallo del cambio.
 - [ ] Sin tracebacks ni PII/PHI expuestos al cliente ni a logs.
 - [ ] Accesibilidad verificada (si tocó UI).
-- [ ] Trazabilidad: REQ/Risk + `archivo:línea` + nombre de test.
+- [ ] Trazabilidad: REQ/Risk + `ruta/archivo.py::símbolo` + nombre de test.
 - [ ] Documentación actualizada junto con el cambio (Master Map / deuda / RFC según aplique).
 - [ ] Boy Scout: al menos un pedazo de deuda del archivo tocado quedó más limpio.
 

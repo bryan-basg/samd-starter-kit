@@ -81,7 +81,7 @@
 
 ## 6. Acciones correctivas y preventivas
 
-| ID | Acción | Tipo | Prioridad | Responsable | Fecha objetivo | Estado | Verificación (`archivo:línea`/test) |
+| ID | Acción | Tipo | Prioridad | Responsable | Fecha objetivo | Estado | Verificación (`ruta/archivo.py::símbolo`/test) |
 |---|---|---|---|---|---|---|---|
 | AC-1 | <corrección inmediata del defecto> | Correctiva | Alta | <responsable> | YYYY-MM-DD | Abierta | `test_<...>` |
 | AC-2 | <test de regresión que cubra el gap> | Preventiva | Alta | <responsable> | YYYY-MM-DD | Abierta | `<...>` |

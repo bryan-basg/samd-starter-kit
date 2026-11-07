@@ -8,12 +8,21 @@
 # dice «esta versión no la quiero» y no vuelve a proponerla; una actualización de una pieza
 # externa (IEC 62304 §8) no puede perderse en silencio por inactividad. No existe una etiqueta
 # `security` en el repo (Dependabot no la crea), por eso no se usa.
+#
+# `cooldown` (14 días, en los tres bloques): Dependabot espera ese tiempo desde que se publica
+# una versión antes de proponerla. Una versión recién publicada es justo la que puede traer un
+# paquete comprometido (cadena de suministro, IEC 62304 §8); dos semanas bastan para que la
+# comunidad lo detecte y lo retire. El cooldown frena SOLO las actualizaciones de VERSIÓN: los
+# avisos de SEGURIDAD (CVE) llegan igual y de inmediato, así que un parche urgente no se demora.
+# Si querés ir más rápido en un ecosistema concreto, bajá el número ahí; no lo quites.
 version: 2
 updates:
   - package-ecosystem: "npm"
     directory: "/frontend"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 14
     open-pull-requests-limit: 5
     labels: ["dependencies"]
     # Versiones MAYORES con un bloqueo duro hoy. Se ignoran con su motivo para que Dependabot
@@ -50,10 +59,21 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 14
     open-pull-requests-limit: 5
     labels: ["dependencies"]
+    # mutmut va FIJADO a 2.5.1 (`requirements-dev.txt`): mutmut 3 eliminó `--paths-to-mutate` y
+    # `--runner`, que usa `scripts/run_mutmut.sh`, y cambió el cache que lee
+    # `scripts/check_mutmut_score.py`. Si Dependabot lo subiera solo, la mutación backend
+    # quedaría rota sin aviso. Condición para quitar la regla: migrar ambos scripts a mutmut 3.
+    ignore:
+      - dependency-name: "mutmut"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 14
     labels: ["dependencies", "ci"]

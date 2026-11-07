@@ -28,7 +28,7 @@ Idioma de trabajo del equipo: {{CHAT_LANG}}.
 | **Unit — backend** (pytest) | Routers, services, reglas de negocio, fail-safe; async en `asyncio_mode = auto`. | En cada cambio de backend; gate de PR. | `pytest -ra` |
 | **Coverage — backend** (coverage.py) | Cobertura de líneas/ramas; gate ≥95% global (+ piso por capa datos/SQL). Reproducible, en paralelo. | Gate de PR backend; nightly. | `bash scripts/check_coverage.sh` |
 | **Mutation — frontend** (Stryker) | Que los tests *maten* mutantes (no solo cubran líneas); gate `break ~90`. | Nightly/semanal incremental; full periódico. Nunca en paralelo con agentes que escriben tests. | `npx stryker run` |
-| **Mutation — backend** (mutmut) | Igual que Stryker, en Python; gate de score por env var. | Nightly/semanal incremental. | `bash scripts/run_mutmut.sh` |
+| **Mutation — backend** (mutmut **2.5.1**, fijado) | Igual que Stryker, en Python; el gate lee el cache de mutmut y falla bajo el umbral (env var). | Nightly/semanal incremental. | `bash scripts/run_mutmut.sh` |
 | **DB tier** (pytest @ Postgres + pgvector) | Comportamiento real del motor (asyncpg, pgvector, defaults SQL) que SQLite oculta. | Al tocar `app/models`/migraciones; cron 3×/sem; `workflow_dispatch`. | `bash scripts/run_pytest_postgres.sh` (o `.github/workflows/db-tier.yml`) |
 | **SAST** (analizador estático de seguridad) | Vulnerabilidades en código Python+TS, secretos hardcodeados, patrones inseguros. | Nightly; gate de PR sobre archivos tocados. | `bash scripts/run_semgrep.sh` |
 | **DAST** (escáner dinámico, OWASP ZAP) | Superficie HTTP en runtime: headers, auth, inyección, exposición. | Nightly contra entorno efímero. | `bash scripts/run_zap_dast.sh` |
@@ -70,6 +70,28 @@ Estas reglas no son negociables; son consecuencia directa de IEC 62304 §5.7.
    `scripts/check_mutmut_score.py` (umbral por env var, default 80);
    cobertura backend ≥95%. Si un módulo baja del umbral, se interviene antes
    de cerrar.
+7. **La mutación backend va con la versión de mutmut FIJADA (2.5.1) y un gate
+   que se prueba a sí mismo.** mutmut 3 eliminó `--paths-to-mutate` y
+   `--runner` y cambió el formato del cache: con `mutmut` sin pin, un
+   `pip install` nuevo rompe `run_mutmut.sh` sin aviso. Tres decisiones que no
+   son obvias y están ancladas por `tests/test_mutmut_gate.py`:
+   - El gate **cuenta los mutantes del cache SQLite** (`.mutmut-cache`),
+     porque `mutmut results` solo lista los que NO murieron: un gate que
+     parsea esa salida nunca ve los matados y no puede dar verde.
+   - `run_mutmut.sh` corre con `--CI`: sin esa flag el exit de mutmut es un
+     campo de bits (2 = "hubo supervivientes") que el script tomaría por error
+     fatal; con ella solo un error real de mutmut sale distinto de 0, y se
+     propaga (**sin `|| true`**: un mutmut que muere al arrancar no es «0
+     mutantes», es «0 miradas»).
+   - `scripts/mutmut_pytest_runner.py` convierte **cualquier** salida de pytest
+     distinta de 0 en «mutante muerto»: por defecto mutmut solo mata con exit
+     1, y un mutante que rompe la importación (exit 4) o deja la lista vacía
+     (exit 5) contaba como superviviente, inflando el ruido.
+   Para subir de versión hay que migrar los dos scripts; la regla `ignore` de
+   `.github/dependabot.yml` evita que Dependabot lo haga solo.
+8. **Las acciones de CI van pineadas a SHA, y un test lo vigila**
+   (`tests/test_workflows_pineados_a_sha.py`): una regla en prosa que nada
+   comprueba se erosiona sin ruido (ver `.claude/rules/github-actions.md`).
 
 ---
 
@@ -77,7 +99,8 @@ Estas reglas no son negociables; son consecuencia directa de IEC 62304 §5.7.
 
 - `frontend/stryker.conf.json` — config de mutación frontend.
 - `scripts/check_coverage.sh` — cobertura canónica con doble piso (global + capa datos/SQL).
-- `scripts/run_mutmut.sh` + `scripts/check_mutmut_score.py` — mutación backend + gate de score.
+- `scripts/run_mutmut.sh` + `scripts/check_mutmut_score.py` + `scripts/mutmut_pytest_runner.py` — mutación backend (mutmut 2.5.1) + gate de score (lee `.mutmut-cache`) + runner que convierte todo exit ≠ 0 en mutante muerto. Anclados por `tests/test_mutmut_gate.py`.
+- `tests/test_workflows_pineados_a_sha.py` — guardián: toda acción de `.github/workflows/` pineada a SHA de 40 hex, una sola versión por acción.
 - `scripts/run_pytest_postgres.sh` — suite contra Postgres real (self-contained, docker).
 - `scripts/run_zap_dast.sh` — DAST (OWASP ZAP) contra la app corriendo.
 - `scripts/check_translations.py` — auditor i18n (paridad de claves + "copiado sin traducir").

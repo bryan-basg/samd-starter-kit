@@ -47,7 +47,7 @@
 
 Módulos de clase inferior que tocan datos o flujos de un módulo de clase superior, y la barrera que justifica no heredar la clase.
 
-| Módulo inferior | Módulo superior afectado | Barrera de segregación (`archivo:línea`) | ¿Hereda clase? |
+| Módulo inferior | Módulo superior afectado | Barrera de segregación (`ruta/archivo.py::símbolo`) | ¿Hereda clase? |
 |---|---|---|---|
 | MOD-0X | MOD-0Y | `<...>` | No / Sí |
 

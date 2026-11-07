@@ -9,7 +9,7 @@ paths:
 
 > Regla **por-capa** del cerebro SaMD; las reglas **transversales** viven en `CLAUDE.md`. Esta regla carga sola cuando el agente lee/edita el backend. Es una **CONSECUENCIA PRÁCTICA de la Regla 0** (cumplimiento SaMD): no es opcional. Capa/agente dueño: `backend` (+ `db-architect` para datos/migraciones, `clinical-algorithms` para la lógica clínica).
 >
-> **Adaptá los `paths:` de arriba y los valores de abajo a tu stack real** (`{{BACKEND_STACK}}` / `{{DB_STACK}}`). Lo que sigue son los principios estables; los valores concretos (pools, tiers, env vars) deben citar `archivo:línea` del código real, no recopiarse.
+> **Adaptá los `paths:` de arriba y los valores de abajo a tu stack real** (`{{BACKEND_STACK}}` / `{{DB_STACK}}`). Lo que sigue son los principios estables; los valores concretos (pools, tiers, env vars) deben citar `ruta/archivo.py::símbolo` del código real, no recopiarse.
 
 * **Identidad por token, nunca por cliente**: el `user_id` depende exclusivamente del token/JWT decodificado por el proveedor de auth. NUNCA aceptes `user_id` desde body, query ni headers custom — es un vector de escalada garantizado.
 * **Asincronía máxima**: prohibidas funciones I/O bloqueantes en el path de request. Usá el modelo async del framework.

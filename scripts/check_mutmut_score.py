@@ -10,18 +10,32 @@ unit suite proves the code runs; a mutation score proves the tests actually
 and exits non-zero if the surviving-mutant ratio pushes the score under the
 configured floor, so CI blocks regressions in test rigor.
 
-Mutation score = killed / (killed + survived + suspicious + timeout-as-killed)
-We count killed + timeout as "caught" and survived + suspicious as "escaped".
+Source of truth: the SQLite cache (`.mutmut-cache`) that mutmut 2.x leaves
+behind, table `Mutant`, column `status`. We do NOT parse the human text of
+`mutmut results`: in 2.5.1 that text lists only survived / suspicious /
+timed-out / untested mutants and never the killed ones, so a text parser sees
+`killed = 0` and reports a score near 0% on a healthy suite (and "no scorable
+mutants" on a perfect one) -- a gate that can never go green.
+
+Mutant.status values (mutmut 2.x):
+    ok_killed      detected by the suite                      -> caught
+    bad_timeout    detected by timeout                        -> caught
+    bad_survived   NOT detected                               -> escaped
+    ok_suspicious  slowed the suite down, not reliably caught -> escaped
+    skipped        excluded from the score
+    untested       not run yet; excluded from the score
+    (anything else is counted as escaped: the conservative reading)
+
+Mutation score = caught / (caught + escaped)
 
 Configuration (all via environment variables, with safe defaults):
     MUTMUT_SCORE_THRESHOLD   Minimum acceptable score, percent.   Default: 80.0
     MUTMUT_CACHE             Path to the mutmut cache db.         Default: .mutmut-cache
-    MUTMUT_BIN               mutmut executable.                   Default: mutmut
 
 Exit codes:
     0  score >= threshold
     1  score <  threshold  (gate failed)
-    2  could not determine the score (mutmut missing / no results / parse error)
+    2  could not determine the score (no cache / unreadable / no scorable mutants)
 
 Usage:
     MUTMUT_SCORE_THRESHOLD=85 python scripts/check_mutmut_score.py
@@ -30,20 +44,26 @@ Usage:
 from __future__ import annotations
 
 import os
-import subprocess  # noqa: S404 - invoking the project's own mutmut, fixed argv
+import sqlite3
 import sys
+from contextlib import closing
 from dataclasses import dataclass
+
+_CAUGHT_STATUSES = {"ok_killed", "bad_timeout"}
+_ESCAPED_STATUSES = {"bad_survived", "ok_suspicious"}
+_EXCLUDED_STATUSES = {"skipped", "untested"}
 
 
 @dataclass(frozen=True)
 class MutationTotals:
-    """Bucketed mutant counts parsed from `mutmut results`."""
+    """Bucketed mutant counts read from the mutmut cache."""
 
     killed: int
     survived: int
     suspicious: int
     timeout: int
-    skipped: int
+    skipped: int  # skipped + untested: excluded from the score
+    unknown: int = 0  # statuses this script does not know: counted as escaped
 
     @property
     def caught(self) -> int:
@@ -52,8 +72,8 @@ class MutationTotals:
 
     @property
     def escaped(self) -> int:
-        """Mutants that slipped past the suite (alive or ambiguous)."""
-        return self.survived + self.suspicious
+        """Mutants that slipped past the suite (alive, ambiguous or unknown)."""
+        return self.survived + self.suspicious + self.unknown
 
     @property
     def scored(self) -> int:
@@ -79,69 +99,53 @@ def _read_float_env(name: str, default: float) -> float:
         return default
 
 
-def _run_mutmut_results(mutmut_bin: str, cache_path: str) -> str:
-    """Return the raw text of `mutmut results`.
+def read_totals(cache_path: str) -> MutationTotals:
+    """Count mutants by status straight from the mutmut SQLite cache.
 
-    Raises RuntimeError if mutmut cannot be invoked or has no cache.
+    Raises RuntimeError if the cache is missing or cannot be read.
     """
     if not os.path.exists(cache_path):
         raise RuntimeError(
             f"mutmut cache not found at {cache_path!r}; run `mutmut run` first"
         )
     try:
-        completed = subprocess.run(  # noqa: S603 - argv is fixed, no shell
-            [mutmut_bin, "results"],
-            check=True,
-            capture_output=True,
-            text=True,
-        )
-    except FileNotFoundError as exc:
-        raise RuntimeError(f"mutmut executable {mutmut_bin!r} not found") from exc
-    except subprocess.CalledProcessError as exc:
-        raise RuntimeError(
-            f"`{mutmut_bin} results` failed (exit {exc.returncode}): {exc.stderr.strip()}"
-        ) from exc
-    return completed.stdout
+        with closing(sqlite3.connect(cache_path)) as con:
+            rows = con.execute(
+                "SELECT status, COUNT(*) FROM Mutant GROUP BY status"
+            ).fetchall()
+    except sqlite3.Error as exc:
+        raise RuntimeError(f"cannot read table Mutant from {cache_path!r}: {exc}") from exc
 
-
-def parse_totals(results_text: str) -> MutationTotals:
-    """Parse the summary line block emitted by `mutmut results`.
-
-    mutmut prints a header like:
-        Killed 123  Survived 4  Suspicious 0  Timeout 2  Skipped 1
-    Field order and casing vary across versions, so we scan token pairs.
-    """
-    buckets = {
-        "killed": 0,
-        "survived": 0,
-        "suspicious": 0,
-        "timeout": 0,
-        "skipped": 0,
-    }
-    tokens = results_text.replace("\n", " ").split()
-    for i in range(len(tokens) - 1):
-        label = tokens[i].strip(":").lower()
-        if label in buckets:
-            candidate = tokens[i + 1].strip("()%,")
-            if candidate.isdigit():
-                buckets[label] = int(candidate)
-    return MutationTotals(**buckets)
+    counts = {str(status): int(n) for status, n in rows}
+    known = _CAUGHT_STATUSES | _ESCAPED_STATUSES | _EXCLUDED_STATUSES
+    unknown = {s: n for s, n in counts.items() if s not in known}
+    if unknown:
+        print(f"::warning:: unknown mutmut statuses (counted as escaped): {unknown}")
+    return MutationTotals(
+        killed=counts.get("ok_killed", 0),
+        survived=counts.get("bad_survived", 0),
+        suspicious=counts.get("ok_suspicious", 0),
+        timeout=counts.get("bad_timeout", 0),
+        skipped=sum(counts.get(s, 0) for s in _EXCLUDED_STATUSES),
+        unknown=sum(unknown.values()),
+    )
 
 
 def main() -> int:
     threshold = _read_float_env("MUTMUT_SCORE_THRESHOLD", 80.0)
     cache_path = os.environ.get("MUTMUT_CACHE", ".mutmut-cache")
-    mutmut_bin = os.environ.get("MUTMUT_BIN", "mutmut")
 
     try:
-        results_text = _run_mutmut_results(mutmut_bin, cache_path)
+        totals = read_totals(cache_path)
     except RuntimeError as exc:
         print(f"::error:: cannot determine mutation score: {exc}")
         return 2
 
-    totals = parse_totals(results_text)
     if totals.scored == 0:
-        print("::error:: no scorable mutants found; was `mutmut run` executed?")
+        print(
+            "::error:: no scorable mutants found (empty cache, or all skipped/untested); "
+            "was `mutmut run` executed and did the runner actually run the tests?"
+        )
         return 2
 
     score = totals.score

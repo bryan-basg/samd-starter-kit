@@ -18,9 +18,19 @@
 
 ## Deudas abiertas
 
-| Código | Descripción | Impacto SaMD | Severidad | Riesgo asociado | Estado |
-|---|---|---|---|---|---|
-| D-XXX-01 | <descripción concreta con `archivo:línea`> | <§5.x / control de riesgo> | <Crítica/Alta/Media/Baja> | R-XXX-NN | Abierta |
+Cada fila declara su **cubo** — la pregunta que lo decide es *«si esto sigue roto un año, ¿alguien sale perjudicado, o solo el código es más feo?»*:
+
+| Cubo | Qué es | Cuenta como deuda |
+|---|---|---|
+| 🔴 | Daña a un paciente, expone o pierde datos, o impide usar la app. | Sí — **meta: cero abiertas**. |
+| 🟡 | Incumple un requisito de certificación (WCAG, GDPR, ISO 14971, trazabilidad). | Sí — **meta: cero abiertas antes de certificar**. |
+| 🧊 | Calidad interna o producto sin decidir. | **No es deuda**: va a un backlog aparte, no a esta tabla. |
+
+> La **severidad** (Crítica/Alta/Media/Baja) NO dice el cubo: una «Media» puede ser 🔴 y una «Alta» puede ser 🧊. Sin cubo declarado, una auditoría vuelca casi todo en 🔴 y la tabla pierde la señal de lo que de verdad urge (ver skill `/ola-auditoria`).
+
+| Código | Cubo | Descripción | Impacto SaMD | Severidad | Riesgo asociado | Estado |
+|---|---|---|---|---|---|---|
+| D-XXX-01 | 🔴/🟡 | <descripción concreta con `ruta/archivo.py::símbolo`> | <§5.x / control de riesgo> | <Crítica/Alta/Media/Baja> | R-XXX-NN | Abierta |
 
 ## Deudas cerradas recientes
 

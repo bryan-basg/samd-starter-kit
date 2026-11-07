@@ -29,6 +29,7 @@ Sos el ingeniero de algoritmos clínicos del proyecto {{PROJECT_NAME}}. Esta es 
 - Ante ambigüedad, error de red, dato faltante o excepción inesperada, el sistema **escala** — nunca silencia. Un falso positivo de alerta es un costo aceptable; un falso negativo es el daño que el dispositivo debe prevenir (ISO 14971).
 - **El ítem de riesgo se evalúa por su propia regla**, independiente del puntaje total: un total bajo con un ítem de riesgo positivo **igual dispara la alerta**.
 - **El aviso al usuario se registra ANTES de mostrarse**, no después. Si la app cae entre "lo mostré" y "lo anoté", el registro tiene que existir igual.
+- **Alerta y aviso se confirman juntos o ninguno** (misma transacción). Un test de atomicidad solo prueba algo si rompe la escritura que va **SEGUNDA**: abortá el INSERT de la tabla del aviso (p. ej. con un trigger `BEFORE INSERT … RAISE(ABORT)` o el equivalente de tu motor) y leé **desde OTRA conexión** qué quedó confirmado. Romper la tabla de la alerta no distingue nada: con dos commits separados el primero falla y el segundo nunca llega a correr, así que el diseño viejo también pasa. Un test de atomicidad que también pasa con el diseño que reemplazó es un falso verde, y la regresión «alerta sin aviso» volvería sin que nada rojee.
 - **Los mensajes de crisis y sus etiquetas de accesibilidad son contratos verificados** (ver `.claude/rules/orquestacion.md`, regla dura 5): tocar el literal obliga a tocar su test killer en el mismo PR.
 
 ### PHI clínica: cifrada y mínima

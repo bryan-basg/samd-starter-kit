@@ -53,7 +53,7 @@ bash scripts/init_kit.sh       # interactive & re-runnable: fills the {{...}} pl
 | Piece | Path | What it is |
 |---|---|---|
 | **Agent ruleset** | `CLAUDE.md` | The **core**: "Rule 0" (SaMD is the absolute priority) + how the agent works, empathy, boy scout, impact analysis and block closure. |
-| **Per-layer rules** | `.claude/rules/` | The rest of the ruleset, split in eight: four **path-scoped** (backend, clinical UX, testing, CI) that load only when that layer is touched, and four cross-cutting (orchestration, agents, commands, parallel sessions). |
+| **Per-layer rules** | `.claude/rules/` | The rest of the ruleset, split in nine: five **path-scoped** (backend, clinical UX, testing, CI, docs) that load only when that layer is touched, and four cross-cutting (orchestration, agents, commands, parallel sessions). |
 | **Team of 12 agents** | `.claude/agents/` | Per-layer specialists: `backend`, `frontend`, `clinical-algorithms`, `db-architect`, `cloud-ops`, `qa-mutation`, `e2e-integration`, `security-samd`, `samd-audit-trace`, `docs-dhf`, `i18n-translations`, `mobile-native`. |
 | **Command + skill** | `.claude/commands/`, `.claude/skills/` | `samd-trace`: impact analysis (§5.6) before declaring anything "fixed". |
 | **Multi-agent workflow** | `.claude/workflows/` | `samd-review`: diff review across risk dimensions with adversarial verification. |

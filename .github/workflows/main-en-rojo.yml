@@ -1,0 +1,183 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# AVISO DE `main` EN ROJO
+#
+# POR QUÉ EXISTE: un workflow de verificación que termina en rojo en `main`
+# **no le avisa a nadie por sí solo**. En el proyecto de referencia, un gate de
+# contrato estuvo 15 h en rojo y se descubrió de rebote, al correr el CI de otro
+# lote. El workflow HIZO su trabajo (rojeó); el hueco es que nadie mira la lista
+# de corridas. Para un SaMD eso es evidencia de verificación que se rompió sin
+# que el equipo se enterara (IEC 62304 §5.7). Este workflow cierra ese hueco.
+#
+# ── Decisiones de diseño, con su porqué ─────────────────────────────────────
+#
+# 1. `workflows: ["*"]` ⇒ escucha a TODOS. Deliberado: una lista a mano es el
+#    molde «la lista a mano no encuentra a la hermana». Un workflow nuevo entra
+#    en la vigilancia **por existir**, no por acordarse de agregarlo.
+#
+# 2. Se avisa por `failure`, `timed_out` y `startup_failure` — NO solo por
+#    `failure`. Un job que agota `timeout-minutes` no concluye `failure` y ese
+#    estado «no se lee como rojo» (ver `.claude/rules/github-actions.md`, «Los
+#    rojos que NO se ven»). Mirar solo `failure` repetiría aquí ese defecto.
+#
+# 3. `cancelled` NO dispara aviso, y es una renuncia consciente: con
+#    `cancel-in-progress` un push que pisa al anterior produce `cancelled` todos
+#    los días, y **un guardián ruidoso termina desactivado**. LÍMITE HONESTO: si
+#    un job muere por reloj y GitHub lo reporta `cancelled`, este aviso NO lo ve.
+#    Contra eso está el job centinela por workflow (misma regla de arriba): es un
+#    mecanismo distinto y complementario; este no lo reemplaza.
+#
+# 4. `ubuntu-latest` y no `self-hosted`: un avisador que vive en la MISMA máquina
+#    que puede estar apagada calla justo cuando más falta hace. Son segundos por
+#    corrida.
+#
+# 5. Un Issue por workflow, reutilizado. Si `CI` rojea tres veces seguidas no
+#    nacen tres Issues: se comenta en el abierto. Al volver a verde se cierra
+#    solo. El job NO falla cuando avisa: su trabajo es avisar, no volver a pintar
+#    de rojo lo que ya está rojo.
+#
+# 6. Quedan fuera las corridas del robot de Dependabot: figuran en `main` pero no
+#    son `main` roto, y su nombre cambia en cada corrida (un Issue nuevo por
+#    fallo que nunca se cierra). Sus fallos se ven en Insights → Dependabot.
+#
+# 7. Solo corridas del PROPIO repositorio. Un PR desde un fork cuya rama se llame
+#    `main` trae `head_branch == 'main'` igual que una corrida real; sin la
+#    comparación con `head_repository` abriría Issues de «main en rojo» por algo
+#    que no es nuestro `main` (y el fork elige el nombre del workflow).
+#
+# 8. No se menciona (`@usuario`) a quien empujó: en un kit que cada proyecto
+#    adapta, pingar a una persona por cada rojo es una decisión del dueño, no un
+#    default. El Issue ya notifica a quien vigila el repositorio.
+#
+# ── Adaptación ──────────────────────────────────────────────────────────────
+# * Si tu rama principal se llama `master`, cambiá `'main'` en el `if:` (y el
+#   test `tests/test_workflow_main_en_rojo.py` te lo marcará si olvidás alguno).
+# * El nombre del workflow aparece en el `if:` (decisión de no vigilarse a sí
+#   mismo: si este aviso fallara y se vigilara, se dispararía en bucle). Si lo
+#   renombrás, renombralo en los dos sitios; el test los ancla.
+#
+# ── LÍMITE HONESTO DE LA VERIFICACIÓN ───────────────────────────────────────
+# `workflow_run` solo se dispara desde la versión del archivo que está en la rama
+# por defecto: **hasta que esto se mergee a `main`, el disparo real no se puede
+# probar**. Lo que sí se verifica antes: la estructura del YAML y la LÓGICA del
+# script (crear / comentar / cerrar / no hacer nada), ejecutada con `node` contra
+# un cliente simulado — `tests/test_workflow_main_en_rojo.py`.
+# ─────────────────────────────────────────────────────────────────────────────
+name: Main en rojo — aviso
+
+on:
+  workflow_run:
+    workflows: ["*"]
+    types: [completed]
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  # Por workflow vigilado: dos avisos de workflows distintos no deben pisarse.
+  # Sin `cancel-in-progress`: cada aviso es la única muestra de su corrida.
+  # Por `workflow_id` y NO por nombre: el grupo se evalúa antes que el `if`, y un
+  # nombre largo e impredecible (el robot de Dependabot genera de cientos de
+  # caracteres) tumba el workflow al arrancar con 0 jobs. Ver `github-actions.md`.
+  group: main-en-rojo-${{ github.event.workflow_run.workflow_id }}
+  cancel-in-progress: false
+
+jobs:
+  avisar:
+    # Solo `main` del propio repo (decisión 7), nunca sobre sí mismo (evita el
+    # bucle si este aviso falla) ni sobre el robot de Dependabot (decisión 6).
+    if: >-
+      github.event.workflow_run.head_branch == 'main' &&
+      github.event.workflow_run.head_repository.full_name == github.repository &&
+      github.event.workflow_run.name != 'Main en rojo — aviso' &&
+      github.event.workflow_run.path != 'dynamic/dependabot/dependabot-updates'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      # Todo valor que venga del evento viaja por `env:` y se lee con
+      # `process.env`. Nada se interpola crudo dentro del `script:` — el nombre
+      # de un workflow es texto controlable (inyección de comandos/JS).
+      - name: Crear o cerrar el aviso según el resultado
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          WF_NAME: ${{ github.event.workflow_run.name }}
+          WF_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+          WF_URL: ${{ github.event.workflow_run.html_url }}
+          WF_SHA: ${{ github.event.workflow_run.head_sha }}
+          WF_ACTOR: ${{ github.event.workflow_run.actor.login }}
+        with:
+          script: |
+            const nombre = process.env.WF_NAME || 'desconocido';
+            const conclusion = process.env.WF_CONCLUSION || 'desconocida';
+            const url = process.env.WF_URL || '';
+            const sha = (process.env.WF_SHA || '').slice(0, 9);
+            const actor = process.env.WF_ACTOR || 'desconocido';
+
+            // Decisión 2: `timed_out` y `startup_failure` cuentan como rojo.
+            // `cancelled` NO (decisión 3).
+            const ROJO = ['failure', 'timed_out', 'startup_failure'];
+            const estaRojo = ROJO.includes(conclusion);
+            const titulo = `🔴 main en rojo — ${nombre}`;
+
+            const abiertos = await github.paginate(github.rest.issues.listForRepo, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'main-en-rojo',
+              per_page: 100,
+            });
+            const previo = abiertos.find((i) => i.title === titulo);
+
+            if (estaRojo) {
+              const cuerpo = [
+                `**Workflow:** ${nombre}`,
+                `**Resultado:** \`${conclusion}\``,
+                `**Commit:** ${sha}`,
+                `**Quién empujó:** ${actor}`,
+                `**Corrida:** ${url}`,
+                ``,
+                `\`main\` quedó en rojo. Este aviso existe porque un CI rojo no avisa`,
+                `por sí solo: si nadie mira la lista de corridas, la verificación se`,
+                `rompe sin que el equipo se entere.`,
+                ``,
+                `Se cierra solo en cuanto este mismo workflow vuelva a verde en main.`,
+              ].join('\n');
+
+              if (previo) {
+                // Ya hay aviso abierto para este workflow: se comenta, no se
+                // crea otro. Tres rojos seguidos no son tres Issues.
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: previo.number,
+                  body: `Sigue en rojo (\`${conclusion}\`) en ${sha}: ${url}`,
+                });
+                core.info(`Aviso #${previo.number} actualizado para «${nombre}».`);
+              } else {
+                const creado = await github.rest.issues.create({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  title: titulo,
+                  body: cuerpo,
+                  labels: ['main-en-rojo'],
+                });
+                core.info(`Aviso #${creado.data.number} creado para «${nombre}».`);
+              }
+              return;
+            }
+
+            if (conclusion === 'success' && previo) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: previo.number,
+                body: `✅ Recuperado en ${sha}: ${url}`,
+              });
+              await github.rest.issues.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: previo.number,
+                state: 'closed',
+              });
+              core.info(`Aviso #${previo.number} cerrado: «${nombre}» volvió a verde.`);
+            }

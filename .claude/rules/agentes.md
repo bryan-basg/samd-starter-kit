@@ -16,7 +16,7 @@ El proyecto tiene un equipo de agentes de capa (hoy **12**, sin tope numérico f
 | `cloud-ops` | Plataforma | Cloud, BD gestionada, scheduler, gestor de secretos, hosting, CI/CD, monitoring, deploys. |
 | `qa-mutation` | Testing / mutation | Olas de mutation testing, killers de mutantes, configs scoped, ratchet de score. NO lanza procesos pesados sin OK. |
 | `samd-audit-trace` | Regulatorio (audita) | Auditar un changeset contra IEC 62304 §5.1/§5.7 + ISO 14971 antes de cerrar fase/PR. Detecta gaps, NO los escribe. |
-| `docs-dhf` | Regulatorio (escribe) | Materializar updates en Master Map, TECHNICAL_DEBT_SUMMARY, ISO_14971_RISK_MATRIX, TRACEABILITY_MATRIX_SAMD, RFCs. Verifica `archivo:línea` + tests reales. Corre el link-checker. |
+| `docs-dhf` | Regulatorio (escribe) | Materializar updates en Master Map, TECHNICAL_DEBT_SUMMARY, ISO_14971_RISK_MATRIX, TRACEABILITY_MATRIX_SAMD, RFCs. Verifica `ruta/archivo.py::símbolo` + tests reales. Corre el link-checker. |
 | `security-samd` | Seguridad regulatoria | SAST, cifrado, gestión de claves, JWT-only, audit sin PII, pentest contra el contrato OpenAPI. Reporta D-SEC-XX; NO escribe docs ni toca secretos. |
 | `i18n-translations` | Internacionalización | Locales en todos los idiomas (frontend + backend), paridad y anti "copiado sin traducir", glosario clínico pre-certificación, placeholders y plurales. |
 | `mobile-native` | Nativo móvil | Empaquetado del cliente web en app nativa, plugins nativos, auth nativa, persistencia nativa, push, build/firma/distribución. Verifica EN DEVICE real. Distinto del `frontend` (web). |

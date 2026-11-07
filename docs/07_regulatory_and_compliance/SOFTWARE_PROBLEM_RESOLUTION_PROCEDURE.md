@@ -23,7 +23,7 @@ Todo problema se documenta en un registro central con, como mínimo:
 | Origen | Usuario / test / monitoreo / auditoría / SAST |
 | Descripción | Qué se observó (sin PII en el registro) |
 | Severidad provisional | Ver §4 |
-| Componente afectado | `archivo:línea` / módulo |
+| Componente afectado | `ruta/archivo.py::símbolo` / módulo |
 | Estado | Abierto / En análisis / Corregido / Verificado / Cerrado |
 
 ---

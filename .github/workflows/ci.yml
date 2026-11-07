@@ -30,6 +30,15 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Link-checker cross-doc (0 broken obligatorio)
         run: bash scripts/check_doc_links.sh
+      # check_doc_links.sh solo mira que exista el ARCHIVO; descarta el `#ancla`.
+      # Sin este paso un título renombrado deja el enlace roto y el CI en verde.
+      - name: Anclas internas (#sección) de la documentación
+        run: python3 scripts/check_doc_anchors.py
+
+      # Las citas al código van por NOMBRE (`ruta/archivo.py::símbolo`): un número de
+      # línea caduca con el siguiente commit; un nombre renombrado lo caza este paso.
+      - name: Citas al código (ruta/archivo.py::símbolo) de la documentación
+        run: python3 scripts/check_doc_citations.py
 
   # ---- Reparto: qué capas tocó el cambio (evita correr backend si solo cambió UI) ----
   changes:
@@ -62,7 +71,11 @@ jobs:
               - 'pyproject.toml'
               - 'pytest.ini'
               - '.mypy.ini'
-              - '.github/workflows/ci.yml'
+              # CUALQUIER workflow, no solo este: `tests/test_workflows_pineados_a_sha.py`
+              # lee todos los de `.github/workflows/`. Con solo `ci.yml` aquí, un PR que
+              # cambia otro workflow (p. ej. vuelve a poner `@v4`) no dispara el backend
+              # y el guardián de pineo por SHA nunca llega a mirarlo.
+              - '.github/workflows/**'
 
   frontend:
     name: Frontend (lint + tipos + tests)

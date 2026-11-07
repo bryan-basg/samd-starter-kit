@@ -28,3 +28,7 @@ jobs:
         run: python scripts/lint_agents.py
       - name: Link-checker cross-doc (0 broken obligatorio)
         run: bash scripts/check_doc_links.sh
+      - name: Anclas internas (#sección) de la documentación
+        run: python scripts/check_doc_anchors.py
+      - name: Citas al código (ruta/archivo.py::símbolo) de la documentación
+        run: python scripts/check_doc_citations.py

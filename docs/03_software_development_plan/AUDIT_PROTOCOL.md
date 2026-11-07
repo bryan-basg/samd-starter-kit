@@ -32,7 +32,7 @@ Garantizar que ningún cambio que toque algoritmo clínico, esquema de datos, re
 3. **Verificación** (§5.7): correr los tests vinculados y registrar números reales (pasados/fallados/cobertura/mutation cuando aplique).
 4. **Verificación adversarial** sobre hallazgos clínicos o de seguridad: un segundo revisor independiente debe refutar el hallazgo antes de actuar. Hallazgo no verificado ≠ arreglado.
 5. **Fail-safe**: confirmar que los modos de fallo degradan seguro y no exponen tracebacks.
-6. **Trazabilidad**: cada cambio relevante referencia REQ-XXX y/o Riesgo-XXX con `archivo:línea` verificable y nombre de test existente HOY.
+6. **Trazabilidad**: cada cambio relevante referencia REQ-XXX y/o Riesgo-XXX con `ruta/archivo.py::símbolo` verificable y nombre de test existente HOY.
 
 ---
 
@@ -41,7 +41,7 @@ Garantizar que ningún cambio que toque algoritmo clínico, esquema de datos, re
 | Agente | Hace | NO hace |
 |---|---|---|
 | `samd-audit-trace` | Audita el changeset contra IEC 62304 §5.1/§5.7 + ISO 14971; **detecta** gaps de trazabilidad y propone qué falta. | No escribe documentación; no decide el fix. |
-| `docs-dhf` | **Materializa** las actualizaciones: Master Map, resumen de deuda técnica, matriz de riesgos, matriz de trazabilidad, RFCs, guías. Verifica `archivo:línea` + tests reales. Corre el link-checker cross-doc. | No audita por sí solo; complementa a `samd-audit-trace`. |
+| `docs-dhf` | **Materializa** las actualizaciones: Master Map, resumen de deuda técnica, matriz de riesgos, matriz de trazabilidad, RFCs, guías. Verifica `ruta/archivo.py::símbolo` + tests reales. Corre el link-checker cross-doc. | No audita por sí solo; complementa a `samd-audit-trace`. |
 
 Regla de cohesión: ningún agente de ejecución toca trazabilidad; la **propone** `samd-audit-trace` y la **ejecuta** el orquestador vía `docs-dhf`.
 
@@ -62,7 +62,7 @@ Regla de cohesión: ningún agente de ejecución toca trazabilidad; la **propone
 Verificaciones finales:
 
 - [ ] Link-checker cross-doc reporta **0 enlaces rotos**.
-- [ ] Cada REQ-XXX nuevo apunta a `archivo:línea` + test existente.
+- [ ] Cada REQ-XXX nuevo apunta a `ruta/archivo.py::símbolo` + test existente.
 - [ ] Tests vinculados corridos; números reportados.
 - [ ] Sin residuos de valores/reglas viejas tras propagar (grep en `docs/` y configuración → 0 residuos).
 

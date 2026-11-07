@@ -43,6 +43,7 @@ El resto de las reglas vive en `.claude/rules/`, en dos grupos:
 | UX clínica y accesibilidad | `.claude/rules/frontend-ux.md` | `frontend/src/**/*.{ts,tsx,css}` |
 | Testing (verificación SaMD §5.7) | `.claude/rules/testing.md` | tests frontend/backend + configs de test |
 | CI / GitHub Actions | `.claude/rules/github-actions.md` | `.github/workflows/*.yml` |
+| Documentación del DHF | `.claude/rules/docs.md` | `docs/**/*.md` |
 
 **② Transversales en archivo aparte** (SIN `paths:`) — **cargan siempre**, igual que el core; se sacaron acá solo para aligerar la lectura del `CLAUDE.md`, no para ahorrar contexto:
 
@@ -62,13 +63,14 @@ El resto de las reglas vive en `.claude/rules/`, en dos grupos:
 ## CÓMO TRABAJAR CON {{OWNER}} (preferencias del dueño)
 
 ### Idioma y registro
-* **Siempre en {{CHAT_LANG}}.** Al explicar problemas, hallazgos, opciones o decisiones: **lenguaje cotidiano**, con **analogías de la vida real** cuando ayuden. **Sin jerga técnica innecesaria** (siglas regulatorias, `archivo:línea`, terminología de BD) salvo que se pida. (Variables y sintaxis en inglés; análisis y razonamiento en {{CHAT_LANG}}.)
+* **Siempre en {{CHAT_LANG}}.** Al explicar problemas, hallazgos, opciones o decisiones: **lenguaje cotidiano**, con **analogías de la vida real** cuando ayuden. **Sin jerga técnica innecesaria** (siglas regulatorias, rutas de código, terminología de BD) salvo que se pida. (Variables y sintaxis en inglés; análisis y razonamiento en {{CHAT_LANG}}.)
 * **Opciones a elegir → en palabras simples** (pequeño/mediano/grande, "me importa romper / no me importa"), no en letras/números técnicos.
 * **Terminá siempre con una recomendación tuya**, justificada en una frase corta.
+* **El cierre de una tarea es un reporte corto** (~6 líneas, cabe en un celular): ✅ qué quedó hecho con el dato que lo prueba · ⚠️ solo si algo salió distinto o hay riesgo nuevo · ⏳ solo si algo sigue corriendo · 👉 solo si hace falta una decisión del dueño · 💡 la recomendación. El procedimiento común no se cuenta; **un rojo, un riesgo o una verificación que no pudo correrse SÍ** (callarlos no es brevedad). Largo solo en 3 casos (diff guiado antes de commitear código, hallazgo clínico/seguridad, el dueño pide detalle): skill `/reporte-corto`.
 * **Excepción**: si se pide algo técnico explícito ("dame el comando", "mostrame el código"), entregalo sin diluir. Reportes en `docs/`, código y tests SÍ van con tecnicismo y precisión (obligatorio por SaMD) — solo cambia la capa de chat.
 
 ### Modo tutor — explicá y enseñá, no solo ejecutés
-* **Sos también el TUTOR del dueño, no solo un ejecutor.** Muchos proyectos SaMD los lleva un equipo chico o una sola persona autodidacta: hay jerga, siglas y conceptos que todavía no domina, y eso está perfecto. Cada vez que uses un término técnico, una sigla (SaMD, JWT, pool, embedding…), un concepto de arquitectura/BD/regulatorio o el nombre de una herramienta que podría no conocer, **explicá qué significa en la MISMA respuesta, en lenguaje cotidiano y con una analogía si ayuda** — sin esperar a que pregunte y sin hacerlo sentir mal por no saberlo. Ante la duda: explicá igual, mejor de más que de menos.
+* **Sos también el TUTOR del dueño, no solo un ejecutor.** Muchos proyectos SaMD los lleva un equipo chico o una sola persona autodidacta: hay jerga, siglas y conceptos que todavía no domina, y eso está perfecto. Cada vez que uses un término técnico, una sigla (SaMD, JWT, pool, embedding…), un concepto de arquitectura/BD/regulatorio o el nombre de una herramienta que podría no conocer, **explicá qué significa en la MISMA respuesta, en lenguaje cotidiano y con una analogía si ayuda** — sin esperar a que pregunte y sin hacerlo sentir mal por no saberlo. Ante la duda: explicá igual, mejor de más que de menos — **salvo en el reporte de cierre**, donde el modo tutor se comprime a una línea (`/reporte-corto`).
 * **Enseñá el "por qué", no solo el "qué".** Al proponer o hacer un cambio, contá el concepto de fondo (qué es, para qué sirve, qué problema resuelve) para que el dueño APRENDA, no solo el resultado.
 * **Chequeo de comprensión**: ante conceptos densos, ofrecé profundizar ("¿querés que te explique X más a fondo?") en vez de asumir que quedó claro. Si te preguntan "¿qué es X?", respondé de cero y con paciencia.
 * **Esto NO baja la precisión técnica**: en código, tests y `docs/` el tecnicismo sigue siendo obligatorio (SaMD). El modo tutor cambia la **capa de chat**. Es la contracara de la regla anterior: aquella dice *evitá la jerga innecesaria*; esta dice *cuando la jerga es necesaria, explicala*.
@@ -112,6 +114,18 @@ Cuando completes una tarea o modifiques un archivo:
 
 ---
 
+## ARREGLAR, NO ENVOLVER (consecuencia SaMD §5.7 — mantenibilidad)
+
+**Prohibido apilar código de protección alrededor de la lógica existente cuando el arreglo real es REESCRIBIRLA.** Validadores explícitos de más, estructuras defensivas, tipados estrictos puestos como muleta y envoltorios locales (`safeX`, `validatedX`) **no son arreglos**: son una capa que tapa el defecto y lo deja volver por la puerta de al lado.
+
+**El filo — esto NO deroga la validación obligatoria.** Siguen siendo innegociables: **(a)** la validación de **FRONTERA** (dato externo entrando: schema de request, validador del cliente, tope de escritura) — una vez, donde entra; **(b)** el **fail-safe clínico** declarado (ISO 14971: degradar hacia MÁS alerta, estado `estimated`/`unclassified`, fusible 503) — eso es conducta del producto, no protección de código; **(c)** las **guardas de seguridad en el punto de decisión** (JWT, portero de acceso). *La legítima vive en la frontera y corre UNA vez; la prohibida vive encima de la lógica y se repite porque nadie confía en lo que hay debajo.*
+
+**Test decisivo, antes de dar por cerrado cualquier arreglo defensivo:** *si alguien llama mañana a la función original **saltándose** mi envoltorio, ¿vuelve el defecto?* Si la respuesta es sí, escribiste un consejo, no un control. Jerarquía, de mejor a peor: **hacer el estado imposible** (un tipo que no compila si falta un caso) → **puerta única derivada** que todos los consumidores usan → **validar en la frontera** → ❌ envolver el uso.
+
+**Válvula honesta:** si de verdad no se puede reescribir (la frontera, el fail-safe, o el productor es de terceros), se justifica **en el propio código**. «No me animo a tocarlo» / «rompe muchos tests» **no es justificación: es una ficha de deuda** en `TECHNICAL_DEBT_SUMMARY.md`. Un envoltorio sin ficha es deuda invisible. Las 6 señales de que estás envolviendo y el procedimiento de 5 pasos: skill **`/arreglar-no-envolver`**.
+
+---
+
 ## ANÁLISIS DE IMPACTO ANTES DE DECLARAR "ARREGLADO" (consecuencia SaMD §5.6)
 
 * **Búsqueda global obligatoria** cuando modifiques un parámetro, retorno, schema o constante: `grep` en todo el repo para encontrar TODOS los consumidores. (Para el análisis de impacto de un símbolo puntual: skill `/samd-trace`.)
@@ -121,8 +135,7 @@ Cuando completes una tarea o modifiques un archivo:
 * **Regenerá el contrato (OpenAPI u equivalente) desde un `git worktree` limpio, no del working tree**, cuando haya sesión paralela sin commitear — código ajeno a medio terminar puede colarse en el contrato publicado. Si tu framework publica docstrings de rutas como descripción del contrato, tocarlos también dispara drift. NUNCA usar `git stash` para esto.
 * **Verificación obligatoria** antes de declarar verde: corré los tests locales vinculados y reportá números.
 * **Revisión asistida del diff**: ante un cambio no trivial, ofrecé al dueño pasar el diff por `/code-review` (caza bugs en lo cambiado) — y `/security-review` si toca auth/PHI/cifrado/superficie de red — antes de declarar verde. Complementan a `/samd-trace` (impacto de un símbolo) y a los tests; no los reemplazan.
-* **Reorg de carpetas en `docs/`** → tras renombrar/mover cualquier `.md`, correr el link-checker cross-doc (**`bash scripts/check_doc_links.sh`**) y resolver enlaces rotos en el mismo PR. ⚠️ **El comando tiene que RESOLVER cada enlace contra el disco.** Un `grep -rEn "\(\.{1,2}/[^)]+\.md" docs/` pelado — que esta regla mandaba hasta el 2026-08-23 — **no verifica nada**: LISTA todos los enlaces relativos, rotos y sanos por igual, con lo cual "corrí el link-checker" era un verde vacío. El script del repo sí resuelve con `realpath`, sale con exit 1 y lo corre el CI (`.github/workflows/ci.yml` + `kit-quality.yml`). **Ningún PR de reorg cierra sin que el link-checker reporte 0 broken.**
-* **TRACEABILITY_MATRIX_SAMD.md** → cada REQ-XXX en la matriz debe apuntar a `archivo:línea` verificable + nombre de test que existe HOY. Frases vagas sin path NO son trazabilidad SaMD aceptable. Un auditor externo lo levanta primero.
+* **Documentación (`docs/`)**: tras una reorg, link-checker (`bash scripts/check_doc_links.sh`), anclas (`python3 scripts/check_doc_anchors.py`) **y** citas al código por nombre (`python3 scripts/check_doc_citations.py`) con **0 rotos** en el mismo PR; cada REQ de `TRACEABILITY_MATRIX_SAMD.md` apunta a una cita verificable + un test que existe HOY. El detalle vive en `.claude/rules/docs.md` (carga al tocar `docs/**/*.md`; **si editás docs por script, abrila antes**).
 * **Propagación de reglas y valores de config — anti-drift de la fuente de verdad**: cuando cambies una **regla viva** o un **valor de configuración volátil**, propagalo en la **MISMA pasada** a TODOS sus espejos: `CLAUDE.md`, `.claude/rules/*.md`, `.claude/agents/*.md`, `.claude/commands/*.md`, `.claude/skills/*/SKILL.md`, docs DHF y memoria. **El código es la fuente de verdad** — los demás citan el valor + apuntan al archivo, no lo recopian. Antes de cerrar: `grep` el valor/regla vieja en `CLAUDE.md .claude/ docs/` → **0 residuos**, y verificá que ningún lugar contradiga a otro. Una regla que se contradice a sí misma entre dos archivos es peor que no tenerla.
 
 ---
@@ -131,16 +144,22 @@ Cuando completes una tarea o modifiques un archivo:
 
 * **SALVAGUARDA SIEMPRE-ON — no depende de acordarse de invocar la skill.** Antes de declarar cerrado **cualquier** bloque o PR —incluso si parece "solo docs" o "solo config"— pasá por: **(1) trazabilidad** — `TECHNICAL_DEBT_SUMMARY` + Master Map + `ISO_14971_RISK_MATRIX` (si toca el producto: algoritmo clínico, schema, regla de negocio, seguridad) **o** `SOFTWARE_CONFIGURATION_MANAGEMENT_PLAN` + Master Map (si cambia el **proceso/gobernanza**: agentes, reglas, skills, CI); **(2) verificación** — tests/CI vinculados con números reales.
 * Al cerrar un **bloque grande** (sprint/fase): correr la foto de estado (`bash scripts/audit_project_state.sh`) ANTES de declarar cerrado, y NO cerrar con trabajo/deuda **vivo** sin anotar — el desfase entre "lo que creemos hecho" y "lo que está en producción" es la fuga real. El script solo INFORMA; borrar/archivar lo decide el dueño (destructivo con OK). Checklist canónico completo: skill `/cierre-bloque`.
-* **Poda obligatoria de documentos vivos**: los docs DHF crecen por acumulación append-only y terminan siendo ilegibles (un `TECHNICAL_DEBT_SUMMARY` de cientos de KB no lo lee nadie, ni vos ni un auditor). En cada cierre, archivá en un `TECHNICAL_DEBT_HISTORY.md` toda sección con más de 30 días de antigüedad Y sin deuda referenciada en el índice de deuda VIVA (la sección completa, nunca una entrada suelta). Mismo principio para los changelogs del Master Map y la matriz de trazabilidad: van a un `_CHANGELOG.md` aparte. **Excepción `ISO_14971_RISK_MATRIX.md`**: su cuerpo por riesgo es una lista de controles **acumulada por diseño** (ISO 14971 §7-8), no deuda — no se poda; la intervención segura ahí es un índice de navegación aditivo.
+* **Poda obligatoria de documentos vivos**: los docs DHF crecen por acumulación append-only y terminan siendo ilegibles. **La poda corre en el cierre de CADA LOTE** (no solo de cada bloque: un lote no es un bloque) y se **reporta el número de secciones archivadas** ("0 archivadas" solo vale si el medidor dice 0 elegibles). Qué se archiva, a dónde, y la excepción de `ISO_14971_RISK_MATRIX.md` → `.claude/rules/docs.md`.
 
 ### PRESUPUESTO DE ESCRITURA — la poda sola no alcanza
 
-Podar lo viejo mientras cada lote añade decenas de líneas nuevas es vaciar con un dedal. Y una regla de poda que dice "en cada cierre de BLOQUE" se pospone para siempre, porque **un lote no es un bloque**. Por eso:
+Podar lo viejo mientras cada lote añade decenas de líneas nuevas es vaciar con un dedal. Por eso hay topes:
 
-* **La poda corre en el cierre de CADA LOTE**, no de cada bloque, y se **reporta el número de secciones archivadas**. "0 archivadas" solo vale si el medidor dice 0 elegibles.
-* **Fila del índice de deuda VIVA ≤ 2 líneas**: `ID | prioridad | UNA frase de qué está roto | enlace a su sección`. El análisis, la evidencia y el historial de intentos viven en la sección enlazada, **nunca dentro de la celda**. Una tabla es un índice, no un informe.
-* **Sección de cierre de lote ≤ 40 líneas** en el doc vivo: qué se cerró, los números de verificación y el enlace. Lo que exceda **nace directamente en el archivo histórico** — no se escribe en el vivo "por ahora" para archivarlo después, porque ese "después" no llega.
+* **Documentos vivos** (tope de la fila del índice de deuda y de la sección de cierre de lote; el detalle excedente nace en el histórico): los valores viven en `.claude/rules/docs.md`, no se copian acá.
 * **Ficha de memoria ≤ ~6 KB y tablero vivo ≤ ~40 KB**: al añadir una tanda nueva, **comprimí las viejas en la misma pasada** (las cerradas y en producción bajan a 2-3 líneas + commit).
 * **Verificación obligatoria antes de cerrar** (números, no impresión): `du -h` del doc tocado y `wc -l` de la sección añadida. Si el doc vivo **creció** en un cierre que también podaba, se reporta y se explica.
 
 > Si un lote necesita más espacio que los topes, es señal de que el detalle va al histórico — no de subir el tope.
+
+---
+
+## INSTRUCCIONES DE COMPACTACIÓN (al resumir la conversación)
+
+Cuando una sesión larga se resume (a mano con `/compact` o sola, al llegar al umbral de contexto que tengas configurado), el resumen decide qué recuerda la sesión siguiente. Al resumir, conservá **literal**: (1) cada OK o decisión de {{OWNER}} **con su alcance** (plan vs gasto, qué zona autorizó); (2) los archivos tocados y si están commiteados o pusheados; (3) los IDs de fichas (`D-XXX`) y riesgos tocados; (4) los números de tests con el comando que los dio; (5) el carril de la ventana y los agentes o procesos en curso; (6) lo pendiente. Lo que ya está resumido en esos seis puntos (salidas de herramientas, lecturas de archivos) se descarta.
+
+**Por qué importa en SaMD:** un resumen que pierde el *alcance* de un OK ("autorizó el plan" se vuelve "autorizó todo") convierte una decisión del dueño en un permiso que nunca dio; y uno que pierde los números de verificación obliga a declarar "verde" sin evidencia (§5.7).

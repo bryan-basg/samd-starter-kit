@@ -6,7 +6,7 @@
 >
 > **Esto NO es una certificación ISO 27001 ni un reporte SOC 2.** Un reporte SOC 2 lo emite un auditor (CPA) independiente; la certificación ISO 27001 la emite un organismo acreditado. Este documento es un andamio de preparación con **celdas de evidencia** para que {{OWNER}} complete. `{{...}}` / "Pendiente de evidencia" = aún sin completar.
 >
-> **Fuente de verdad = el código.** Los paths que siguen citan el archivo real; el `archivo:línea` exacto se confirma en `COMPLIANCE_CHECKLIST.md`, que es el documento operativo control-por-control. Mantenida por `docs-dhf`.
+> **Fuente de verdad = el código.** Los paths que siguen citan el archivo real; el `ruta/archivo.py::símbolo` exacto se confirma en `COMPLIANCE_CHECKLIST.md`, que es el documento operativo control-por-control. Mantenida por `docs-dhf`.
 
 ---
 
@@ -18,7 +18,7 @@
 
 | Documento relacionado | Rol |
 |---|---|
-| `COMPLIANCE_CHECKLIST.md` | Control-por-control GDPR Art.32 + HIPAA (con `archivo:línea`). |
+| `COMPLIANCE_CHECKLIST.md` | Control-por-control GDPR Art.32 + HIPAA (con `ruta/archivo.py::símbolo`). |
 | `COMPLIANCE_AND_SECURITY_MASTER.md` | Documento maestro de seguridad/compliance. |
 | `DATA_FLOW_DOCUMENTATION.md` | Fronteras de confianza / modelo de amenazas. |
 | `SBOM_MANAGEMENT_PLAN.md` | Gestión de SBOM y vulnerabilidades. |
@@ -28,7 +28,7 @@
 
 ## 2. Inventario de controles técnicos vivos del kit
 
-Controles que el starter kit ya implementa o tiene cableados en CI. El `archivo:línea` exacto se rellena en `COMPLIANCE_CHECKLIST.md`.
+Controles que el starter kit ya implementa o tiene cableados en CI. El `ruta/archivo.py::símbolo` exacto se rellena en `COMPLIANCE_CHECKLIST.md`.
 
 | Control del kit | Dónde vive (path) | Evidencia de prueba |
 |---|---|---|
@@ -47,7 +47,7 @@ Controles que el starter kit ya implementa o tiene cableados en CI. El `archivo:
 | Fuzz de contrato (Schemathesis) | `.github/workflows/schemathesis.yml` | {{Pendiente de evidencia}} |
 | Detección de secretos (Gitleaks) | `scripts/run_gitleaks.sh` + `.gitleaks.toml` | {{Pendiente de evidencia}} |
 
-> Los paths a `app/`, `.github/`, `scripts/` son del esqueleto de referencia; verificar contra el código real del proyecto antes de citar `archivo:línea` en una auditoría.
+> Los paths a `app/`, `.github/`, `scripts/` son del esqueleto de referencia; verificar contra el código real del proyecto antes de citar `ruta/archivo.py::símbolo` en una auditoría.
 
 ---
 
@@ -128,7 +128,7 @@ Estos gaps son de **proceso/gobernanza**, no de código — son los que más fre
 
 ## 6. Cómo usar este documento
 
-1. Completar cada celda `{{...}}` / "Pendiente de evidencia" con la referencia real (`archivo:línea` vía `COMPLIANCE_CHECKLIST.md`, o documento de proceso).
+1. Completar cada celda `{{...}}` / "Pendiente de evidencia" con la referencia real (`ruta/archivo.py::símbolo` vía `COMPLIANCE_CHECKLIST.md`, o documento de proceso).
 2. Para ISO 27001, derivar el **SoA** de la §3 marcando aplicabilidad y justificación de exclusiones.
 3. Para SOC 2, decidir Type I (punto en el tiempo) vs Type II (período) y qué TSC opcionales se incluyen.
 4. Revisar en cada release y ante cambio de superficie de seguridad.

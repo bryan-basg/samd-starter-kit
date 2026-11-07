@@ -63,8 +63,8 @@ def _load_app_schema() -> object | None:
         print(f"❌ No se pudo importar '{module_path}': {exc}")
         print("   Pistas:")
         print("   - ¿Activaste el venv del backend?")
-        print(f"   - ¿La app vive en otro módulo? Ajustá APP_IMPORT (ej. "
-              f"APP_IMPORT=src.server.main:app).")
+        print("   - ¿La app vive en otro módulo? Ajustá APP_IMPORT (ej. "
+              "APP_IMPORT=src.server.main:app).")
         return None
     app = getattr(module, attr, None)
     if app is None:

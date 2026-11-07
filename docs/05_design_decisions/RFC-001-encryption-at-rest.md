@@ -1,6 +1,6 @@
 # RFC-001 — Cifrado en reposo de PII/PHI a nivel columna (AES-256-GCM)
 
-**Proyecto:** {{PROJECT_NAME}} · **Clase SaMD:** {{SAMD_CLASS}} · **Versión:** v1.0 · **Fecha:** 2026-01-15
+**Proyecto:** {{PROJECT_NAME}} · **Clase SaMD:** {{SAMD_CLASS}} · **Versión:** v1.1 · **Fecha:** 2026-11-07
 
 > RFC del SaMD Starter Kit. Ejemplo didáctico de una decisión de diseño de la capa de datos. Documenta cómo y por qué se cifra la información sensible del paciente antes de persistirla.
 
@@ -42,12 +42,12 @@ Si un atacante o un tercero no autorizado obtiene una copia física de la base d
 
 ## 4. Decisión
 
-Se adopta la **Alternativa B: cifrado a nivel columna con AES-256-GCM**, implementado como un `TypeDecorator` reutilizable de {{DB_STACK}} (`EncryptedString` en `app/models/types.py:11`) que cifra al escribir y descifra al leer de forma transparente para la capa de servicios.
+Se adopta la **Alternativa B: cifrado a nivel columna con AES-256-GCM**, implementado en el kit como dos funciones puras, `encrypt` y `decrypt` (`app/core/encryption.py`), que el router aplica al escribir y al leer. Un proyecto con ORM puede envolverlas en un `TypeDecorator` reutilizable de {{DB_STACK}} (`EncryptedString`) para que el cifrado sea transparente para la capa de servicios; el kit no trae ese envoltorio porque su esqueleto no tiene modelos ORM.
 
 Detalles de construcción:
 - **Algoritmo:** AES-256-GCM (AEAD) vía librería criptográfica auditada (no implementación propia). Cada valor lleva su nonce de 96 bits único y su tag de autenticación; un tag inválido aborta la lectura (no se sirve dato corrupto).
 - **Clave:** `ENCRYPTION_KEY` de 256 bits, provista por el gestor de secretos de {{CLOUD_STACK}} (Secret Manager / KMS). **Está prohibido reutilizar `SECRET_KEY`** (la clave de firma de sesión/JWT) ni hardcodearla. Dominios de confianza separados: comprometer la firma de sesión no descifra PHI, y viceversa.
-- **Aplicación:** todas las columnas con PII/PHI declaran `EncryptedString` en lugar de `String`/`Text`.
+- **Aplicación:** todo campo con PII/PHI pasa por `encrypt` antes de persistirse y por `decrypt` al leerse (en el kit, `app/routers/notes.py`); con ORM, las columnas declaran `EncryptedString` en lugar de `String`/`Text`.
 - **Rotación:** la clave admite versionado (prefijo de versión en el ciphertext) para rotar sin descifrar toda la tabla de golpe.
 
 ## 5. Consecuencias
@@ -64,8 +64,8 @@ Detalles de construcción:
 |---|---|
 | Requisito(s) | REQ-SEC-01 — Cifrado en reposo de PII/PHI (AES-256-GCM) |
 | Riesgo(s) ISO 14971 | R-SEC-01 — Exfiltración de PHI por copia/volcado del almacenamiento (Sev. Crítica × Prob. Remota → INACEPTABLE → residual Aceptable) |
-| Código | `app/models/types.py:11` (`EncryptedString`); clave en gestor de secretos del {{CLOUD_STACK}} |
-| Test(s) de verificación | `test_encrypted_string_roundtrip`, `test_encrypted_string_rejects_tampered_tag`, `test_encryption_key_not_equal_secret_key` en `tests/test_encryption_at_rest.py` |
+| Código | `app/core/encryption.py::encrypt`, `app/core/encryption.py::decrypt`; clave en gestor de secretos del {{CLOUD_STACK}} |
+| Test(s) de verificación | `tests/test_hard_rules.py::test_encryption_roundtrip_and_nonce_uniqueness`, `tests/test_hard_rules.py::test_tampered_ciphertext_is_rejected`, `tests/test_hard_rules.py::test_encryption_key_length_validation` |
 | Entrada en Master Map | v1.0 |
 
 ## 7. Historial
@@ -74,6 +74,7 @@ Detalles de construcción:
 |---|---|---|---|
 | v0.1 | 2026-01-08 | Equipo de Plataforma | Propuesta inicial |
 | v1.0 | 2026-01-15 | Equipo de Plataforma | Aceptada e implementada; columnas PII/PHI migradas a `EncryptedString` |
+| v1.1 | 2026-11-07 | Equipo de Plataforma | Se corrige la trazabilidad al código real del kit (`app/core/encryption.py`, funciones `encrypt`/`decrypt`) y a sus tests existentes; la cita anterior (`app/models/types.py:11`, `tests/test_encryption_at_rest.py`) apuntaba a archivos que el kit no tiene. La decisión (AES-256-GCM a nivel campo) no cambia |
 
 ---
 **Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

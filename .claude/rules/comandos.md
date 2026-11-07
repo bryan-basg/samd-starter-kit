@@ -9,7 +9,7 @@
 # La profundidad la dan los tests de abajo. No pide OK: es barato.)
 mypy .                                     # tipos backend (con el entorno virtual activo)
 ruff check app/                            # lint backend
-cd frontend && npm run type-check          # tipos frontend
+cd frontend && npm run typecheck           # tipos frontend
 cd frontend && npm run lint                # lint frontend. ⚠️ Si tu CI corre el lint con `--max-warnings=0`
                                            # y el script local NO pasa ese flag, un aviso nuevo se ve VERDE en local
                                            # y ROMPE el CI. Alineá los dos comandos (o corré el del CI antes de pushear).

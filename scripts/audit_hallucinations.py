@@ -73,6 +73,42 @@ EXCLUDE_DIRS = {
     # En tu proyecto real, quitá estas exclusiones para auditar tus docs.
     "examples",
 }
+# Salidas gitignoradas en la RAÍZ del repo (mkdocs `site/`, reportes de testing/DAST, gitleaks
+# `audit/`, cachés). Se excluyen por ruta relativa a la raíz y NO por nombre suelto: un paquete
+# versionado `app/audit/` o `app/reports/` sí debe escanearse.
+EXCLUDE_ROOT_DIRS = {
+    "site", "reports", "audit", ".cache", ".schemathesis",
+    "frontend/reports", "frontend/coverage", "frontend/dist",
+}
+
+# Falsos positivos de plantilla/documentación, ACOTADOS al archivo + etiqueta + fragmento de la
+# línea (no comodines por archivo ni por patrón): (ruta relativa, etiqueta, fragmento, motivo).
+# Un `localhost:8000` nuevo en código de esos mismos archivos SÍ dispara; solo se toleran
+# estas líneas. Cualquier otra ocurrencia en el árbol sigue fallando.
+ALLOWLIST: list[tuple[str, str, str, str]] = [
+    ("GETTING_STARTED.md", "localhost hardcodeado", "http://localhost:8000/docs",
+     "instrucción de arranque local para el desarrollador"),
+    ("GETTING_STARTED.md", "localhost hardcodeado", "http://localhost:5173",
+     "instrucción de arranque local para el desarrollador"),
+    ("app/README.md", "localhost hardcodeado", "http://localhost:8000/docs",
+     "instrucción de arranque local"),
+    ("frontend/README.md", "localhost hardcodeado", "http://localhost:5173",
+     "instrucción de arranque local"),
+    ("app/main.py", "localhost hardcodeado", "Docs:       http://localhost:8000/docs",
+     "línea del docstring del módulo (documentación, no configuración)"),
+    ("scripts/sast.sh", "localhost hardcodeado", "Default: http://localhost:8000/openapi.json",
+     "comentario que documenta el default de OPENAPI_URL"),
+    (".github/workflows/db-tier.yml", "localhost hardcodeado",
+     "postgresql+asyncpg://testuser@localhost:5432/testdb",
+     "contenedor de servicio de Postgres efímero del job de CI (sin credenciales reales)"),
+    ("docs/06_operations_and_runbooks/INCIDENT_RESPONSE_DRILL_REPORT.md", "placeholder XXXX",
+     "<DRILL-XXXX>", "plantilla: el ID se completa al ejecutar el simulacro"),
+    ("docs/06_operations_and_runbooks/INCIDENT_POSTMORTEM_TEMPLATE.md", "placeholder XXXX",
+     "<INC-XXXX>", "plantilla: el ID se completa al abrir el incidente"),
+    ("docs/07_regulatory_and_compliance/BREACH_NOTIFICATION_TEMPLATE.md", "placeholder XXXX",
+     "<INC-XXXX>", "plantilla: el ID se completa al abrir el incidente"),
+]
+
 # El propio auditor contiene los patrones como literales → se auto-excluye.
 EXCLUDE_FILES = {"audit_hallucinations.py"}
 
@@ -86,9 +122,16 @@ INCLUDE_SUFFIXES = {
 _COMPILED = [(re.compile(rx, re.IGNORECASE), label, sev) for rx, label, sev in PATTERNS]
 
 
+def _is_allowlisted(rel: str, label: str, line: str) -> bool:
+    return any(rel == f and label == lb and frag in line for f, lb, frag, _ in ALLOWLIST)
+
+
 def _iter_files(root: Path):
     for path in root.rglob("*"):
         if not path.is_file():
+            continue
+        rel_parts = path.relative_to(root).parts
+        if any("/".join(rel_parts[:i]) in EXCLUDE_ROOT_DIRS for i in range(1, len(rel_parts))):
             continue
         if any(part in EXCLUDE_DIRS for part in path.parts):
             continue
@@ -107,9 +150,10 @@ def scan(root: Path) -> list[tuple[Path, int, str, str, str]]:
             text = path.read_text(encoding="utf-8", errors="ignore")
         except OSError:
             continue
+        rel = path.relative_to(root).as_posix()
         for lineno, line in enumerate(text.splitlines(), start=1):
             for regex, label, sev in _COMPILED:
-                if regex.search(line):
+                if regex.search(line) and not _is_allowlisted(rel, label, line):
                     findings.append((path, lineno, label, sev, line.strip()[:120]))
     return findings
 

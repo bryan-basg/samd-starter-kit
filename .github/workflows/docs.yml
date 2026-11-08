@@ -19,6 +19,14 @@ on:
       - "mkdocs.yml"
       - "requirements-docs.txt"
       - ".github/workflows/docs.yml"
+  # En PR solo se VERIFICA (build --strict); `configure-pages`, la subida y `deploy` se saltean.
+  # Sin `paths:` el filtro del push no aplica: se repite para no correr en PRs ajenos a docs.
+  pull_request:
+    paths:
+      - "docs/**"
+      - "mkdocs.yml"
+      - "requirements-docs.txt"
+      - ".github/workflows/docs.yml"
   workflow_dispatch: {}
 
 # Permisos mínimos para desplegar a Pages vía OIDC (id-token) — nada de contents:write.
@@ -28,9 +36,11 @@ permissions:
   id-token: write
 
 # Una sola publicación a la vez; no cancelar un deploy a Pages a medias.
+# En PR cada rama tiene su grupo y se cancela la corrida vieja; el push a main conserva el grupo
+# `pages` (serializa los deploys y no cancela uno a medias).
 concurrency:
-  group: pages
-  cancel-in-progress: false
+  group: ${{ github.event_name == 'pull_request' && format('docs-pr-{0}', github.ref) || 'pages' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build:
@@ -47,20 +57,23 @@ jobs:
         run: pip install -r requirements-docs.txt
       - name: Build estricto (warnings = error)
         run: mkdocs build --strict
-      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+      - if: github.event_name != 'pull_request'
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
         # enablement: true => el workflow intenta ACTIVAR Pages por sí mismo en
         # el primer run, en vez de fallar con "Get Pages site failed / Not Found".
         # Hace el kit a prueba de balas en proyectos derivados recién clonados.
         # (Requiere permiso `pages: write`, ya declarado en este workflow.)
         with:
           enablement: true
-      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+      - if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: site
 
   deploy:
     name: Publicar en GitHub Pages
     needs: build
+    if: github.event_name != 'pull_request'   # en PR solo se verifica el build
     runs-on: ubuntu-latest
     timeout-minutes: 10
     environment:

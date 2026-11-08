@@ -23,6 +23,9 @@ concurrency:
   group: placeholder-guard-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   placeholders:
     name: Marcadores {{...}} sin reemplazar

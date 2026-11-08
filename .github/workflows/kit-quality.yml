@@ -14,6 +14,9 @@ concurrency:
   group: kit-quality-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   kit-quality:
     name: Lint de agentes + enlaces cross-doc

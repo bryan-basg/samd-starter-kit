@@ -6,7 +6,7 @@ description: Protocolo de desarrollo agnóstico al agente para {{PROJECT_NAME}} 
 
 > Este protocolo es **agnóstico al agente**: captura el **proceso estable** de cómo se trabaja en este repo, aplicable a cualquier asistente de IA que opere sobre él. Las reglas dinámicas (estado de tests, deuda en curso) viven en `docs/` y en la memoria del agente.
 >
-> **Fuente de verdad:** el canon es el `CLAUDE.md` del proyecto (**core**, carga en cada turno) más las reglas de `.claude/rules/` — cinco **path-scoped** que cargan solo al tocar su capa (backend, UX clínica, testing, CI, documentación) y cuatro transversales (orquestación, agentes, comandos, sesiones paralelas). El mapa de qué carga cuándo está en `CLAUDE.md` §MAPA DE ESTE CEREBRO. Este protocolo es su **espejo agnóstico al agente** y debe mantenerse sincronizado. Si divergen, manda el canon y, por encima de todo, la **realidad del código**.
+> **Fuente de verdad:** el canon es el `CLAUDE.md` del proyecto (**core**, carga en cada turno) más las reglas de `.claude/rules/` — cinco **path-scoped** que cargan solo al tocar su capa (backend, UX clínica, testing, CI, documentación) y dos transversales (reglas duras de ejecución, comandos) — más el estilo de salida «Orquestador SaMD» (`.claude/output-styles/orquestador.md`), que solo carga la sesión principal (cómo trabajar con el dueño, orquestación de agentes, sesiones paralelas). El mapa de qué carga cuándo está en `CLAUDE.md` §MAPA DE ESTE CEREBRO. Este protocolo es su **espejo agnóstico al agente** y debe mantenerse sincronizado. Si divergen, manda el canon y, por encima de todo, la **realidad del código**.
 
 ---
 

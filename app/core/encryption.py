@@ -10,14 +10,14 @@ import os
 
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
-from app.core.config import settings
+from app.core.config import decode_encryption_key, settings
 
 _NONCE_BYTES = 12
 
 
 def _key() -> bytes:
-    raw = base64.b64decode(settings.encryption_key)
-    if len(raw) != 32:
+    raw = decode_encryption_key(settings.encryption_key)
+    if raw is None:
         # Fail-safe explícito: una clave mal configurada NO debe degradar a
         # "sin cifrado" en silencio — rompe ruidosamente.
         raise ValueError("ENCRYPTION_KEY debe decodificar a 32 bytes (AES-256).")

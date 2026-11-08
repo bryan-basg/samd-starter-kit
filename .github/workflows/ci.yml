@@ -20,6 +20,10 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+# Mínimo privilegio: ningún job escribe en el repo ni en PRs.
+permissions:
+  contents: read
+
 jobs:
   # ---- Gate SaMD: integridad de la trazabilidad documental (siempre corre, barato) ----
   trace-integrity:
@@ -45,6 +49,11 @@ jobs:
     name: Qué capas cambiaron
     runs-on: ubuntu-latest
     timeout-minutes: 3
+    # dorny/paths-filter lista los archivos del PR por la API → necesita `pull-requests: read`
+    # (en repos privados; inocuo en públicos). Al declarar el bloque se pierden los defaults.
+    permissions:
+      contents: read
+      pull-requests: read
     outputs:
       frontend: ${{ steps.filter.outputs.frontend }}
       backend: ${{ steps.filter.outputs.backend }}
@@ -123,8 +132,12 @@ jobs:
         run: ruff check app/ --select F401,F841,F811
       - name: Type-check estricto
         run: mypy .
-      - name: Tests
-        run: TESTING=True DATABASE_URL="sqlite+aiosqlite:///:memory:" pytest -q
+      # Gate de cobertura (TESTING_TOOLS.md «Gate de PR backend»): corre la suite UNA sola vez
+      # (xdist + cobertura) y exige los dos pisos del script (global y capa datos/SQL, ≥95%).
+      # Reemplaza al `pytest -q` pelado: ya ejecuta `pytest tests/`, no se duplica la suite.
+      # TESTING y DATABASE_URL vienen del `env:` del job.
+      - name: Tests + piso de cobertura (global y datos/SQL)
+        run: bash scripts/check_coverage.sh
 
   contract-sync:
     name: Drift del contrato OpenAPI

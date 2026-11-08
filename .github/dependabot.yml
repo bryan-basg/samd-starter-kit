@@ -1,7 +1,7 @@
 # Dependabot — vigila dependencias vulnerables y propone updates (seguridad por diseño).
 #
-# Tres ecosistemas activos: github-actions (workflows), npm (frontend/) y pip (requirements*.txt
-# de la raíz). Si quitás un manifiesto, comentá su bloque: Dependabot falla si no lo encuentra.
+# Cinco ecosistemas activos: github-actions (workflows), npm (frontend/), pip (requirements*.txt
+# de la raíz), docker (Dockerfile) y devcontainers (.devcontainer/). Si quitás un manifiesto, comentá su bloque: Dependabot falla si no lo encuentra.
 #
 # TODOS los bloques llevan la etiqueta `dependencies` a propósito: `stale.yml` exime de cierre
 # automático a los PRs con esa etiqueta (`exempt-pr-labels`). Cerrar un PR de Dependabot le
@@ -9,7 +9,7 @@
 # externa (IEC 62304 §8) no puede perderse en silencio por inactividad. No existe una etiqueta
 # `security` en el repo (Dependabot no la crea), por eso no se usa.
 #
-# `cooldown` (14 días, en los tres bloques): Dependabot espera ese tiempo desde que se publica
+# `cooldown` (14 días, en todos los bloques): Dependabot espera ese tiempo desde que se publica
 # una versión antes de proponerla. Una versión recién publicada es justo la que puede traer un
 # paquete comprometido (cadena de suministro, IEC 62304 §8); dos semanas bastan para que la
 # comunidad lo detecte y lo retire. El cooldown frena SOLO las actualizaciones de VERSIÓN: los
@@ -70,6 +70,36 @@ updates:
     ignore:
       - dependency-name: "mutmut"
         update-types: ["version-update:semver-major"]
+      # schemathesis va FIJADO a propósito (`requirements-fuzz.txt`): sin fijar, el gate del fuzz
+      # cambió de criterio entre dos corridas sin que cambiara el código. Subirlo es una decisión
+      # deliberada (cambiar el número, correr el fuzz y leer el reporte en el MISMO PR). Se ignoran
+      # las tres clases de actualización de VERSIÓN; los avisos de SEGURIDAD (CVE) llegan igual.
+      # Condición para quitar la regla: que el gate del fuzz tolere cambios de versión de la herramienta.
+      - dependency-name: "schemathesis"
+        update-types:
+          - "version-update:semver-major"
+          - "version-update:semver-minor"
+          - "version-update:semver-patch"
+  # Imágenes base del Dockerfile (python:3.12-slim). NO cubre las imágenes de `container:` /
+  # `services:` de los workflows (semgrep, pgvector): Dependabot no las lee; esas van pineadas por
+  # digest a mano (guardián: tests/test_workflows_pineados_a_sha.py).
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 14
+    open-pull-requests-limit: 5
+    labels: ["dependencies"]
+  # Features del devcontainer (`.devcontainer/devcontainer-lock.json`, con digest resuelto).
+  - package-ecosystem: "devcontainers"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 14
+    open-pull-requests-limit: 5
+    labels: ["dependencies"]
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:

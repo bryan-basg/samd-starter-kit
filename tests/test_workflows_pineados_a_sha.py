@@ -19,6 +19,8 @@ import re
 from collections import defaultdict
 from pathlib import Path
 
+import yaml
+
 ROOT = Path(__file__).resolve().parents[1]
 WORKFLOWS = ROOT / ".github" / "workflows"
 
@@ -133,4 +135,42 @@ def test_el_pin_lleva_la_version_legible_al_lado():
         "Estos pines no dicen a qué versión corresponden:\n  - "
         + "\n  - ".join(sin_comentario)
         + "\n\nAñadí ` # vX.Y.Z` al final de la línea."
+    )
+
+
+def _imagenes_de_contenedor() -> list[tuple[str, str]]:
+    """(`workflow:job:origen`, imagen) de `container:` y `services.*.image` de cada job."""
+    salida: list[tuple[str, str]] = []
+    for wf in _archivos():
+        jobs = (yaml.safe_load(wf.read_text(encoding="utf-8")) or {}).get("jobs") or {}
+        for nombre, job in jobs.items():
+            cont = job.get("container")
+            if cont:
+                imagen = cont if isinstance(cont, str) else cont.get("image")
+                salida.append((f"{wf.name}:{nombre}:container", imagen))
+            for svc, datos in (job.get("services") or {}).items():
+                salida.append((f"{wf.name}:{nombre}:services.{svc}", datos["image"]))
+    return salida
+
+
+def test_hay_imagenes_de_contenedor_que_examinar():
+    """El detector de imágenes no puede aprobar por vacío (el kit trae semgrep y pgvector)."""
+    assert len(_imagenes_de_contenedor()) >= 2
+
+
+def test_toda_imagen_de_contenedor_esta_pineada_a_digest():
+    """`semgrep/semgrep` o `pgvector:pg16` son etiquetas mutables: mismo vector que `@v4`.
+
+    Su dueño reapunta la etiqueta y el CI ejecuta otra imagen sin que cambie el diff. Se
+    exige `@sha256:<64 hex>`; la etiqueta legible puede quedar al lado (`imagen:tag@sha256:...`).
+    """
+    sueltas = [
+        f"{donde}: {imagen}"
+        for donde, imagen in _imagenes_de_contenedor()
+        if not re.search(r"@sha256:[0-9a-f]{64}$", imagen)
+    ]
+    assert not sueltas, (
+        "Imágenes de contenedor sin digest:\n  - "
+        + "\n  - ".join(sueltas)
+        + "\n\nPinealas con `imagen:tag@sha256:<digest>` (digest del índice multi-arquitectura)."
     )

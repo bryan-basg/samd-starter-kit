@@ -1,8 +1,10 @@
 # RFC-003 — Scheduling de jobs periódicos vía cron externo gestionado
 
-**Proyecto:** {{PROJECT_NAME}} · **Clase SaMD:** {{SAMD_CLASS}} · **Versión:** v1.0 · **Fecha:** 2026-01-29
+**Proyecto:** {{PROJECT_NAME}} · **Clase SaMD:** {{SAMD_CLASS}} · **Versión:** v1.1 · **Fecha:** 2026-11-07
 
 > RFC del SaMD Starter Kit. Ejemplo didáctico de una decisión de diseño de la capa cloud/API. Documenta cómo se disparan los trabajos periódicos (recordatorios, avisos clínicos, mantenimiento de colas).
+>
+> ⚠️ **Decisión de ejemplo SIN implementación en el kit.** El esqueleto no tiene scheduler, cola de notificaciones ni endpoint disparador (`app/` solo trae `app/routers/notes.py`, `app/core/security.py`, `app/core/encryption.py`). Todo lo que esta RFC nombra como código o test (`ENABLE_INTERNAL_SCHEDULER`, `POST /notifications/process-queue`, REQ-SYNC-02, R-NOTIF-01) es una **plantilla para el proyecto derivado**: no existe en este repo ni figura en su matriz de trazabilidad. El derivado que adopte la decisión lo implementa y reemplaza §6 por citas `ruta::símbolo` a su propio código.
 
 ---
 
@@ -11,7 +13,7 @@
 | Campo | Valor |
 |---|---|
 | ID | RFC-003 |
-| Estado | **Implementado** |
+| Estado | **Aceptado como decisión de ejemplo (sin implementación en el kit)** |
 | Autor | Equipo de Plataforma / Cloud |
 | Revisores | Responsable de Backend, Responsable de Gestión de Riesgo (ISO 14971) |
 | Fecha de propuesta | 2026-01-23 |
@@ -45,7 +47,7 @@ Con un scheduler interno por proceso y autoescalado, cada job se multiplica por 
 Se adopta la **Alternativa B**: en producción los jobs periódicos los dispara un **cron gestionado externo** del {{CLOUD_STACK}}, que invoca un endpoint idempotente del backend (p. ej. `POST /notifications/process-queue`) en cada tick. El **scheduler interno queda deshabilitado por defecto** y solo se activa opt-in en desarrollo local.
 
 Detalles de construcción:
-- **Flag de control**: variable de entorno `ENABLE_INTERNAL_SCHEDULER` con default `false`. En prod permanece `false`; en dev local sin cron externo se pone `true` para no depender de infraestructura.
+- **Flag de control** (plantilla del derivado; no existe en `app/core/config.py`): variable de entorno `ENABLE_INTERNAL_SCHEDULER` con default `false`. En prod permanece `false`; en dev local sin cron externo se pone `true` para no depender de infraestructura.
 - **Endpoint disparador**: idempotente y acotado en trabajo por invocación; protegido (secreto compartido / OIDC) para que solo el cron pueda invocarlo.
 - **Cobertura**: el cron externo cubre los tres jobs (eventos próximos, despacho de cola, reprocesado de pospuestos) con un único tick periódico.
 - **Alineación de pool** (§5.6): el cálculo del techo de conexiones (`max-instances × pool_por_instancia + baseline`) se reevalúa sin sumar trabajo de scheduler por instancia, porque ya no existe en prod.
@@ -56,24 +58,27 @@ Detalles de construcción:
 - **Negativas / costo**: depende de un componente externo (si el cron del {{CLOUD_STACK}} falla o se desconfigura, no hay ticks → se necesita alerta de "cron no disparó en X minutos"); el endpoint disparador es superficie de ataque y debe protegerse.
 - **Impacto en consumidores** (§5.6): cualquier código que asumiera "el scheduler corre dentro del proceso" debe migrar a "el trabajo se hace cuando llega el tick HTTP"; el arranque de la app ya no inicia jobs en prod.
 - **Fail-safe**: si el endpoint falla en un tick, el cron reintenta; el trabajo es idempotente, por lo que un reintento no duplica avisos. Falta prolongada de ticks → alerta de monitoreo (no falla silenciosa).
-- **Deuda técnica generada**: `D-CLOUD-CRON-MISSED-TICK-ALERT-01` — alerta que dispare si el endpoint no recibe un tick dentro de la ventana esperada; `D-CLOUD-CRON-SECRET-ROTATION-01` — endurecer el secreto del disparador (rotación / OIDC).
+- **Deuda técnica generada** (a abrir en el proyecto derivado si adopta la decisión; el kit no la lleva en su índice): `D-CLOUD-CRON-MISSED-TICK-ALERT-01` — alerta que dispare si el endpoint no recibe un tick dentro de la ventana esperada; `D-CLOUD-CRON-SECRET-ROTATION-01` — endurecer el secreto del disparador (rotación / OIDC).
 
 ## 6. Trazabilidad
+
+> Plantilla para el proyecto derivado: ninguna de las referencias de esta tabla existe en el kit. Se dejan sin formato de cita verificable (`ruta::símbolo`) a propósito, para no aparentar trazabilidad que no hay.
 
 | Vínculo | Referencia |
 |---|---|
 | Requisito(s) | REQ-SYNC-02 — Entrega fiable y no duplicada de avisos/jobs periódicos (notificaciones clínicas) |
 | Riesgo(s) ISO 14971 | R-NOTIF-01 — Saturación del pool de BD por jobs multiplicados → servicio caído / aviso clínico perdido o duplicado (Sev. Seria × Prob. Ocasional → INACEPTABLE → residual ALARP) |
-| Código | `ENABLE_INTERNAL_SCHEDULER` (default `false`) en `app/core/config.py::<símbolo>`; endpoint disparador en `app/api/notifications.py::<símbolo>`; cron del {{CLOUD_STACK}} en infra/IaC |
-| Test(s) de verificación | `test_internal_scheduler_disabled_by_default`, `test_process_queue_is_idempotent`, `test_process_queue_requires_auth` en `tests/test_external_scheduler.py` |
-| Entrada en Master Map | v1.0 |
+| Código | (derivado) flag `ENABLE_INTERNAL_SCHEDULER` (default `false`) en su módulo de configuración; endpoint disparador en su capa de API; cron del {{CLOUD_STACK}} en infra/IaC. En el kit: ninguno |
+| Test(s) de verificación | (derivado) a escribir: scheduler interno deshabilitado por defecto, disparador idempotente, disparador exige autenticación. En el kit: ninguno |
+| Entrada en Master Map | v1.0 (aclaración de alcance en v1.1 de esta RFC) |
 
 ## 7. Historial
 
 | Versión | Fecha | Autor | Cambio |
 |---|---|---|---|
 | v0.1 | 2026-01-23 | Equipo de Plataforma / Cloud | Propuesta inicial |
-| v1.0 | 2026-01-29 | Equipo de Plataforma / Cloud | Aceptada e implementada; scheduler interno deshabilitado por default, cron externo en prod |
+| v1.0 | 2026-01-29 | Equipo de Plataforma / Cloud | Aceptada; scheduler interno deshabilitado por default, cron externo en prod |
+| v1.1 | 2026-11-07 | Equipo de Plataforma | Se corrige el estado: el kit no implementa scheduler; las citas a `ENABLE_INTERNAL_SCHEDULER`, `app/api/notifications.py` y `tests/test_external_scheduler.py` apuntaban a archivos que el kit no tiene y quedan marcadas como plantilla del derivado. La decisión (cron externo) no cambia |
 
 ---
 **Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

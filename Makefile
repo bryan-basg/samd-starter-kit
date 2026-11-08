@@ -50,7 +50,7 @@ ci: ## CI local pre-push completo -> scripts/run_local_ci.sh
 mutation: ## Mutation testing del frontend -> scripts/run_stryker.sh (pesado)
 	bash scripts/run_stryker.sh
 
-security: ## SAST/CVEs -> scripts/run_trivy.sh + scripts/run_semgrep.sh (pesado)
+security: ## SAST/CVEs -> scripts/run_trivy.sh + scripts/run_semgrep.sh (corto: ~30 s + ~2 min, sin OK)
 	bash scripts/run_trivy.sh
 	bash scripts/run_semgrep.sh
 

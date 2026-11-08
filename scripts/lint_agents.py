@@ -26,6 +26,10 @@ Contrato real (derivado de los archivos existentes, no inventado):
                                 Un frontmatter sin `paths` no acota nada: la
                                 regla cree ser por-capa y en realidad no carga
                                 donde debería.
+  - `.claude/output-styles/*.md` → frontmatter YAML con `name` y `description`
+                                no vacíos + cabecera Markdown. El `name` es el
+                                valor que `outputStyle` de `.claude/settings.json`
+                                debe repetir EXACTO.
 
 Sin dependencias externas: el frontmatter se parsea a mano (subconjunto YAML
 suficiente para `clave: valor` en bloque `---`). Si `pyyaml` está disponible se
@@ -53,11 +57,13 @@ AGENTS_DIR = REPO_ROOT / ".claude" / "agents"
 COMMANDS_DIR = REPO_ROOT / ".claude" / "commands"
 SKILLS_DIR = REPO_ROOT / ".claude" / "skills"
 RULES_DIR = REPO_ROOT / ".claude" / "rules"
+STYLES_DIR = REPO_ROOT / ".claude" / "output-styles"
 
 # Claves obligatorias (no vacías) por tipo de artefacto.
 AGENT_REQUIRED = ("name", "description", "tools")
 COMMAND_REQUIRED = ("description",)
 SKILL_REQUIRED = ("name", "description")
+STYLE_REQUIRED = ("name", "description")
 
 
 def split_frontmatter(text: str) -> tuple[str | None, str]:
@@ -241,6 +247,7 @@ def main() -> int:
     commands = list(COMMANDS_DIR.glob("*.md"))
     skills = list(SKILLS_DIR.glob("*/SKILL.md"))
     rules = list(RULES_DIR.glob("*.md"))
+    styles = list(STYLES_DIR.glob("*.md"))
 
     results = [
         lint_group("Agentes (.claude/agents/*.md)", agents, AGENT_REQUIRED),
@@ -252,6 +259,13 @@ def main() -> int:
             "Skills (.claude/skills/*/SKILL.md)",
             skills,
             SKILL_REQUIRED,
+            need_heading=True,
+            require_present=False,
+        ),
+        lint_group(
+            "Estilos de salida (.claude/output-styles/*.md)",
+            styles,
+            STYLE_REQUIRED,
             need_heading=True,
             require_present=False,
         ),

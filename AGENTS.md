@@ -8,7 +8,7 @@ Este proyecto ya tiene su guía de trabajo en `CLAUDE.md` y su configuración es
 
 1. Lee `CLAUDE.md` antes de cambiar código o documentación. La **Regla 0 (cumplimiento SaMD)** manda sobre cualquier conveniencia.
 2. Revisa `git status --short` y conserva todo cambio preexistente. No lo sobrescribas, reviertas ni incluyas en tu trabajo.
-3. Lee solo las reglas de `.claude/rules/` pertinentes a los archivos que vas a tocar (cada una declara en su frontmatter `paths:` a qué capa aplica). Las reglas transversales —las que no llevan `paths:`: `orquestacion.md`, `agentes.md`, `comandos.md`, `sesiones-paralelas.md`— aplican siempre.
+3. Lee solo las reglas de `.claude/rules/` pertinentes a los archivos que vas a tocar (cada una declara en su frontmatter `paths:` a qué capa aplica). Las reglas transversales —las que no llevan `paths:`: `orquestacion.md` (reglas duras de ejecución) y `comandos.md`— aplican siempre. Si sos la sesión principal, leé además `.claude/output-styles/orquestador.md` (preferencias del dueño, orquestación y sesiones paralelas).
 4. Si una skill de `.claude/skills/` coincide con la tarea, lee su `SKILL.md` y sigue el procedimiento. Abre `reference.md` solo si necesitas sus casos o fundamentos.
 5. Si una ficha de `.claude/agents/` coincide con la especialidad, úsala como guía de enfoque y límites. Es una referencia de instrucciones; no afirmes que se inició un agente Claude ni que se ejecutó un subagente si no ocurrió.
 

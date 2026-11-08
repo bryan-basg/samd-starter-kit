@@ -3,7 +3,7 @@
 > Plantilla del SaMD Starter Kit. Este documento es la **vista de conjunto** de cómo
 > trabaja el kit: quién hace qué (el equipo de 12 agentes, organizado por capa) y bajo
 > qué ciclo lo hace (el flujo SaMD gobernado por la **Regla 0**). Fuente de verdad de
-> los agentes: `.claude/rules/agentes.md` y `.claude/agents/`; el **core** del reglamento
+> los agentes: `.claude/output-styles/orquestador.md` §2 y `.claude/agents/`; el **core** del reglamento
 > es [`CLAUDE.md`](https://github.com/bryan-basg/samd-starter-kit/blob/main/CLAUDE.md).
 > Fuente de verdad del ciclo: el
 > [Plan de Desarrollo de Software](../03_software_development_plan/SOFTWARE_DEVELOPMENT_PLAN.md).
@@ -96,10 +96,10 @@ auditor/redactor que exige un sistema de gestión de calidad.
 | `samd-audit-trace` | Regulatorio (audita) | Auditar un changeset contra IEC 62304 §5.1/§5.7 + ISO 14971 antes de cerrar fase/PR. |
 | `docs-dhf` | Regulatorio (escribe) | Materializar updates en Master Map, matrices de riesgo y trazabilidad, RFCs. Corre el link-checker. |
 
-> La tabla refleja fielmente la de `.claude/rules/agentes.md`. Si agregás, quitás o
+> La tabla refleja fielmente la del estilo `.claude/output-styles/orquestador.md` §2. Si agregás, quitás o
 > re-asignás un agente, actualizá **ambas** en la misma pasada (anti-drift de la fuente
 > de verdad). El criterio para crear un agente nuevo —los **3 síes rotundos**— y las
-> reglas A-F de diseño de equipo viven en `.claude/rules/orquestacion.md`.
+> reglas A-F de diseño de equipo viven en ese mismo estilo, §2.
 
 ---
 

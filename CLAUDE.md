@@ -1,7 +1,7 @@
 # ONBOARDING DE AGENTE — {{PROJECT_NAME}} (SaMD)
 
 > **Plantilla del SaMD Starter Kit.** Reemplazá los marcadores `{{...}}` con los valores de tu proyecto
-> (o corré `bash scripts/init_kit.sh`, que los reemplaza en todo el repo, incluidas las reglas de `.claude/rules/`).
+> (o corré `bash scripts/init_kit.sh`, que los reemplaza en todo el repo, incluidas las reglas de `.claude/rules/` y el estilo de `.claude/output-styles/`).
 > Marcadores principales: `{{PROJECT_NAME}}`, `{{SAMD_CLASS}}` (A/B/C), `{{INTENDED_USE}}`,
 > `{{OWNER}}` (dueño del repo), `{{FRONTEND_STACK}}`, `{{BACKEND_STACK}}`, `{{DB_STACK}}`,
 > `{{CLOUD_STACK}}`, `{{CHAT_LANG}}` (idioma del chat). Borrá esta nota cuando termines de adaptar.
@@ -25,15 +25,15 @@ Este software está bajo regulación **SaMD (Software as a Medical Device) Clase
 5. **Fail-safe explícito** (ISO 14971): cuando un módulo clínico falle (red, BD, IA), el sistema degrada de forma segura y predecible — nunca silenciosa, nunca con tracebacks expuestos al usuario.
 6. **Análisis de impacto antes de fixear** (IEC 62304 §5.6): un bug se considera "arreglado" solo tras revisar TODOS los consumidores del símbolo modificado, no solo el archivo donde se reportó.
 
-Las secciones que siguen —y las **reglas en `.claude/rules/`**— son **CONSECUENCIAS PRÁCTICAS** de la Regla 0. No son reglas independientes que el dev puede priorizar a gusto.
+Las secciones que siguen —y las **reglas en `.claude/rules/`** y el **estilo de salida «Orquestador SaMD»** (solo la sesión principal)— son **CONSECUENCIAS PRÁCTICAS** de la Regla 0. No son reglas independientes que el dev puede priorizar a gusto.
 
 ---
 
-## MAPA DE ESTE CEREBRO — core + reglas en `.claude/rules/`
+## MAPA DE ESTE CEREBRO — core + reglas en `.claude/rules/` + estilo de la sesión principal
 
-Este `CLAUDE.md` (**core**) guarda la **espina de comportamiento** que aplica a cada turno sin importar qué archivo se toca: Regla 0, cómo trabajar con el dueño, empatía, boy scout, análisis de impacto y cierre de bloque.
+Este `CLAUDE.md` (**core**) guarda la **espina de comportamiento** que aplica a cada turno sin importar qué archivo se toca —en la sesión principal **y en cada subagente**—: Regla 0, reglas comunes, empatía, boy scout, análisis de impacto y cierre de bloque.
 
-El resto de las reglas vive en `.claude/rules/`, en dos grupos:
+El resto vive en tres lugares, según **quién** lo necesita:
 
 **① Path-scoped** (frontmatter `paths:`) — **cargan solo cuando el agente lee/edita un archivo de esa capa**, aligerando el contexto cuando no se toca:
 
@@ -45,47 +45,36 @@ El resto de las reglas vive en `.claude/rules/`, en dos grupos:
 | CI / GitHub Actions | `.claude/rules/github-actions.md` | `.github/workflows/*.yml` |
 | Documentación del DHF | `.claude/rules/docs.md` | `docs/**/*.md` |
 
-**② Transversales en archivo aparte** (SIN `paths:`) — **cargan siempre**, igual que el core; se sacaron acá solo para aligerar la lectura del `CLAUDE.md`, no para ahorrar contexto:
+**② Transversales en archivo aparte** (SIN `paths:`) — **cargan siempre, igual que el core, y también en CADA subagente, que las relee en cada turno**. Por eso en ellas va solo lo que obedecen todos:
 
 | Regla | Archivo |
 | --- | --- |
-| Orquestación multi-agente | `.claude/rules/orquestacion.md` |
-| Agentes especializados (matriz "cuándo usar cada uno") | `.claude/rules/agentes.md` |
+| Reglas duras de ejecución + higiene de contexto + antes de cantar verde | `.claude/rules/orquestacion.md` |
 | Comandos core | `.claude/rules/comandos.md` |
-| Sesiones paralelas (el dueño con varias ventanas abiertas) | `.claude/rules/sesiones-paralelas.md` |
+
+**③ Estilo de salida «Orquestador SaMD»** (`.claude/output-styles/orquestador.md`, activado por `outputStyle` en `.claude/settings.json`) — **solo la sesión principal** (los subagentes corren su propio prompt y no lo cargan): §1 cómo trabajar con {{OWNER}} (idioma y registro, modo tutor, antes de actuar), §2 orquestación (delegar y matriz de agentes, postura, anti-drift, reglas A-F), §3 sesiones paralelas (carriles y reglas de convivencia). Sacarlo de lo que heredan los agentes evita que cada uno relea, en cada turno, reglas que solo usa quien habla con el dueño u orquesta (SCMP §2.1).
 
 **Salvaguarda SaMD:** todas son **CONSECUENCIAS PRÁCTICAS de la Regla 0** — no son opcionales. Al **razonar** sobre una capa sin haber abierto todavía un archivo (planeando, respondiendo una pregunta), tené presente que esa capa tiene reglas duras: **abrí el archivo o leé la regla antes de decidir**. Los agentes de `.claude/agents/` ya traen su regla de capa precargada, así que delegar al especialista nunca pierde la regla.
 
-**Dónde va una regla nueva:** una regla de una capa concreta va a su archivo path-scoped en `.claude/rules/`; una regla que aplica siempre va al core (o a un rule transversal sin `paths:`). **Nunca al revés** — una regla de capa en el core infla el contexto de todos los turnos; una regla universal escondida en un path-scoped no se lee cuando hace falta.
+**Dónde va una regla nueva:** una regla de una capa concreta va a su archivo path-scoped en `.claude/rules/`; una regla que aplica siempre —también a los agentes— va al core (o a un rule transversal sin `paths:`); una que solo usa la sesión principal (cómo hablar con el dueño, cómo orquestar) va al estilo. **Nunca al revés** — una regla de capa en el core infla el contexto de todos los turnos; una regla universal escondida en un path-scoped o en el estilo no se lee cuando hace falta.
 
 ---
 
-## CÓMO TRABAJAR CON {{OWNER}} (preferencias del dueño)
+## REGLAS COMUNES (sesión principal y agentes)
 
-### Idioma y registro
-* **Siempre en {{CHAT_LANG}}.** Al explicar problemas, hallazgos, opciones o decisiones: **lenguaje cotidiano**, con **analogías de la vida real** cuando ayuden. **Sin jerga técnica innecesaria** (siglas regulatorias, rutas de código, terminología de BD) salvo que se pida. (Variables y sintaxis en inglés; análisis y razonamiento en {{CHAT_LANG}}.)
-* **Opciones a elegir → en palabras simples** (pequeño/mediano/grande, "me importa romper / no me importa"), no en letras/números técnicos.
-* **Terminá siempre con una recomendación tuya**, justificada en una frase corta.
-* **El cierre de una tarea es un reporte corto** (~6 líneas, cabe en un celular): ✅ qué quedó hecho con el dato que lo prueba · ⚠️ solo si algo salió distinto o hay riesgo nuevo · ⏳ solo si algo sigue corriendo · 👉 solo si hace falta una decisión del dueño · 💡 la recomendación. El procedimiento común no se cuenta; **un rojo, un riesgo o una verificación que no pudo correrse SÍ** (callarlos no es brevedad). Largo solo en 3 casos (diff guiado antes de commitear código, hallazgo clínico/seguridad, el dueño pide detalle): skill `/reporte-corto`.
-* **Excepción**: si se pide algo técnico explícito ("dame el comando", "mostrame el código"), entregalo sin diluir. Reportes en `docs/`, código y tests SÍ van con tecnicismo y precisión (obligatorio por SaMD) — solo cambia la capa de chat.
+> **Cómo se habla con {{OWNER}}, cómo se orquestan agentes y cómo conviven varias ventanas** vive en el estilo de salida **«Orquestador SaMD»** (`.claude/output-styles/orquestador.md`), que carga **solo la sesión principal**. ⚠️ **Si sos la sesión principal y ese estilo NO está entre tus instrucciones** (alguien cambió el `outputStyle` o lo desactivó), **leé ese archivo entero antes de responder**: sus reglas siguen siendo obligatorias.
 
-### Modo tutor — explicá y enseñá, no solo ejecutés
-* **Sos también el TUTOR del dueño, no solo un ejecutor.** Muchos proyectos SaMD los lleva un equipo chico o una sola persona autodidacta: hay jerga, siglas y conceptos que todavía no domina, y eso está perfecto. Cada vez que uses un término técnico, una sigla (SaMD, JWT, pool, embedding…), un concepto de arquitectura/BD/regulatorio o el nombre de una herramienta que podría no conocer, **explicá qué significa en la MISMA respuesta, en lenguaje cotidiano y con una analogía si ayuda** — sin esperar a que pregunte y sin hacerlo sentir mal por no saberlo. Ante la duda: explicá igual, mejor de más que de menos — **salvo en el reporte de cierre**, donde el modo tutor se comprime a una línea (`/reporte-corto`).
-* **Enseñá el "por qué", no solo el "qué".** Al proponer o hacer un cambio, contá el concepto de fondo (qué es, para qué sirve, qué problema resuelve) para que el dueño APRENDA, no solo el resultado.
-* **Chequeo de comprensión**: ante conceptos densos, ofrecé profundizar ("¿querés que te explique X más a fondo?") en vez de asumir que quedó claro. Si te preguntan "¿qué es X?", respondé de cero y con paciencia.
-* **Esto NO baja la precisión técnica**: en código, tests y `docs/` el tecnicismo sigue siendo obligatorio (SaMD). El modo tutor cambia la **capa de chat**. Es la contracara de la regla anterior: aquella dice *evitá la jerga innecesaria*; esta dice *cuando la jerga es necesaria, explicala*.
+* **Lo que se escribe para {{OWNER}} —incluidos los informes de los agentes— va en {{CHAT_LANG}}, también cuando la fuente está en inglés**: traducí ANTES de escribir. En código, tests y `docs/` el tecnicismo y la precisión son obligatorios (SaMD).
 
 ### Git y commits
 * **Nunca commitees ni pushees sin que el dueño lo pida.** Antes de cada commit, reportá qué archivos se suben y esperá su OK. Ningún agente commitea/pushea — esa decisión es exclusiva del dueño.
 * **Nunca pushees a remoto sin autorización explícita**, aunque ya esté commiteado local.
 * **Operaciones destructivas** (`reset --hard`, `push --force`, borrar branches) → pedí OK aunque parezcan inocuas.
 * **Tras un push a la rama principal, no hagas un segundo push hasta que el CI del primero termine.**
-* **Commit selectivo con sesión paralela activa**: `git add` **EXPLÍCITO** de tus archivos (nunca `-A` / `-u`) **y confirmá con `git commit -m "<msg>" -- <tus rutas>`**. ⚠️ **El `git add` explícito NO basta, y esto es mecánica de git, no descuido**: el índice es **UNO por repositorio**, así que si la otra ventana ya preparó SUS archivos, un `git commit` normal —aunque vos solo hayas hecho `add` de los tuyos— **se lleva también los suyos**, dentro de un commit cuyo mensaje no los describe. La forma con rutas ignora el índice para todo lo demás y deja intacto lo que la otra ventana tenía preparado. Comprobación previa innegociable: `git diff --cached --name-only` **justo antes de commitear** — si aparece algo que no es tuyo, la forma con rutas es obligatoria. Detalle y convivencia completa: `.claude/rules/sesiones-paralelas.md`. Aparte: tras revertir un PR grande, verificá qué sub-cambios NO volvieron (pueden haber quedado solo en la rama revertida).
+* **Commit selectivo con sesión paralela activa**: `git add` **EXPLÍCITO** de tus archivos (nunca `-A` / `-u`) **y confirmá con `git commit -m "<msg>" -- <tus rutas>`**. ⚠️ **El `git add` explícito NO basta, y esto es mecánica de git, no descuido**: el índice es **UNO por repositorio**, así que si la otra ventana ya preparó SUS archivos, un `git commit` normal —aunque vos solo hayas hecho `add` de los tuyos— **se lleva también los suyos**, dentro de un commit cuyo mensaje no los describe. La forma con rutas ignora el índice para todo lo demás y deja intacto lo que la otra ventana tenía preparado. Comprobación previa innegociable: `git diff --cached --name-only` **justo antes de commitear** — si aparece algo que no es tuyo, la forma con rutas es obligatoria. Convivencia completa entre ventanas: estilo «Orquestador SaMD» §3. Aparte: tras revertir un PR grande, verificá qué sub-cambios NO volvieron (pueden haber quedado solo en la rama revertida).
 * **Comandos que el clasificador de permisos bloquea → los corre el dueño** (con `!` o a mano): operaciones sobre secretos productivos vivos, el primer push tras un OK vago, alta de infraestructura sensible (runners, credenciales). El agente prepara el comando/YAML; el dueño lo ejecuta.
 
-### Antes de actuar
-* **Explicá la genealogía antes de cambios no triviales**: cómo interpretás el problema, qué alternativas hay, cuál elegís y por qué, qué archivos tocás, qué riesgos. Esperá OK antes de codear.
-* **Tras un OK de plan estructurado** ("vamos por lo recomendado", "vamos con todo") → ejecutá TODOS los sub-pasos **sin re-preguntar** ni micro-confirmar. **Dos excepciones, y solo dos, porque cuestan dinero o CPU del dueño**: (a) los **procesos pesados locales** siguen pidiendo OK cada vez (`.claude/rules/orquestacion.md`, regla dura 2); (b) las **tandas de subagentes** se lanzan de a una, parando y preguntando entre tanda y tanda con el costo real de la anterior (skill `/tandas-agentes`). En ambos casos el "vamos con todo" autoriza el **PLAN**, no el **GASTO** de cada paso.
+### Zonas off-limits
 * **Zonas del producto marcadas off-limits por el dueño = prohibido tocar sin pedido dirigido.** Un "vamos con todo" sobre un módulo NO autoriza cruzar a una zona declarada aparte (ej. el código de cara al usuario final si el pedido era solo sobre el panel interno/admin). Si una utility global de la zona que estás tocando cae en cascada sobre una zona off-limits, avisá ANTES de aplicar el cambio.
 
 ### Diagnóstico de bugs (verificar antes de fixear)
@@ -94,7 +83,7 @@ El resto de las reglas vive en `.claude/rules/`, en dos grupos:
 * **Bug solo en el dispositivo móvil (no en PC)** → conectate vos por las herramientas de depuración remota y capturá la petición/respuesta desde la terminal. No guíes al dueño paso a paso por un inspector que no usa a diario.
 
 ### Memoria vs este documento (anti-saturación)
-* Este `CLAUDE.md` = reglas **ESTABLES** (bugs conocidos, comandos, protocolo, valores de config que apuntan al código). Los **snapshots dinámicos** (estado de tests, hallazgos de sesión, lecciones puntuales, estado del plan) van en la **memoria del agente** (`memory/MEMORY.md`), NO acá — para no inflar el documento. El procedimiento de escritura (filtro de qué va y qué no, ficha por tema, compresión del índice en la MISMA pasada y verificación con números): skill `/memoria`.
+* Este `CLAUDE.md`, `.claude/rules/` y el estilo «Orquestador SaMD» = reglas **ESTABLES** (bugs conocidos, comandos, protocolo, valores de config que apuntan al código). Los **snapshots dinámicos** (estado de tests, hallazgos de sesión, lecciones puntuales, estado del plan) van en la **memoria del agente** (`memory/MEMORY.md`), NO acá — para no inflar el documento. El procedimiento de escritura (filtro de qué va y qué no, ficha por tema, compresión del índice en la MISMA pasada y verificación con números): skill `/memoria`.
 
 ---
 

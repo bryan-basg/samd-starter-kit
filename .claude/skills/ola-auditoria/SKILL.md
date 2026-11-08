@@ -24,7 +24,7 @@ Vas a lanzar agentes a **BUSCAR defectos**, no a arreglarlos. El riesgo propio e
 1. **Recontá el inventario con UNA sola implementación** — lo comparable es el **DELTA** antes/después con la misma, nunca el absoluto de otra sesión.
 2. **Derivá la lista del CÓDIGO o del DISCO, nunca a mano**: una lista a mano incluye lo que ya no existe y no encuentra a la hermana.
 3. **Verificá vos mismo lo barato.** «¿Existe X en `ruta/archivo.py::símbolo`?» se resuelve leyendo, no lanzando un agente.
-4. **Decile a {{OWNER}} el número de agentes y el costo estimado ANTES de lanzar**: un brief que exige refutar la premisa cuesta sensiblemente más que uno mecánico — presupuestá por el TIPO de brief (`.claude/rules/orquestacion.md`, regla B).
+4. **Decile a {{OWNER}} el número de agentes y el costo estimado ANTES de lanzar**: un brief que exige refutar la premisa cuesta sensiblemente más que uno mecánico — presupuestá por el TIPO de brief (estilo «Orquestador SaMD» §2, regla B).
 
 ## El brief obligatorio — 4 cláusulas, literales
 
@@ -52,4 +52,4 @@ Un hallazgo que dispare cambio en algoritmo clínico, schema, regla de negocio o
 * **Arreglar** deuda ya fichada y verificada → `/tandas-agentes` a secas.
 * **Elegir** mejoras de fondo con menú y decisión de {{OWNER}} → `/mesa-ingenieros`.
 * **Un símbolo puntual** y sus consumidores → `/samd-trace`, sin agentes.
-* **Diagnóstico abierto sin hipótesis** → chat principal (`.claude/rules/orquestacion.md`, regla E): repartir agentes sobre un problema que aún no entendés multiplica el ruido, no la señal.
+* **Diagnóstico abierto sin hipótesis** → chat principal (estilo «Orquestador SaMD» §2, regla E): repartir agentes sobre un problema que aún no entendés multiplica el ruido, no la señal.

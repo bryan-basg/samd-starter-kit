@@ -47,10 +47,11 @@ El reglamento que gobierna a los agentes vive junto al código, no en el DHF:
 
 | Pieza | Path | Contenido |
 |---|---|---|
-| Core del reglamento | `CLAUDE.md` | Regla 0, preferencias del dueño, empatía, boy scout, **arreglar no envolver**, análisis de impacto, cierre de bloque, instrucciones de compactación. Carga en cada turno. |
+| Core del reglamento | `CLAUDE.md` | Regla 0, reglas comunes (git, zonas off-limits, diagnóstico, memoria), empatía, boy scout, **arreglar no envolver**, análisis de impacto, cierre de bloque, instrucciones de compactación. Carga en cada turno. |
 | Entrada para otras herramientas | `AGENTS.md` | Apunta a `CLAUDE.md` y `.claude/` para las herramientas que leen `AGENTS.md` (Codex y similares); no agrega reglas. |
-| Reglas por capa | `.claude/rules/` | Cinco **path-scoped** (backend, UX clínica, testing, CI, documentación) que cargan solas al tocar esa capa + cuatro transversales (orquestación, agentes, comandos, sesiones paralelas). |
-| Equipo de agentes | `.claude/agents/` | 12 especialistas por capa, cada uno con `model:` en el frontmatter (palanca de costo/velocidad — ver `.claude/rules/orquestacion.md`). Matriz de "cuándo usar cada uno": `.claude/rules/agentes.md`. |
+| Reglas por capa | `.claude/rules/` | Cinco **path-scoped** (backend, UX clínica, testing, CI, documentación) que cargan solas al tocar esa capa + dos transversales (reglas duras de ejecución, comandos) que cargan siempre, también en cada subagente. |
+| Estilo de la sesión principal | `.claude/output-styles/orquestador.md` | Preferencias del dueño, orquestación (matriz de agentes, reglas A-F) y sesiones paralelas. Lo activa `outputStyle` en `.claude/settings.json`; solo lo carga la sesión principal (y un fork), no los subagentes. Guardián: `tests/test_estilo_orquestador_enchufado.py`. |
+| Equipo de agentes | `.claude/agents/` | 12 especialistas por capa, cada uno con `model:` en el frontmatter (palanca de costo/velocidad — ver el estilo `.claude/output-styles/orquestador.md` §2, que trae también la matriz de "cuándo usar cada uno"). |
 | Procedimientos | `.claude/commands/`, `.claude/skills/` | Skills operativas (anti-drift y **tandas de agentes** — cohesión y costo, las dos caras de orquestar—, **ola de auditoría** — veracidad del hallazgo—, **arreglar no envolver** — arreglar en vez de tapar—, cierre de bloque, mutation, diagnóstico, memoria del agente, **reporte corto** — el cierre de una tarea cabe en un celular—). |
 | Verificadores y aviso de CI | `scripts/check_doc_{links,anchors,citations}`, `.github/workflows/main-en-rojo.yml` | Tres verificadores de la documentación (enlaces, `#anclas`, citas al código por nombre `ruta/archivo.py::símbolo`; 0 rotas, los corre el CI) y el aviso que abre un Issue cuando un workflow rojea en `main`. Guardianes: `tests/test_citas_del_dhf.py`, `tests/test_workflow_main_en_rojo.py`. |
 | Hooks mecánicos | `.claude/settings.json`, `.claude/scripts/` | Candados que no dependen de que el agente se acuerde: `PreToolUse` sobre `Bash` deniega a un SUBAGENTE correr la suite completa o un proceso pesado (`.claude/rules/orquestacion.md`, regla dura 2). |
@@ -82,7 +83,7 @@ El reglamento que gobierna a los agentes vive junto al código, no en el DHF:
 
 | Doc | Versión | Última actualización |
 |---|---|---|
-| MASTER_MAP | v1.6 | 2026-11-07 |
-| SOFTWARE_CONFIGURATION_MANAGEMENT_PLAN | v1.7 | 2026-11-07 |
+| MASTER_MAP | v1.7 | 2026-11-07 |
+| SOFTWARE_CONFIGURATION_MANAGEMENT_PLAN | v1.8 | 2026-11-07 |
 | ISO_14971_RISK_MATRIX | v1.0 | 2026-07-05 |
 | TRACEABILITY_MATRIX_SAMD | v1.0 | 2026-07-05 |

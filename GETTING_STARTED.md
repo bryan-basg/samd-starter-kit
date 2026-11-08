@@ -27,7 +27,7 @@ my-medical-device/
 ├── GETTING_STARTED.md   ← you are here
 ├── CONTRIBUTING.md      ← workflow, Definition of Done, hard rules
 ├── .claude/
-│   ├── rules/           ← the rest of the ruleset: 5 path-scoped (load per layer) + 4 cross-cutting
+│   ├── rules/           ← the rest of the ruleset: 5 path-scoped (load per layer) + 2 cross-cutting
 │   ├── agents/          ← 12 layer specialists (backend, clinical, frontend, db, …)
 │   ├── commands/ skills/← samd-trace: impact analysis (§5.6)
 │   └── workflows/       ← samd-review: multi-agent diff review

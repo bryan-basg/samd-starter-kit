@@ -5,7 +5,7 @@ pytest-asyncio>=1.4.0
 httpx>=0.28.1          # lo usa fastapi.testclient.TestClient
 # Cobertura reproducible en paralelo (el comando canónico de TESTING_TOOLS.md:
 # `pytest -n auto --cov ... && coverage combine && coverage report --fail-under=95`).
-coverage>=7.16.2
+coverage>=7.17.0
 pytest-cov>=7.1.0
 pytest-xdist>=3.8.0
 greenlet>=3.5.6          # requerido por concurrency=greenlet del .coveragerc (backend async real)

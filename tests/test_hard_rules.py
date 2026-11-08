@@ -196,6 +196,45 @@ def test_405_allow_header_on_a_single_method_path_is_unchanged(client):
     assert resp.headers["Allow"] == "GET"
 
 
+@pytest.mark.security
+def test_404_of_an_unknown_path_is_empathetic_and_in_spanish(client):
+    """Una ruta inexistente responde 404 con mensaje empático (SaMD §5.4).
+
+    El default de Starlette es `{"detail": "Not Found"}`: inglés y sin guía. Se
+    asserta el TEXTO, no solo el código — el arreglo del 400 enseñó que el código
+    HTTP puede estar bien con el mensaje todavía en crudo.
+    """
+    resp = client.get("/ruta-que-no-existe")
+    assert resp.status_code == 404
+    detail = resp.json()["detail"]
+    assert "no encontramos" in detail.lower()
+    assert "not found" not in detail.lower()
+
+
+@pytest.mark.security
+def test_405_is_empathetic_and_keeps_the_allow_header(client):
+    """El 405 traducido NO pierde el `Allow`: el mensaje y la cabecera viajan juntos.
+
+    Antes, la rama que traducía devolvía una respuesta sin cabeceras; traducir el
+    405 por esa rama habría borrado el `Allow` que exige RFC 9110 §15.5.6.
+    """
+    resp = client.delete("/notes")
+    assert resp.status_code == 405
+    detail = resp.json()["detail"]
+    assert "no está disponible" in detail.lower()
+    assert "method not allowed" not in detail.lower()
+    assert {m.strip() for m in resp.headers["Allow"].split(",")} == {"GET", "POST"}
+
+
+@pytest.mark.unit
+def test_app_http_exception_detail_passes_through_untouched(client):
+    """Ancla de no-regresión: el detalle redactado por la app no se traduce ni pierde cabeceras."""
+    resp = client.get("/demo/unavailable")
+    assert resp.status_code == 503
+    assert resp.json()["detail"].startswith("Estamos teniendo problemas")
+    assert resp.headers["Retry-After"] == "30"
+
+
 @pytest.mark.unit
 def test_health_endpoint(client):
     resp = client.get("/health")

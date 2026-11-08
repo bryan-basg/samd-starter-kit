@@ -6,7 +6,7 @@
 
 ## Cadena de trazabilidad
 
-```
+```text
 Necesidad clínica  →  REQ (requisito)  →  Diseño (ruta/archivo.py::símbolo)  →  Verificación (test)  →  Riesgo (R-XXX-NN)
 ```
 
@@ -30,6 +30,7 @@ Necesidad clínica  →  REQ (requisito)  →  Diseño (ruta/archivo.py::símbol
 ## Verificación de integridad de la matriz
 
 Antes de cerrar cualquier update:
+
 ```bash
 # El archivo existe y el símbolo está definido (código Y test), citados por nombre:
 python3 scripts/check_doc_citations.py

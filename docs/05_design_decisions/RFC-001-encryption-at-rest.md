@@ -25,7 +25,7 @@
 
 El sistema persiste datos personales (PII) y datos de salud (PHI) en {{DB_STACK}}: identificadores de contacto, notas clínicas, respuestas a escalas autoaplicadas y metadatos de comportamiento. Bajo GDPR Art. 32 e HIPAA Security Rule (§164.312(a)(2)(iv)), estos datos exigen protección criptográfica en reposo proporcional al riesgo.
 
-El estado inicial almacenaba los campos sensibles en texto plano en columnas estándar (`String`/`Text`). El cifrado en tránsito (TLS) ya estaba resuelto a nivel de {{CLOUD_STACK}}, pero **un volcado de la base, una réplica de backup mal protegida o un acceso indebido al almacenamiento subyacente exponían PHI directamente legible** (`app/models/types.py:11`, columnas declaradas como `String`).
+El estado inicial almacenaba los campos sensibles en texto plano en columnas estándar (`String`/`Text`). El cifrado en tránsito (TLS) ya estaba resuelto a nivel de {{CLOUD_STACK}}, pero **un volcado de la base, una réplica de backup mal protegida o un acceso indebido al almacenamiento subyacente exponían PHI directamente legible** (columnas declaradas como `String`/`Text` en el modelo de datos).
 
 ## 2. Problema
 
@@ -45,6 +45,7 @@ Si un atacante o un tercero no autorizado obtiene una copia física de la base d
 Se adopta la **Alternativa B: cifrado a nivel columna con AES-256-GCM**, implementado en el kit como dos funciones puras, `encrypt` y `decrypt` (`app/core/encryption.py`), que el router aplica al escribir y al leer. Un proyecto con ORM puede envolverlas en un `TypeDecorator` reutilizable de {{DB_STACK}} (`EncryptedString`) para que el cifrado sea transparente para la capa de servicios; el kit no trae ese envoltorio porque su esqueleto no tiene modelos ORM.
 
 Detalles de construcción:
+
 - **Algoritmo:** AES-256-GCM (AEAD) vía librería criptográfica auditada (no implementación propia). Cada valor lleva su nonce de 96 bits único y su tag de autenticación; un tag inválido aborta la lectura (no se sirve dato corrupto).
 - **Clave:** `ENCRYPTION_KEY` de 256 bits, provista por el gestor de secretos de {{CLOUD_STACK}} (Secret Manager / KMS). **Está prohibido reutilizar `SECRET_KEY`** (la clave de firma de sesión/JWT) ni hardcodearla. Dominios de confianza separados: comprometer la firma de sesión no descifra PHI, y viceversa.
 - **Aplicación:** todo campo con PII/PHI pasa por `encrypt` antes de persistirse y por `decrypt` al leerse (en el kit, `app/routers/notes.py`); con ORM, las columnas declaran `EncryptedString` en lugar de `String`/`Text`.

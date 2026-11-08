@@ -1,10 +1,14 @@
 # Dockerfile — imagen mínima del backend del esqueleto de ejemplo (FastAPI).
 # Úsala con docker-compose.yml (servicio `backend`) o para un build standalone.
 #
-# SaMD: en PRODUCCIÓN, pineá la imagen del deploy por digest (@sha256:...), nunca por
-# tag mutable como :latest — evita rollbacks ciegos ante un incidente. Acá usamos un
-# tag legible porque es solo el entorno de desarrollo local.
-FROM python:3.12-slim
+# SaMD (IEC 62304 §8, SOUP): la imagen base va pineada por DIGEST (@sha256:...), no
+# solo por etiqueta. `3.12-slim` es una etiqueta mutable: su dueño la reapunta a otra
+# imagen y el próximo build sale distinto sin que cambie el diff — ni reproducible ni
+# auditable. La etiqueta queda al lado para que se lea qué versión es; manda el digest
+# (el del índice multi-arquitectura). Dependabot (`docker` en `.github/dependabot.yml`)
+# propone el digest nuevo cuando la etiqueta avanza. Guardián:
+# `tests/test_workflows_pineados_a_sha.py::test_toda_imagen_de_contenedor_esta_pineada_a_digest`.
+FROM python:3.12-slim@sha256:4840d514c583a4d3d8cad3940e68dee6f0f6f3635c12fcd0a3d74c21a5b93a54
 
 # No escribir .pyc y flush inmediato de logs (mejor diagnóstico en contenedor).
 ENV PYTHONDONTWRITEBYTECODE=1 \

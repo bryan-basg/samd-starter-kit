@@ -138,8 +138,12 @@ def test_el_pin_lleva_la_version_legible_al_lado():
     )
 
 
+# `FROM [--platform=...] <imagen> [AS <etapa>]`; se ignora `FROM scratch`. Un `FROM <etapa previa>` de un build multi-etapa saldría como suelto: ajustá el patrón si lo adoptás.
+_FROM = re.compile(r"^FROM\s+(?:--\S+\s+)*(?!scratch\b)(\S+)", re.MULTILINE)
+
+
 def _imagenes_de_contenedor() -> list[tuple[str, str]]:
-    """(`workflow:job:origen`, imagen) de `container:` y `services.*.image` de cada job."""
+    """(origen, imagen) de `container:`/`services.*.image` de cada job y del `FROM` de cada Dockerfile."""
     salida: list[tuple[str, str]] = []
     for wf in _archivos():
         jobs = (yaml.safe_load(wf.read_text(encoding="utf-8")) or {}).get("jobs") or {}
@@ -150,12 +154,17 @@ def _imagenes_de_contenedor() -> list[tuple[str, str]]:
                 salida.append((f"{wf.name}:{nombre}:container", imagen))
             for svc, datos in (job.get("services") or {}).items():
                 salida.append((f"{wf.name}:{nombre}:services.{svc}", datos["image"]))
+    # La imagen base de cada Dockerfile del repo: es la que se construye y despliega.
+    for df in sorted(ROOT.glob("Dockerfile*")):
+        for imagen in _FROM.findall(df.read_text(encoding="utf-8")):
+            salida.append((f"{df.name}:FROM", imagen))
     return salida
 
 
 def test_hay_imagenes_de_contenedor_que_examinar():
-    """El detector de imágenes no puede aprobar por vacío (el kit trae semgrep y pgvector)."""
-    assert len(_imagenes_de_contenedor()) >= 2
+    """El detector de imágenes no puede aprobar por vacío (el kit trae semgrep, pgvector y el Dockerfile)."""
+    assert len(_imagenes_de_contenedor()) >= 3
+    assert any(donde.startswith("Dockerfile") for donde, _ in _imagenes_de_contenedor())
 
 
 def test_toda_imagen_de_contenedor_esta_pineada_a_digest():

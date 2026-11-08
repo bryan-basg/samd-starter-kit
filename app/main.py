@@ -85,8 +85,15 @@ _CUERPO_ILEGIBLE = (
 # Detalles que el FRAMEWORK genera en inglés antes de que el código de la app
 # llegue a correr. Se traducen; cualquier otro `HTTPException` es nuestro y pasa
 # intacto (el 503 con Retry-After, el 401 de auth, etc.).
+#
+# "Not Found" y "Method Not Allowed" son el texto que Starlette pone por defecto
+# (la frase estándar del código HTTP) cuando una ruta no existe o no acepta el
+# método. Un `HTTPException(404)` propio SIN detalle cae en el mismo texto, y
+# también se traduce: sigue sin estar redactado para el usuario.
 _DETALLES_DEL_FRAMEWORK = {
     "There was an error parsing the body": _CUERPO_ILEGIBLE,
+    "Not Found": "No encontramos lo que buscás. Revisá la dirección y probá de nuevo.",
+    "Method Not Allowed": "Esa acción no está disponible en esta dirección.",
 }
 
 
@@ -148,21 +155,22 @@ async def http_exception_handler(
     contrato declaró el 400, sin que el mensaje hubiera mejorado. De ahí que el
     test asserte el TEXTO, no solo el código.
     """
+    headers = getattr(exc, "headers", None)
+    if exc.status_code == status.HTTP_405_METHOD_NOT_ALLOWED and (
+        allow := _metodos_permitidos(request)
+    ):
+        headers = {**(headers or {}), "Allow": allow}
     detalle = _DETALLES_DEL_FRAMEWORK.get(str(exc.detail))
     if detalle is None:
-        headers = getattr(exc, "headers", None)
-        if exc.status_code == status.HTTP_405_METHOD_NOT_ALLOWED and (
-            allow := _metodos_permitidos(request)
-        ):
-            headers = {**(headers or {}), "Allow": allow}
         # Excepción propia de la app: su mensaje ya está redactado con cuidado.
-        return JSONResponse(
-            status_code=exc.status_code,
-            content={"detail": exc.detail},
-            headers=headers,
+        detalle = exc.detail
+    else:
+        logger.info(
+            "Detalle del framework traducido (%s): %s", exc.status_code, exc.detail
         )
-    logger.info("Cuerpo ilegible rechazado: %s", exc.detail)
-    return JSONResponse(status_code=exc.status_code, content={"detail": detalle})
+    return JSONResponse(
+        status_code=exc.status_code, content={"detail": detalle}, headers=headers
+    )
 
 
 app.include_router(notes.router)

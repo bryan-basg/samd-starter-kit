@@ -53,7 +53,7 @@ bash scripts/init_kit.sh       # interactivo y re-ejecutable: rellena los marcad
 | Pieza | Path | Qué es |
 |---|---|---|
 | **Reglamento del agente** | `CLAUDE.md` | El **core**: la "Regla 0" (SaMD es prioridad absoluta) + cómo trabaja el agente, empatía, boy scout, análisis de impacto y cierre de bloque. |
-| **Reglas por capa** | `.claude/rules/` | El resto del reglamento, partido en nueve: cinco **path-scoped** (backend, UX clínica, testing, CI, docs) que cargan solas al tocar esa capa, y cuatro transversales (orquestación, agentes, comandos, sesiones paralelas). |
+| **Reglas por capa** | `.claude/rules/` | El resto del reglamento, partido en siete: cinco **path-scoped** (backend, UX clínica, testing, CI, docs) que cargan solas al tocar esa capa, y dos transversales (reglas duras de ejecución, comandos). Lo que solo necesita la sesión principal (preferencias del dueño, orquestación, sesiones paralelas) vive en el estilo de salida `.claude/output-styles/orquestador.md`. |
 | **Equipo de 12 agentes** | `.claude/agents/` | Especialistas por capa: `backend`, `frontend`, `clinical-algorithms`, `db-architect`, `cloud-ops`, `qa-mutation`, `e2e-integration`, `security-samd`, `samd-audit-trace`, `docs-dhf`, `i18n-translations`, `mobile-native`. |
 | **Comando + skill** | `.claude/commands/`, `.claude/skills/` | `samd-trace`: análisis de impacto (§5.6) antes de declarar algo "arreglado". |
 | **Workflow multi-agente** | `.claude/workflows/` | `samd-review`: revisión del diff por dimensiones de riesgo con verificación adversarial. |

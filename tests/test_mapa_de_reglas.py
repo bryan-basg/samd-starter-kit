@@ -21,7 +21,14 @@ CLAUDE_MD = (ROOT / "CLAUDE.md").read_text(encoding="utf-8")
 
 def test_hay_reglas_que_mirar():
     # Un glob que no encuentra nada haría pasar la parametrización en vacío.
-    assert len(RULES) >= 9, f"solo {len(RULES)} reglas en .claude/rules/"
+    # 5 path-scoped + 2 transversales; lo que solo usa la sesión principal vive en
+    # el estilo `.claude/output-styles/orquestador.md` (ver
+    # tests/test_estilo_orquestador_enchufado.py).
+    assert len(RULES) >= 7, f"solo {len(RULES)} reglas en .claude/rules/"
+
+
+def test_el_mapa_nombra_el_estilo_de_la_sesion_principal():
+    assert ".claude/output-styles/orquestador.md" in CLAUDE_MD
 
 
 @pytest.mark.parametrize("regla", RULES, ids=lambda p: p.name)

@@ -7,7 +7,7 @@ Vas a repartir un trabajo grande entre subagentes en el proyecto {{PROJECT_NAME}
 
 ## Las 2 reglas duras
 
-1. **Máximo 12 agentes por tanda** (regla B de `.claude/rules/orquestacion.md`), contando **todos**: los que trabajan Y los que verifican. Un pipeline de 12 ítems con 2 revisores cada uno son **36 agentes**, no 12.
+1. **Máximo 12 agentes por tanda** (regla B del estilo «Orquestador SaMD» §2, `.claude/output-styles/orquestador.md`), contando **todos**: los que trabajan Y los que verifican. Un pipeline de 12 ítems con 2 revisores cada uno son **36 agentes**, no 12.
 2. **Entre tanda y tanda, PARÁS y PREGUNTÁS.** Nunca encadenes la siguiente por tu cuenta, aunque el plan la contemple. **"Vamos con todo" autoriza el PLAN, no el GASTO de cada tanda** — igual que no autoriza procesos pesados implícitos (regla dura 2 de orquestación).
 
 ## Presupuesto — decilo ANTES de lanzar
@@ -26,7 +26,7 @@ El investigativo cuesta el doble y **lo vale**: en la tanda que fijó ese númer
 1. **Listá el trabajo total** en unidades independientes. Agrupá **por archivo**, nunca por hallazgo: dos agentes sobre el mismo archivo se pisan.
 2. **Partí en tandas de ≤12**, ordenadas por rendimiento: lo barato y de bajo riesgo primero, lo delicado al final.
 3. **Presentá el plan con el costo estimado y esperá OK.**
-4. **Lanzá UNA tanda.** Nunca dos a la vez (comparten máquina; puede haber otras ventanas abiertas — `.claude/rules/sesiones-paralelas.md`).
+4. **Lanzá UNA tanda.** Nunca dos a la vez (comparten máquina; puede haber otras ventanas abiertas — estilo «Orquestador SaMD» §3).
 5. **Verificá vos el `git diff` REAL**, no el summary (`/anti-drift`): medida objetiva, type-check, tests del módulo y `git status` por temporales y huérfanos.
 6. **Reportá y PREGUNTÁ**: qué se hizo, cuántos tokens costó, qué encontraron los revisores y qué falta.
 

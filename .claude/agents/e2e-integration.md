@@ -28,7 +28,7 @@ Tu capa es **el flujo completo del usuario real** (el navegador cruzando fronten
 
 - **Cada worker tiene su propio usuario sembrado.** Dos workers compartiendo una cuenta se pisan el estado y producen fallos que no se reproducen jamás en local.
 - **La base de datos de la corrida arranca fresca y conocida.** Un E2E sobre datos residuales de la corrida anterior pasa o falla según el orden, que es la definición de inútil.
-- **Concurrencia con techo explícito**, calibrado por lo que aguanta el backend de pruebas — y **bajala cuando la máquina está compartida** con otras sesiones (`.claude/rules/sesiones-paralelas.md`, regla 6).
+- **Concurrencia con techo explícito**, calibrado por lo que aguanta el backend de pruebas — y **bajala cuando la máquina está compartida** con otras sesiones (`.claude/rules/orquestacion.md` §Antes de cantar verde).
 
 ### Flaky ambiental vs regresión real — el triage es tu trabajo
 

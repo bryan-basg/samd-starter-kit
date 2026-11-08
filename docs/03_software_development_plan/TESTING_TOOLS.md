@@ -26,7 +26,7 @@ Idioma de trabajo del equipo: {{CHAT_LANG}}.
 |---|---|---|---|
 | **Unit — frontend** (Vitest) | Lógica de componentes/hooks/servicios con aserciones específicas (no humo). | En cada cambio de frontend; gate de PR. | `npm test` |
 | **Unit — backend** (pytest) | Routers, services, reglas de negocio, fail-safe; async en `asyncio_mode = auto`. | En cada cambio de backend; gate de PR. | `pytest -ra` |
-| **Coverage — backend** (coverage.py) | Cobertura de líneas/ramas; gate ≥95% global (+ piso por capa datos/SQL). Reproducible, en paralelo. | Gate de PR backend; nightly. | `bash scripts/check_coverage.sh` |
+| **Coverage — backend** (coverage.py) | Cobertura de líneas/ramas; gate ≥95% global (+ piso por capa datos/SQL). Reproducible, en paralelo. | Gate de PR backend (`ci.yml`). | `bash scripts/check_coverage.sh` |
 | **Mutation — frontend** (Stryker) | Que los tests *maten* mutantes (no solo cubran líneas); gate `break ~90`. | Nightly/semanal incremental; full periódico. Nunca en paralelo con agentes que escriben tests. | `npx stryker run` |
 | **Mutation — backend** (mutmut **2.5.1**, fijado) | Igual que Stryker, en Python; el gate lee el cache de mutmut y falla bajo el umbral (env var). | Nightly/semanal incremental. | `bash scripts/run_mutmut.sh` |
 | **DB tier** (pytest @ Postgres + pgvector) | Comportamiento real del motor (asyncpg, pgvector, defaults SQL) que SQLite oculta. | Al tocar `app/models`/migraciones; cron 3×/sem; `workflow_dispatch`. | `bash scripts/run_pytest_postgres.sh` (o `.github/workflows/db-tier.yml`) |

@@ -19,6 +19,9 @@ concurrency:
   group: mutation-${{ github.ref }}
   cancel-in-progress: false   # NO cancelar una corrida de mutation a medias
 
+permissions:
+  contents: read
+
 jobs:
   stryker:
     name: Stryker (frontend)

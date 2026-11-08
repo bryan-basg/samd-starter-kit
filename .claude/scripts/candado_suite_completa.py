@@ -152,9 +152,9 @@ def main() -> int:
                 f"pesados (mutación, fuzz, E2E completa, tier de BD real). Bloqueado: "
                 f"`{tramo[:160]}`. La suite entera la corre el orquestador una vez, al final. "
                 f"Usá tu directorio, p. ej. `pytest tests/test_<modulo>*.py -q` o "
-                f"`cd frontend && npx vitest run src/<carpeta>`. Ojo: `pytest tests/ -k` y "
-                f"`npm test -- <archivo>` también recorren TODO; para filtrar, pasá "
-                f"la lista explícita de archivos en vez de un patrón sobre el directorio entero."),
+                f"`cd frontend && npx vitest run src/<carpeta>`. Ojo: `pytest tests/ -k <patrón>` "
+                f"también recorre TODO (un patrón sobre el directorio entero no es una ruta); "
+                f"para filtrar, pasá la lista explícita de archivos."),
         }}, ensure_ascii=False))
     return 0
 

@@ -79,7 +79,9 @@ def test_tampered_ciphertext_is_rejected():
     raw = bytearray(base64.b64decode(token))
     raw[-1] ^= 0x01  # corrompe un byte del tag GCM
     tampered = base64.b64encode(bytes(raw)).decode()
-    with pytest.raises(Exception):
+    from cryptography.exceptions import InvalidTag
+
+    with pytest.raises(InvalidTag):
         encryption.decrypt(tampered)
 
 
@@ -245,6 +247,19 @@ def test_expired_token_is_rejected(client):
 
 
 @pytest.mark.security
+def test_token_without_exp_is_rejected(client):
+    import jwt
+
+    from app.core.config import settings
+
+    # Firma válida pero SIN `exp`: un token así, filtrado, valdría para siempre.
+    sin_exp = jwt.encode({"sub": "alice"}, settings.secret_key, algorithm="HS256")
+    resp = client.get("/notes", headers={"Authorization": f"Bearer {sin_exp}"})
+    assert resp.status_code == 401
+    assert "iniciá sesión de nuevo" in resp.json()["detail"].lower()
+
+
+@pytest.mark.security
 def test_secret_guard_aborts_on_dev_defaults(monkeypatch):
     from app.core.config import settings
     from app.main import _assert_secure_secrets
@@ -268,8 +283,37 @@ def test_secret_guard_passes_with_real_secrets(monkeypatch):
     monkeypatch.setattr(
         settings, "encryption_key", base64.b64encode(b"x" * 32).decode()
     )
-    assert settings.insecure_default_secrets() == []
+    assert settings.insecure_secrets() == []
     _assert_secure_secrets()  # no debe lanzar
+
+
+@pytest.mark.security
+@pytest.mark.parametrize(
+    ("secret_key", "encryption_key", "culpable"),
+    [
+        ("", "eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHg=", "SECRET_KEY"),
+        ("a", "eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHg=", "SECRET_KEY"),
+        ("x" * 31, "eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHg=", "SECRET_KEY"),
+        ("a-real-injected-production-secret", "", "ENCRYPTION_KEY"),
+        ("a-real-injected-production-secret", "no-es-base64!!", "ENCRYPTION_KEY"),
+        ("a-real-injected-production-secret", "eHh4eHh4eHh4eHh4eHh4eA==", "ENCRYPTION_KEY"),
+    ],
+    ids=["secret-vacio", "secret-1-byte", "secret-31-bytes", "enc-vacia", "enc-no-base64", "enc-16-bytes"],
+)
+def test_secret_guard_aborts_on_empty_short_or_malformed(
+    monkeypatch, secret_key, encryption_key, culpable
+):
+    from app.core.config import settings
+    from app.main import _assert_secure_secrets
+
+    # `cp .env.example .env` deja los secretos VACÍOS: el guard debe abortar
+    # el arranque, no dejar que la app falle tarde, request por request.
+    monkeypatch.setattr(settings, "testing", False)
+    monkeypatch.setattr(settings, "secret_key", secret_key)
+    monkeypatch.setattr(settings, "encryption_key", encryption_key)
+    assert culpable in settings.insecure_secrets()
+    with pytest.raises(RuntimeError, match="fail-safe SaMD"):
+        _assert_secure_secrets()
 
 
 @pytest.mark.security

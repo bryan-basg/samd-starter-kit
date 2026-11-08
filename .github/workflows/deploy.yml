@@ -64,8 +64,10 @@ jobs:
           # <comando-ver-revision>       # ej. `alembic current` vía proxy a la BD de prod
 
   # ── 2. Backend: solo se publica si la migración pasó. ──
+  # `needs: [guard, migrate]`: el contexto `needs` SOLO ve dependencias DIRECTAS. Con solo
+  # `migrate`, `needs.guard.outputs.enabled` del `if:` es vacío y el job se saltea en silencio.
   deploy-backend:
-    needs: migrate
+    needs: [guard, migrate]
     if: needs.guard.outputs.enabled == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -84,8 +86,11 @@ jobs:
           # curl -fsS "<URL>/health"
 
   # ── 3. Frontend: build + publicar al hosting estático. ──
+  # Backend ANTES que frontend (productor del contrato antes que el consumidor): si el frontend
+  # nuevo manda un campo que el backend viejo rechaza, falla en prod. `guard` va explícito por
+  # la misma razón que arriba (el `if:` lo lee).
   deploy-frontend:
-    needs: guard
+    needs: [guard, deploy-backend]
     if: needs.guard.outputs.enabled == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15

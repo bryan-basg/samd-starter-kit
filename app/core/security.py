@@ -45,12 +45,17 @@ def get_current_user_id(
     if credentials is None:
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, _UNAUTHENTICATED)
     try:
+        # `require`: un token sin `exp` vale para siempre si se filtra, así que
+        # se rechaza aunque la firma sea válida (lo emita quien lo emita).
         payload = jwt.decode(
-            credentials.credentials, settings.secret_key, algorithms=[_ALGORITHM]
+            credentials.credentials,
+            settings.secret_key,
+            algorithms=[_ALGORITHM],
+            options={"require": ["exp", "sub"]},
         )
     except jwt.InvalidTokenError:
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, _INVALID) from None
     user_id = payload.get("sub")
-    if not user_id:
+    if not user_id:  # `require` solo exige que exista: un `sub` vacío se rechaza acá
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, _INVALID)
     return str(user_id)

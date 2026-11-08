@@ -10,6 +10,7 @@ en vez de degradar en silencio a una postura insegura — ver `app.main.lifespan
 """
 
 import base64
+import binascii
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -18,6 +19,26 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 _DEV_ENCRYPTION_KEY = base64.b64encode(b"samd-starter-kit-dev-key-32bytes").decode()
 # Mínimo 32 bytes: HS256 lo exige (RFC 7518 §3.2) y PyJWT avisa por debajo.
 _DEV_SECRET_KEY = "dev-only-insecure-public-secret-key"
+
+# Pisos de longitud. SECRET_KEY: ≥32 bytes (HS256, RFC 7518 §3.2) — una clave
+# HMAC corta se rompe por fuerza bruta offline a partir de cualquier token.
+# ENCRYPTION_KEY: base64 que decodifica a EXACTAMENTE 32 bytes (AES-256).
+MIN_SECRET_KEY_BYTES = 32
+ENCRYPTION_KEY_BYTES = 32
+
+
+def decode_encryption_key(value: str) -> bytes | None:
+    """Puerta única del formato de ENCRYPTION_KEY. `None` = clave inválida.
+
+    La usan el guard de arranque (`Settings.insecure_secrets`) y el cifrado
+    (`app.core.encryption._key`), para que la regla de los 32 bytes viva en un
+    solo lugar.
+    """
+    try:
+        raw = base64.b64decode(value, validate=True)
+    except (binascii.Error, ValueError):
+        return None
+    return raw if len(raw) == ENCRYPTION_KEY_BYTES else None
 
 
 class Settings(BaseSettings):
@@ -38,15 +59,22 @@ class Settings(BaseSettings):
     # la app con secretos reales" en el guard fail-safe de `app.main`.
     testing: bool = False
 
-    def insecure_default_secrets(self) -> list[str]:
-        """Nombres de los secretos que siguen con el default PÚBLICO de dev.
+    def insecure_secrets(self) -> list[str]:
+        """Nombres de los secretos que NO sirven para producción.
 
-        Lista vacía = todos los secretos fueron inyectados con valores reales.
+        Inseguro = sigue con el default PÚBLICO de dev, está vacío o es demasiado
+        corto / mal formado. Lista vacía = todos los secretos son aptos.
         """
         insecure: list[str] = []
-        if self.secret_key == _DEV_SECRET_KEY:
+        if (
+            self.secret_key == _DEV_SECRET_KEY
+            or len(self.secret_key.encode("utf-8")) < MIN_SECRET_KEY_BYTES
+        ):
             insecure.append("SECRET_KEY")
-        if self.encryption_key == _DEV_ENCRYPTION_KEY:
+        if (
+            self.encryption_key == _DEV_ENCRYPTION_KEY
+            or decode_encryption_key(self.encryption_key) is None
+        ):
             insecure.append("ENCRYPTION_KEY")
         return insecure
 

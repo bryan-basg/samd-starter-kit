@@ -24,22 +24,23 @@ logger = logging.getLogger("app")
 
 
 def _assert_secure_secrets() -> None:
-    """Fail-safe SaMD/ISO 14971: negarse a SERVIR con secretos de dev públicos.
+    """Fail-safe SaMD/ISO 14971: negarse a SERVIR con secretos no aptos.
 
     En TESTING (tests, CI sin secretos, tooling que solo importa la app) se
     permiten los defaults. Fuera de TESTING asumimos entorno real: si algún
-    secreto sigue con el valor de dev público, abortamos el arranque en vez de
+    secreto sigue con el valor de dev público, está vacío o es corto, abortamos el arranque en vez de
     degradar en silencio a una postura insegura (clave de firma/cifrado conocida
     por cualquiera que lea el repo).
     """
     if settings.testing:
         return
-    insecure = settings.insecure_default_secrets()
+    insecure = settings.insecure_secrets()
     if insecure:
         raise RuntimeError(
             "Arranque abortado (fail-safe SaMD): "
             + ", ".join(insecure)
-            + " usa(n) el valor de DEV público. Inyectá los secretos reales "
+            + " está(n) vacío(s), es(son) demasiado corto(s) o usa(n) el valor de"
+            " DEV público. Inyectá los secretos reales "
             "desde el gestor de secretos/KMS, o poné TESTING=True solo en test."
         )
 

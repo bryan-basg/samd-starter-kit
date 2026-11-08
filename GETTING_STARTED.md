@@ -21,7 +21,7 @@ You bring your application code into `app/` (backend), `frontend/` (client) and 
 
 ## Map of the repo
 
-```
+```text
 my-medical-device/
 ├── CLAUDE.md            ← the ruleset core the agents obey (Rule 0)
 ├── GETTING_STARTED.md   ← you are here

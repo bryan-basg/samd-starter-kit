@@ -32,7 +32,9 @@ jobs:
           fetch-depth: 0 # historia completa para `git branch --no-merged`
 
       - name: Correr la foto del estado
-        run: bash scripts/audit_project_state.sh | tee state-audit.txt
+        # La salida va a RUNNER_TEMP (fuera del repo): escrita dentro, el propio informe
+        # aparecía como "?? state-audit.txt" en su sección de cambios sin commitear.
+        run: bash scripts/audit_project_state.sh | tee "$RUNNER_TEMP/state-audit.txt"
 
       - name: Publicar/actualizar el Issue
         env:
@@ -43,13 +45,13 @@ jobs:
             echo "Foto automática del estado del repo (read-only)."
             echo
             echo '```'
-            cat state-audit.txt
+            cat "$RUNNER_TEMP/state-audit.txt"
             echo '```'
-          } > issue-body.md
+          } > "$RUNNER_TEMP/issue-body.md"
           NUM=$(gh issue list --state open --search "$TITLE in:title" \
                 --json number,title --jq ".[] | select(.title==\"$TITLE\") | .number" | head -1)
           if [ -n "$NUM" ]; then
-            gh issue comment "$NUM" --body-file issue-body.md
+            gh issue comment "$NUM" --body-file "$RUNNER_TEMP/issue-body.md"
           else
-            gh issue create --title "$TITLE" --body-file issue-body.md
+            gh issue create --title "$TITLE" --body-file "$RUNNER_TEMP/issue-body.md"
           fi

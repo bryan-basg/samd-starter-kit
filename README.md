@@ -7,7 +7,7 @@
 
 ### A starter kit to build Software as a Medical Device (SaMD) with a team of AI agents.
 
-**12 agents · 20 skills · 50+ DHF documents · 16 CI workflows**
+**12 agents · 21 skills · 50+ DHF documents · 16 CI workflows**
 
 [![Version](https://img.shields.io/badge/version-1.0.0-informational.svg)](CHANGELOG.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -59,7 +59,7 @@ bash scripts/init_kit.sh          # interactive & re-runnable: fills the {{...}}
 | **Agent ruleset** | `CLAUDE.md` | The **core**: "Rule 0" (SaMD is the absolute priority) + how the agent works, empathy, boy scout, impact analysis and block closure. |
 | **Per-layer rules** | `.claude/rules/` | The rest of the ruleset: five **path-scoped** rules (backend, clinical UX, testing, CI, docs) that load only when that layer is touched, plus two cross-cutting ones (hard execution rules, commands). What only the main session needs lives in the output style `.claude/output-styles/orquestador.md`. |
 | **Team of 12 agents** | `.claude/agents/` | Per-layer specialists — see [the team](#the-12-agent-team). |
-| **Skills & commands** | `.claude/skills/`, `.claude/commands/` | 20 reusable procedures, e.g. `/samd-trace` (impact analysis before declaring anything "fixed"), `/anti-drift`, `/ola-mutation`, `/cierre-bloque`, `/ci-rojo`, `/tandas-agentes`. |
+| **Skills & commands** | `.claude/skills/`, `.claude/commands/` | 21 reusable procedures, e.g. `/samd-trace` (impact analysis before declaring anything "fixed"), `/anti-drift`, `/ola-mutation`, `/cierre-bloque`, `/ci-rojo`, `/tandas-agentes`. |
 | **Multi-agent workflow** | `.claude/workflows/` | `samd-review`: diff review across risk dimensions with adversarial verification. |
 | **Development protocol** | `.agents/workflows/` | Agent-agnostic mirror of the stable process. |
 | **Memory** | `memory/MEMORY.md` | The agent's persistent memory structure. |

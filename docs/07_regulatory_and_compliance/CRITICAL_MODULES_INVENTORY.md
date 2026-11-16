@@ -35,7 +35,7 @@
 | ID | Módulo / componente | Ruta (`archivo`) | Responsabilidad | Clase (A/B/C) | Justificación de clase | Riesgos asociados | Umbral testing | Estado |
 |---|---|---|---|---|---|---|---|---|
 | MOD-01 | <ej. motor de evaluación clínica> | `app/services/<...>.py` | <qué hace> | C | Un fallo puede contribuir a daño serio (no detecta riesgo). | R001, R005 | Cov ≥ <COV_C>% / Mut ≥ <MUT_C>% | Verificado |
-| MOD-02 | <ej. autenticación / identidad> | `app/dependencies.py` | <qué hace> | C | Un fallo expone PHI de otro titular (IDOR). | R002, R-SEC-01 | Cov ≥ <COV_C>% / Mut ≥ <MUT_C>% | Verificado |
+| MOD-02 | <ej. autenticación / identidad> | `app/core/security.py` | <qué hace> | C | Un fallo expone PHI de otro titular (IDOR). | R002, R-SEC-01 | Cov ≥ <COV_C>% / Mut ≥ <MUT_C>% | Verificado |
 | MOD-03 | <ej. motor de notificaciones> | `app/services/<...>.py` | <qué hace> | B | Un fallo retrasa un aviso; daño no serio. | R-NOTIF-01 | Cov ≥ <COV_B>% / Mut ≥ <MUT_B>% | Implementado |
 | MOD-04 | <ej. capa de sincronización offline> | `frontend/src/<...>.ts` | <qué hace> | B | Pérdida temporal de datos del usuario; recuperable. | R-SYNC-01 | Cov ≥ <COV_B>% / Mut ≥ <MUT_B>% | Implementado |
 | MOD-05 | <ej. panel de ajustes visuales> | `frontend/src/<...>.tsx` | <qué hace> | A | Un fallo no produce daño; solo inconveniente. | — | Cov ≥ <COV_A>% | Verificado |

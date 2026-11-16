@@ -13,7 +13,7 @@ This kit is **scaffolding + methodology**, not an application. It gives you:
 - A **team of AI agents** (in `.claude/agents/`) pre-loaded with the compliance rules of each layer.
 - A complete **Design History File (DHF)** — 50+ regulatory & process templates with `{{placeholders}}` ready to fill.
 - The **rules** (`CLAUDE.md` core + `.claude/rules/` per layer), a **multi-agent review workflow**, and **working CI**.
-- A **worked example** ([`examples/auralog/`](examples/auralog/)) showing the templates filled in.
+- Two **worked examples** showing the templates filled in: [`examples/auralog/`](examples/auralog/) (Class B) and [`examples/dosificta/`](examples/dosificta/) (Class C).
 
 You bring your application code into `app/` (backend), `frontend/` (client) and `tests/`. The kit handles the *process* around it that **IEC 62304 + ISO 14971** demand.
 
@@ -43,6 +43,7 @@ my-medical-device/
 │   ├── 06_… 07_…        ← runbooks · regulatory & compliance (25 templates)
 │   └── 08_… 09_…        ← verification & audits · engineering lessons
 ├── examples/auralog/    ← a fictional Class B device with its DHF filled in
+├── examples/dosificta/  ← a fictional Class C device: what changes when a bug can kill
 ├── scripts/             ← init_kit, CI, security, mutation, link-check
 ├── memory/              ← the agent's persistent memory
 └── .github/workflows/   ← working CI
@@ -107,7 +108,7 @@ Don't open all 40 documents. Fill these **four**, in this order — each one fee
 | 3 | [`ISO_14971_RISK_MATRIX`](docs/07_regulatory_and_compliance/ISO_14971_RISK_MATRIX.md) | Your hazards and the controls for each. |
 | 4 | [`TRACEABILITY_MATRIX_SAMD`](docs/07_regulatory_and_compliance/TRACEABILITY_MATRIX_SAMD.md) | The chain: need → REQ → design → test → risk. |
 
-See [`examples/auralog/`](examples/auralog/) for these exact four, filled in for a fictional Class B device — the fastest way to understand what "good" looks like.
+See [`examples/auralog/`](examples/auralog/) for these exact four, filled in for a fictional Class B device — the fastest way to understand what "good" looks like. Class C? Start with [`examples/dosificta/CLASS_C_DELTA.md`](examples/dosificta/CLASS_C_DELTA.md).
 
 **Then read by class** — only what applies to you:
 
@@ -194,11 +195,15 @@ The full rulebook is [`CLAUDE.md`](CLAUDE.md) (core) plus [`.claude/rules/`](.cl
 |---|---|
 | Understand the rules the agents enforce | [`CLAUDE.md`](CLAUDE.md) + [`.claude/rules/`](.claude/rules/) |
 | Navigate the whole DHF | [`docs/README.md`](docs/README.md) |
-| See the templates filled in | [`examples/auralog/`](examples/auralog/) |
+| See the templates filled in | [`examples/auralog/`](examples/auralog/) (Class B) · [`examples/dosificta/`](examples/dosificta/) (Class C — what changes when the risk is high) |
 | Plan the road to certification | [`CERTIFICATION_HOWTO`](docs/07_regulatory_and_compliance/CERTIFICATION_HOWTO.md) |
 | Learn the multi-agent method | [`MULTI_AGENT_ENGINEERING_METHOD`](docs/09_engineering_experience/MULTI_AGENT_ENGINEERING_METHOD.md) |
 | Avoid known production traps | [`PRODUCTION_LESSONS`](docs/09_engineering_experience/PRODUCTION_LESSONS.md) |
 | Know what to prioritize on day one | [`STARTUP_DISCIPLINE`](docs/09_engineering_experience/STARTUP_DISCIPLINE.md) |
+
+### What the kit does NOT give you
+
+The kit covers the **software lifecycle** (IEC 62304) and **risk management** (ISO 14971). Three **company-level** quality processes (ISO 13485) are yours to set up when you approach certification: **management review**, an **internal audit program**, and **CAPA** (corrective and preventive actions, including checking later that the fix worked). What exists today and what is missing: [`ISO_13485_READINESS_PLAN` §1](docs/07_regulatory_and_compliance/ISO_13485_READINESS_PLAN.md).
 
 ---
 

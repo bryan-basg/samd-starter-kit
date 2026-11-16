@@ -29,7 +29,7 @@
 ### A.2 Confidencialidad, integridad, disponibilidad, resiliencia (Art.32.1.b)
 
 - [ ] **Identidad desde el token verificado**, nunca desde body/query.
-  Verificación: `<app/dependencies.py::símbolo>` (`get_current_user`).
+  Verificación: `<app/core/security.py::símbolo>` (`get_current_user_id`).
 - [ ] **Autorización por recurso** (anti-IDOR): cada acceso valida ownership.
   Verificación: `<app/routers/<recurso>.py::símbolo>`.
 - [ ] **Fail-safe explícito** ante fallo de dependencia (BD/IA/red): degradación
@@ -72,7 +72,7 @@
 - [ ] **Análisis de riesgo** documentado (§164.308(a)(1)(ii)(A)).
   Verificación: [`ISO_14971_RISK_MATRIX.md`](./ISO_14971_RISK_MATRIX.md).
 - [ ] **Gestión de accesos** por rol (§164.308(a)(4)).
-  Verificación: `<app/dependencies.py::símbolo>` (roles / scopes).
+  Verificación: `<app/core/security.py::símbolo>` (roles / scopes).
 - [ ] **Registro de auditoría** de accesos y mutaciones a PHI (§164.308(a)(1)(ii)(D)).
   Verificación: `<app/middleware/audit.py::símbolo>`.
 - [ ] **Plan de respuesta a incidentes** (§164.308(a)(6)).
@@ -88,7 +88,7 @@
 ### B.3 Salvaguardas técnicas (§164.312)
 
 - [ ] **Control de acceso único** por usuario (§164.312(a)(2)(i)).
-  Verificación: `<app/dependencies.py::símbolo>` (identidad por token).
+  Verificación: `<app/core/security.py::símbolo>` (identidad por token).
 - [ ] **Logoff automático** / expiración de sesión (§164.312(a)(2)(iii)).
   Verificación: `<frontend/src/<auth>/session.ts::símbolo>` + TTL del token.
 - [ ] **Cifrado/descifrado de PHI** (§164.312(a)(2)(iv)).
@@ -98,7 +98,7 @@
 - [ ] **Integridad** — detección de alteración no autorizada de PHI (§164.312(c)(1)).
   Verificación: `<app/services/<integrity>.py::símbolo>` o checksums de BD.
 - [ ] **Autenticación de entidad** (§164.312(d)).
-  Verificación: `<app/dependencies.py::símbolo>` (verificación del token).
+  Verificación: `<app/core/security.py::símbolo>` (verificación del token).
 - [ ] **Seguridad en transmisión** — cifrado de PHI en tránsito (§164.312(e)(1)).
   Verificación: `<app/main.py::símbolo>` (TLS/HSTS).
 

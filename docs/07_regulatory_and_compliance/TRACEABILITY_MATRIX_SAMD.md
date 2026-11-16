@@ -15,9 +15,13 @@ Necesidad clínica  →  REQ (requisito)  →  Diseño (ruta/archivo.py::símbol
 | REQ | Descripción | Origen (necesidad/riesgo) | Implementación (`ruta/archivo.py::símbolo`) | Verificación (`tests/…::test`) | Estado |
 |---|---|---|---|---|---|
 | REQ-SEC-01 | Cifrado en reposo de PII/PHI (AES-256-GCM) | GDPR Art.32 / HIPAA | `app/core/encryption.py::encrypt`, `app/core/encryption.py::decrypt` | `tests/test_hard_rules.py::test_encryption_roundtrip_and_nonce_uniqueness`, `tests/test_hard_rules.py::test_tampered_ciphertext_is_rejected` | ✓ |
-| REQ-SEC-02 | Identidad solo del token (JWT-only) | R-SEC / escalada | `app/core/security.py::get_current_user_id` | `tests/test_hard_rules.py::test_identity_comes_from_token_not_from_body` | ✓ |
+| REQ-SEC-02 | Identidad solo del token (JWT-only) | R002 (escalada de identidad) | `app/core/security.py::get_current_user_id` | `tests/test_hard_rules.py::test_identity_comes_from_token_not_from_body` | ✓ |
 | REQ-CLN-01 | <requisito clínico nuclear> | R001 | `app/services/<módulo>.py::<función>` | `tests/test_<...>.py::test_<...>` | <✓/pendiente> |
-| REQ-UX-01 | Fail-safe empático sin tracebacks | ISO 14971 / §5.4 | `app/main.py::unhandled_exception_handler` | `tests/test_hard_rules.py::test_internal_error_never_leaks_a_traceback` | ✓ |
+| REQ-UX-01 | Fail-safe empático sin tracebacks | R-SEC-01 | `app/main.py::unhandled_exception_handler` | `tests/test_hard_rules.py::test_internal_error_never_leaks_a_traceback` | ✓ |
+| REQ-AI-01 | <validador clínico de la respuesta de la IA + disclaimer + fallback> | R005 | `app/services/<módulo>.py::<función>` | `tests/test_<...>.py::test_<...>_validator` | <✓/pendiente> |
+| REQ-AI-02 | <sin dato real → estado "sin clasificar", nunca un valor inventado> | R-IA-01 | `app/services/<módulo>.py::<función>` | `tests/test_<...>.py::test_<...>_no_data` | <✓/pendiente> |
+
+> Los IDs de riesgo de la columna "Origen" son los de [`ISO_14971_RISK_MATRIX.md`](ISO_14971_RISK_MATRIX.md) y [`RISK_CONTROL_TRACEABILITY.md`](RISK_CONTROL_TRACEABILITY.md): los tres documentos usan los mismos.
 
 ## Categorías de requisitos sugeridas
 

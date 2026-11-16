@@ -17,6 +17,16 @@
 
 **Fuera de alcance:** producción física de hardware (el dispositivo es software puro) y procesos delegados al proveedor de nube bajo responsabilidad compartida.
 
+> **Lo que este kit NO trae (y te van a pedir al acercarte a certificar).** El kit da las bases del **ciclo de vida del software** (IEC 62304) y de la **gestión de riesgo** (ISO 14971). Tres procesos del sistema de calidad de la **organización** (ISO 13485) quedan a cargo de tu empresa; las cláusulas son orientativas, contrastalas con la norma:
+>
+> | Proceso | Qué es, en una línea | Cláusula ISO 13485 | Qué trae el kit hoy |
+> |---|---|---|---|
+> | **Revisión por la dirección** | Reunión periódica con acta donde la dirección revisa cómo va la calidad y decide acciones. Necesita además una política y objetivos de calidad. | §5.3, §5.4, §5.6 | Solo el checkpoint CP-2 de la §4 de este plan. |
+> | **Programa de auditorías internas** | Calendario de autoauditorías del sistema de calidad, con auditor independiente, informe y seguimiento. | §8.2.4 | [`AUDIT_PROTOCOL.md`](../03_software_development_plan/AUDIT_PROTOCOL.md) audita **cambios de software**, no el sistema de calidad entero: no lo reemplaza. |
+> | **CAPA** (acciones correctivas y preventivas) | Registro de problema → causa raíz → acción → **verificación posterior de que la acción funcionó**. | §8.5.2, §8.5.3 | [`SOFTWARE_PROBLEM_RESOLUTION_PROCEDURE.md`](SOFTWARE_PROBLEM_RESOLUTION_PROCEDURE.md) y el [postmortem](../06_operations_and_runbooks/INCIDENT_POSTMORTEM_TEMPLATE.md) cubren hasta la acción; falta el registro CAPA y la verificación de eficacia. |
+>
+> Lo mismo para la **validación de herramientas** (§4.1.6): la columna "Validación de la herramienta" del [SDP §7](../03_software_development_plan/SOFTWARE_DEVELOPMENT_PLAN.md) es el punto de partida; los tests de `tests/` que vigilan los scripts de gate (`test_mutmut_gate.py`, `test_workflows_pineados_a_sha.py`…) sirven como evidencia, pero el registro formal lo arma tu equipo.
+
 ---
 
 ## 2. Estado de madurez del QMS

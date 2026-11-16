@@ -3,6 +3,8 @@
 **Proyecto:** {{PROJECT_NAME}} · **Clase SaMD:** {{SAMD_CLASS}} · **Versión:** v0.1 · **Fecha:** 2026-01-01
 
 > Plantilla del SaMD Starter Kit. Define cómo se audita un changeset o una fase contra el marco SaMD antes de declararlo cerrado.
+>
+> **Alcance:** es la revisión interna de **cambios de software**. NO es el programa de auditorías internas del sistema de calidad que pide ISO 13485 §8.2.4 (calendario, auditor independiente, informe por cláusula); ese queda a cargo de tu organización — ver [`ISO_13485_READINESS_PLAN.md` §1](../07_regulatory_and_compliance/ISO_13485_READINESS_PLAN.md#1-propósito-y-alcance).
 
 ---
 

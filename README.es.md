@@ -67,7 +67,7 @@ bash scripts/init_kit.sh          # interactivo y re-ejecutable: rellena los mar
 | **Design History File** | `docs/` | 50+ plantillas regulatorias y de proceso: ISO 14971, trazabilidad SaMD, plan IEC 62304, clasificación, SOUP, evaluación/validación clínica, post-market, IFU, docs de usuario, privacidad, runbooks. También publicado como [sitio de docs](https://bryan-basg.github.io/samd-starter-kit/). |
 | **CI/CD funcional** | `.github/workflows/` | 16 workflows — 11 gates heredables (CI, seguridad vía Trivy+Semgrep, mutación vía Stryker, fuzz de API vía schemathesis, DAST vía OWASP ZAP, SBOM, tier Postgres, drift del contrato OpenAPI, auditoría del estado, stale PRs, plantilla de deploy) + 5 de mantenimiento del kit (docs, gates de calidad, guard de placeholders, release, aviso de `main` en rojo). Stack de referencia React+TS / Python+FastAPI. |
 | **Esqueleto ejecutable** | `app/` · `frontend/` · `tests/` | Un ejemplo mínimo FastAPI + React/TS que cablea las reglas duras (identidad solo del token, AES-256-GCM en reposo, fail-safe, UI plana y accesible). Corre sin infra y trae sus propios tests (`pytest`, `vitest`) que el CI ejecuta en cada push. Borralo cuando traigas tu app. |
-| **Ejemplo trabajado** | `examples/auralog/` | Un dispositivo Clase B ficticio (AuraLog) con su DHF rellenado — el kit en acción. |
+| **Ejemplos trabajados** | `examples/auralog/` · `examples/dosificta/` | Dos dispositivos ficticios con su DHF rellenado: AuraLog (Clase B) y DosiFicta (Clase C, una calculadora de dosis de insulina — muestra qué hace distinto el programador cuando un error puede matar). |
 
 ## Cómo encajan las piezas
 

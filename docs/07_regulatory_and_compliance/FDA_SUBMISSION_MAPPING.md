@@ -73,7 +73,7 @@ Alineado con *Cybersecurity in Medical Devices: Quality System Considerations an
 
 > **Controles técnicos vivos referenciados** (la fuente de verdad es el código; el path se confirma en `COMPLIANCE_CHECKLIST.md`):
 > - Cifrado en reposo AES-256-GCM → `app/models/types.py` (ver checklist §A.1)
-> - Identidad JWT-only → `app/dependencies.py` (ver checklist §A.2)
+> - Identidad JWT-only → `app/core/security.py` (ver checklist §A.2)
 > - Audit middleware de mutaciones → `app/middleware/audit.py` (ver checklist §B.3)
 > - SAST/SCA/SBOM en CI → `.github/workflows/` (ver checklist §A.4)
 

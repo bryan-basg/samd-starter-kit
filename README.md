@@ -67,7 +67,7 @@ bash scripts/init_kit.sh          # interactive & re-runnable: fills the {{...}}
 | **Design History File** | `docs/` | 50+ regulatory & process templates: ISO 14971, SaMD traceability, IEC 62304 plan, safety classification, SOUP, clinical evaluation/validation, post-market, IFU, user docs, privacy, runbooks. Also published as a [docs site](https://bryan-basg.github.io/samd-starter-kit/). |
 | **Working CI/CD** | `.github/workflows/` | 16 workflows — 11 inheritable gates (CI, security via Trivy+Semgrep, mutation via Stryker, API fuzz via schemathesis, DAST via OWASP ZAP, SBOM, Postgres tier, OpenAPI contract-drift, project-state audit, stale PRs, deploy template) + 5 kit-maintenance (docs, quality gates, placeholder guard, release, red-`main` alert). Reference stack: React+TS / Python+FastAPI. |
 | **Runnable skeleton** | `app/` · `frontend/` · `tests/` | A minimal FastAPI + React/TS example wiring the hard rules (token-only identity, AES-256-GCM at rest, fail-safe, flat accessible UI). Runs with zero infra and ships with its own tests (`pytest`, `vitest`) that CI runs on every push. Delete it when you bring your own app. |
-| **Worked example** | `examples/auralog/` | A fictional Class B device (AuraLog) with its DHF filled in — see the kit in action. |
+| **Worked examples** | `examples/auralog/` · `examples/dosificta/` | Two fictional devices with their DHF filled in: AuraLog (Class B) and DosiFicta (Class C, an insulin-dose calculator — shows what the developer does differently when a bug can kill). |
 
 ## How the pieces fit together
 

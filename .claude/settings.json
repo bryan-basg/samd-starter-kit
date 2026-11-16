@@ -13,6 +13,19 @@
           }
         ]
       }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && python3 .claude/scripts/audit_clinical_log.py || true",
+            "timeout": 10,
+            "statusMessage": "Bitácora SaMD de módulos clínicos"
+          }
+        ]
+      }
     ]
   }
 }

@@ -11,7 +11,7 @@
 This kit is **scaffolding + methodology**, not an application. It gives you:
 
 - A **team of AI agents** (in `.claude/agents/`) pre-loaded with the compliance rules of each layer.
-- A complete **Design History File (DHF)** — 40+ regulatory & process templates with `{{placeholders}}` ready to fill.
+- A complete **Design History File (DHF)** — 50+ regulatory & process templates with `{{placeholders}}` ready to fill.
 - The **rules** (`CLAUDE.md` core + `.claude/rules/` per layer), a **multi-agent review workflow**, and **working CI**.
 - A **worked example** ([`examples/auralog/`](examples/auralog/)) showing the templates filled in.
 
@@ -129,7 +129,7 @@ The `app/`, `frontend/` and `tests/` folders ship with a **minimal runnable refe
 # Backend (from the repo root)
 python -m venv venv && source venv/bin/activate
 pip install -r requirements-dev.txt
-pytest                          # 16/16 green
+pytest                          # all green (no infra needed)
 uvicorn app.main:app --reload   # http://localhost:8000/docs
 
 # Frontend

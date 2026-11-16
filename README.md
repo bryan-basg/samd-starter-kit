@@ -1,27 +1,25 @@
 <div align="center">
 
-<img src=".github/social-preview.png" alt="SaMD Starter Kit — build Software as a Medical Device with a team of AI agents" width="820">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/social-preview-dark.png">
+  <img src=".github/social-preview.png" alt="SaMD Starter Kit — build Software as a Medical Device with a team of AI agents" width="820">
+</picture>
 
 ### A starter kit to build Software as a Medical Device (SaMD) with a team of AI agents.
 
+**12 agents · 20 skills · 50+ DHF documents · 16 CI workflows**
+
 [![Version](https://img.shields.io/badge/version-1.0.0-informational.svg)](CHANGELOG.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![CI](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/ci.yml)
+[![Security Audit](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/security-audit.yml/badge.svg)](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/security-audit.yml)
 [![IEC 62304](https://img.shields.io/badge/IEC%2062304-software%20lifecycle-blue)](docs/07_regulatory_and_compliance/SOFTWARE_SAFETY_CLASSIFICATION.md)
 [![ISO 14971](https://img.shields.io/badge/ISO%2014971-risk%20management-blue)](docs/07_regulatory_and_compliance/ISO_14971_RISK_MATRIX.md)
-[![WCAG 2.1 AA](https://img.shields.io/badge/WCAG%202.1-AA-blueviolet)](CLAUDE.md)
 [![Built with Claude Code](https://img.shields.io/badge/built%20with-Claude%20Code-8A2BE2)](https://claude.com/claude-code)
-[![Maintained](https://img.shields.io/badge/maintained-yes-brightgreen.svg)](CHANGELOG.md)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
-
-[![CI](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/ci.yml)
-[![Kit Quality](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/kit-quality.yml/badge.svg)](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/kit-quality.yml)
-[![Placeholder Guard](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/placeholder-guard.yml/badge.svg)](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/placeholder-guard.yml)
-[![Security Audit](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/security-audit.yml/badge.svg)](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/security-audit.yml)
-[![API Fuzzing](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/schemathesis.yml/badge.svg)](https://github.com/bryan-basg/samd-starter-kit/actions/workflows/schemathesis.yml)
 
 **English · [Español](README.es.md)**
 
-[Quickstart](#60-second-quickstart) · [Getting started](GETTING_STARTED.md) · [The 12 agents](#the-12-agent-team) · [Design History File](docs/) · [Worked example](examples/auralog/) · [Contributing](CONTRIBUTING.md)
+[Quickstart](#60-second-quickstart) · [Getting started](GETTING_STARTED.md) · [Docs site](https://bryan-basg.github.io/samd-starter-kit/) · [The 12 agents](#the-12-agent-team) · [Worked example](examples/auralog/) · [Contributing](CONTRIBUTING.md)
 
 </div>
 
@@ -33,14 +31,20 @@ This repository is **not an application**. It is the **scaffolding and methodolo
 
 ## 60-second quickstart
 
+**You need:** [Git](https://git-scm.com), [Claude Code](https://claude.com/claude-code), Python 3.12 and Node ≥ 24 (for the runnable skeleton). Docker is optional (real-Postgres test tier, `Dockerfile`, `docker-compose.yml`).
+
 ```bash
 git clone https://github.com/bryan-basg/samd-starter-kit my-medical-device
 cd my-medical-device
-rm -rf .git && git init -b main   # start your own history
-bash scripts/init_kit.sh       # interactive & re-runnable: fills the {{...}} placeholders
+rm -rf .git && git init -b main   # run ONLY inside the new folder: starts your own history
+bash scripts/init_kit.sh          # interactive & re-runnable: fills the {{...}} placeholders
 ```
 
-**Then open [`GETTING_STARTED.md`](GETTING_STARTED.md)** — the guided path: classify your software (A/B/C), fill the four foundation documents in order, wire your stack, and learn the daily loop with the agent team. It tells you which of the 50+ documents actually apply to *your* class, so you don't drown in templates.
+> [!TIP]
+> **Then open [`GETTING_STARTED.md`](GETTING_STARTED.md)** — the guided path: classify your software (A/B/C), fill the four foundation documents in order, wire your stack, and learn the daily loop with the agent team. It tells you which of the 50+ documents actually apply to *your* class, so you don't drown in templates.
+
+> [!NOTE]
+> **Language.** This README and `GETTING_STARTED.md` are in English, but the agent ruleset (`CLAUDE.md`, `.claude/`), the DHF templates and the field notes are written in **Spanish**, the language of the project they were extracted from. The language the agent uses when talking to you is set by the `{{CHAT_LANG}}` placeholder in `init_kit.sh`. Translations of the rules and templates are a welcome contribution.
 
 ## Who is this for?
 
@@ -53,16 +57,16 @@ bash scripts/init_kit.sh       # interactive & re-runnable: fills the {{...}} pl
 | Piece | Path | What it is |
 |---|---|---|
 | **Agent ruleset** | `CLAUDE.md` | The **core**: "Rule 0" (SaMD is the absolute priority) + how the agent works, empathy, boy scout, impact analysis and block closure. |
-| **Per-layer rules** | `.claude/rules/` | The rest of the ruleset, split in seven: five **path-scoped** (backend, clinical UX, testing, CI, docs) that load only when that layer is touched, and two cross-cutting (hard execution rules, commands). What only the main session needs (owner preferences, orchestration, parallel sessions) lives in the output style `.claude/output-styles/orquestador.md`. |
-| **Team of 12 agents** | `.claude/agents/` | Per-layer specialists: `backend`, `frontend`, `clinical-algorithms`, `db-architect`, `cloud-ops`, `qa-mutation`, `e2e-integration`, `security-samd`, `samd-audit-trace`, `docs-dhf`, `i18n-translations`, `mobile-native`. |
-| **Command + skill** | `.claude/commands/`, `.claude/skills/` | `samd-trace`: impact analysis (§5.6) before declaring anything "fixed". |
+| **Per-layer rules** | `.claude/rules/` | The rest of the ruleset: five **path-scoped** rules (backend, clinical UX, testing, CI, docs) that load only when that layer is touched, plus two cross-cutting ones (hard execution rules, commands). What only the main session needs lives in the output style `.claude/output-styles/orquestador.md`. |
+| **Team of 12 agents** | `.claude/agents/` | Per-layer specialists — see [the team](#the-12-agent-team). |
+| **Skills & commands** | `.claude/skills/`, `.claude/commands/` | 20 reusable procedures, e.g. `/samd-trace` (impact analysis before declaring anything "fixed"), `/anti-drift`, `/ola-mutation`, `/cierre-bloque`, `/ci-rojo`, `/tandas-agentes`. |
 | **Multi-agent workflow** | `.claude/workflows/` | `samd-review`: diff review across risk dimensions with adversarial verification. |
 | **Development protocol** | `.agents/workflows/` | Agent-agnostic mirror of the stable process. |
 | **Memory** | `memory/MEMORY.md` | The agent's persistent memory structure. |
 | **Example RFCs** | `docs/05_design_decisions/RFC-001..003` | Three real SaMD decisions already written (encryption at rest, JWT-only identity, external scheduler). |
-| **Design History File** | `docs/` | 40+ regulatory & process templates: ISO 14971, SaMD traceability, IEC 62304 plan, safety classification, SOUP, clinical evaluation/validation, post-market, IFU, user docs, privacy, runbooks. |
+| **Design History File** | `docs/` | 50+ regulatory & process templates: ISO 14971, SaMD traceability, IEC 62304 plan, safety classification, SOUP, clinical evaluation/validation, post-market, IFU, user docs, privacy, runbooks. Also published as a [docs site](https://bryan-basg.github.io/samd-starter-kit/). |
 | **Working CI/CD** | `.github/workflows/` | 16 workflows — 11 inheritable gates (CI, security via Trivy+Semgrep, mutation via Stryker, API fuzz via schemathesis, DAST via OWASP ZAP, SBOM, Postgres tier, OpenAPI contract-drift, project-state audit, stale PRs, deploy template) + 5 kit-maintenance (docs, quality gates, placeholder guard, release, red-`main` alert). Reference stack: React+TS / Python+FastAPI. |
-| **Runnable skeleton** | `app/` · `frontend/` · `tests/` | A minimal FastAPI + React/TS example wiring the hard rules (token-only identity, AES-256-GCM at rest, fail-safe, flat accessible UI). Runs with zero infra: `pytest` 16/16, `vitest` 5/5. Delete it when you bring your own app. |
+| **Runnable skeleton** | `app/` · `frontend/` · `tests/` | A minimal FastAPI + React/TS example wiring the hard rules (token-only identity, AES-256-GCM at rest, fail-safe, flat accessible UI). Runs with zero infra and ships with its own tests (`pytest`, `vitest`) that CI runs on every push. Delete it when you bring your own app. |
 | **Worked example** | `examples/auralog/` | A fictional Class B device (AuraLog) with its DHF filled in — see the kit in action. |
 
 ## How the pieces fit together
@@ -95,7 +99,18 @@ The core rule is **Rule 0**: *every technical decision is subordinate to SaMD co
 3. **Explicit fail-safe** (ISO 14971): when something fails, it degrades safely and predictably — never silently.
 4. **Impact analysis before fixing** (§5.6): a bug is fixed after reviewing ALL consumers of the symbol, not just the file where it was reported.
 
+And a handful of **hard rules** that a better model does not override:
+
+- No one commits or pushes without the owner's explicit OK.
+- The mutation engine never runs in parallel with agents writing tests.
+- Adversarial verification is mandatory on clinical/security findings before acting.
+- Identity comes only from the token (JWT-only) — never `user_id` from the client.
+- Errors never expose tracebacks to the user — empathetic messages + correct HTTP code.
+
 ## The 12-agent team
+
+<details>
+<summary><b>See what each agent covers</b> (12 specialists, one per layer)</summary>
 
 | Agent | Layer | Use it for |
 |---|---|---|
@@ -112,22 +127,21 @@ The core rule is **Rule 0**: *every technical decision is subordinate to SaMD co
 | `i18n-translations` | i18n | Locales across all languages, key parity, anti "copied-untranslated" auditing, pre-certification clinical glossary. |
 | `mobile-native` | Mobile | Packaging the web client as a native app (Capacitor/RN/equiv.), native plugins/auth/storage, push, build/sign/distribution. |
 
-## Hard rules the kit enforces
-
-- No one commits or pushes without the owner's explicit OK.
-- The mutation engine never runs in parallel with agents writing tests.
-- Adversarial verification is mandatory on clinical/security findings before acting.
-- Identity comes only from the token (JWT-only) — never `user_id` from the client.
-- Errors never expose tracebacks to the user — empathetic messages + correct HTTP code.
+</details>
 
 ## Field notes & methodology
 
 The kit isn't only templates — it carries the **hard-won experience** behind them. These are based on real production incidents, generalized (no product specifics):
 
+<details>
+<summary><b>Read the four field notes</b></summary>
+
 - **[Startup discipline](docs/09_engineering_experience/STARTUP_DISCIPLINE.md)** — what to prioritize in the first days: compliance before code, memory and shipping discipline, avoiding over-building before validation, empathetic UX as a clinical decision.
 - **[Production lessons](docs/09_engineering_experience/PRODUCTION_LESSONS.md)** — what broke in production and what we learned: pool exhaustion masquerading as auth failures, the migration "green" that lies, env-var footguns, offline-first discipline, mutation tests as contracts.
 - **[Reference architecture](docs/09_engineering_experience/REFERENCE_ARCHITECTURE.md)** — the hybrid offline-first pattern (client + API + transactional DB + cloud) with the *why* behind each decision and when **not** to use it.
 - **[The "Engineers' Table" method](docs/09_engineering_experience/MULTI_AGENT_ENGINEERING_METHOD.md)** — orchestrating a team of AI agents on a regulated codebase without losing coherence: the anti-drift protocol, adversarial verification, and the hard rules a better model doesn't override.
+
+</details>
 
 ## Standards covered
 
@@ -135,7 +149,8 @@ IEC 62304 (medical software lifecycle) · ISO 14971 (risk management) · ISO 134
 
 ## What this is NOT
 
-This kit is a **process scaffold**, not regulatory advice and not a guarantee of certification. Safety classification, clinical evidence, and approval of a medical device require the judgment of regulatory professionals and, depending on the market, a Notified Body or the relevant health authority.
+> [!IMPORTANT]
+> This kit is a **process scaffold**, not regulatory advice and not a guarantee of certification. Safety classification, clinical evidence, and approval of a medical device require the judgment of regulatory professionals and, depending on the market, a Notified Body or the relevant health authority.
 
 ## Origin
 

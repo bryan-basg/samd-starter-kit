@@ -14,7 +14,7 @@ mypy
 vulture
 # tests/test_workflow_main_en_rojo.py parsea el YAML del workflow. Ya llega transitivo por
 # `uvicorn[standard]`; se declara acá para que el test no dependa de un extra ajeno.
-pyyaml>=6.0
+pyyaml>=6.0.3
 # Mutation testing del backend. FIJADO a 2.5.1 a propósito (no `>=`): mutmut 3.x eliminó
 # `--paths-to-mutate` y `--runner` (los usa scripts/run_mutmut.sh) y cambió el formato del
 # cache que lee scripts/check_mutmut_score.py. Subir de major = migrar ambos scripts.

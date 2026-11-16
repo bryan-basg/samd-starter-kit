@@ -85,6 +85,16 @@ jobs:
               # cambia otro workflow (p. ej. vuelve a poner `@v4`) no dispara el backend
               # y el guardián de pineo por SHA nunca llega a mirarlo.
               - '.github/workflows/**'
+              # Lo que LEEN los guardianes de gobernanza y del DHF. Varios tests de `tests/`
+              # abren `CLAUDE.md`, `.claude/**` y `docs/**` para comprobar que dicen lo
+              # correcto; sin estas líneas, un PR que edita SOLO un `.md` no dispara el
+              # backend y esos guardianes NO CORREN (no es rojo: es que no miran). Anclado,
+              # derivado del disco, en `tests/test_ci_dispara_lo_que_leen_los_tests.py`.
+              # Si tu suite crece a decenas de minutos, no achiques esto: sacá esos tests a
+              # un workflow angosto propio que dispare con estos paths.
+              - 'CLAUDE.md'
+              - '.claude/**'
+              - 'docs/**'
 
   frontend:
     name: Frontend (lint + tipos + tests)

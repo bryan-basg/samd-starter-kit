@@ -1,4 +1,4 @@
-# Auditoría de seguridad SaMD — Trivy (CVEs) + Semgrep (SAST).
+# Auditoría de seguridad SaMD — Trivy (CVEs) + Semgrep (SAST) + npm audit (deps del frontend).
 # Nightly + en PRs que tocan código o dependencias. Gate: bloquea HIGH/CRITICAL sin waiver.
 name: Security Audit
 
@@ -15,6 +15,7 @@ on:
       - 'requirements*.txt'
       - 'frontend/package*.json'
       - 'Dockerfile'
+      - 'scripts/ci_npm_audit_veredicto.py'
       - '.github/workflows/security-audit.yml'
   workflow_dispatch:
 
@@ -52,3 +53,18 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - run: semgrep --config auto --error --severity ERROR app/ frontend/src/
+
+  npm-audit:
+    name: npm audit (deps del frontend, umbral high)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+      - name: Veredicto de npm audit (tolerados por nombre y con fecha)
+        working-directory: ./frontend
+        # Sin `|| true`: el guion devuelve el veredicto. Un aviso high/critical sin parche
+        # se tolera EN EL GUION (motivo + caducidad ≤ 90 días), nunca apagando el paso.
+        run: python3 ../scripts/ci_npm_audit_veredicto.py --informe "$RUNNER_TEMP/npm-audit.json"

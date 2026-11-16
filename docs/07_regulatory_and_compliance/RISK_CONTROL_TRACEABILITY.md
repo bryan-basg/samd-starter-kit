@@ -38,9 +38,9 @@ Toda modificación de un control clínico o de seguridad obliga a revisar la fil
 | Riesgo (R-XXX) | Peligro / situación peligrosa | Control de riesgo (`ruta/archivo.py::símbolo`) | REQ | Test de verificación (`ruta/test_archivo.py::test_nombre`) | Riesgo inicial | Riesgo residual | Estado |
 |---|---|---|---|---|---|---|---|
 | R001 | <ej. el motor clínico falla y no degrada de forma segura> | <fail-safe a fallback> `app/services/<...>.py::<símbolo>` | REQ-CLN-01 | `tests/<...>.py::test_<...>_failsafe` | INACEPTABLE | ALARP | Verificado |
-| R002 | <ej. escalada de identidad expone datos de otro titular (IDOR)> | identidad solo del token `app/dependencies.py::<símbolo>` | REQ-SEC-01 | `tests/<...>.py::test_idor_<...>` | INACEPTABLE | Aceptable | Verificado |
+| R002 | <ej. escalada de identidad expone datos de otro titular (IDOR)> | identidad solo del token `app/core/security.py::get_current_user_id` | REQ-SEC-02 | `tests/test_hard_rules.py::test_identity_comes_from_token_not_from_body` | INACEPTABLE | Aceptable | Verificado |
 | R005 | <ej. la IA responde sin validación de seguridad> | validador + disclaimer + fallback `app/services/<...>.py::<símbolo>` | REQ-AI-01 | `tests/<...>.py::test_<...>_validator` | INACEPTABLE | ALARP | Implementado |
-| R-SEC-01 | <ej. fuga de PII en logs / tracebacks al cliente> | redacción de errores `app/core/<...>.py::<símbolo>` | REQ-SEC-02 | `tests/<...>.py::test_<...>_no_traceback` | INACEPTABLE | Aceptable | Verificado |
+| R-SEC-01 | <ej. fuga de PII en logs / tracebacks al cliente> | redacción de errores `app/main.py::unhandled_exception_handler` | REQ-UX-01 | `tests/test_hard_rules.py::test_internal_error_never_leaks_a_traceback` | INACEPTABLE | Aceptable | Verificado |
 | R-IA-01 | <ej. el algoritmo entrega datos fantasma sin dato real> | guard "sin dato" `app/services/<...>.py::<símbolo>` | REQ-AI-02 | `tests/<...>.py::test_<...>_no_data` | INACEPTABLE | ALARP | En curso |
 
 ---

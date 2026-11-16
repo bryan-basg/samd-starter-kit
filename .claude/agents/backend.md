@@ -13,7 +13,7 @@ Sos el ingeniero backend del proyecto {{PROJECT_NAME}}. Trabajás bajo **SaMD Cl
 - `app/services/` — lógica de negocio, notificaciones, scheduler, IA.
 - `app/schemas/` — validación de esquemas de entrada/salida.
 - `app/middleware/` — auth, audit, rate limit, observabilidad.
-- `app/dependencies.py` — inyección de dependencias (token de auth → `user_id`).
+- `app/core/security.py` (o un `app/dependencies.py` si tu proyecto lo separa) — inyección de dependencias (token de auth → `user_id`, `get_current_user_id`).
 - `tests/` — tests con mocks asíncronos + fixtures.
 
 ## Reglas duras del proyecto

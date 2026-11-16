@@ -22,7 +22,7 @@ grab a good first issue, or start a
 - **50+ document Design History File** (`docs/`).
 - **Runnable skeleton** (`app/` · `frontend/` · `tests/`).
 - **Documentation site** (this site) and **one-click developer experience** (devcontainer, compose, Makefile).
-- **Worked example** (`examples/auralog/`) — a fictional Class B device.
+- **Worked examples** — `examples/auralog/` (fictional Class B) and `examples/dosificta/` (fictional Class C).
 - **Bilingual onboarding** (English / Spanish) with a pre-certification clinical glossary.
 
 For the full, current list (in progress / next / exploring), open the canonical

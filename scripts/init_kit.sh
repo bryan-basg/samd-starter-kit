@@ -110,6 +110,9 @@ echo "      docs/07_regulatory_and_compliance/SOFTWARE_SAFETY_CLASSIFICATION.md"
 echo " 3. Completá los 4 documentos base, en orden:"
 echo "      clasificación → Master Map → matriz de riesgo ISO 14971 → matriz de trazabilidad"
 echo "    (mirá examples/auralog/ para verlos rellenos en un dispositivo Clase B ficticio)"
+if [[ "$cls" == "C" ]]; then
+  echo "    Clase C: leé examples/dosificta/CLASS_C_DELTA.md — qué exige además (diseño detallado por unidad)."
+fi
 if [[ -n "$cls" ]]; then
   echo
   echo " Tu clase: $cls"

@@ -4,7 +4,8 @@
 name: Nightly Mutation
 
 on:
-  # Triggers automáticos COMENTADOS hasta que tu frontend exista. Descomentá al agregarlo.
+  # Triggers automáticos COMENTADOS de fábrica: una corrida full tarda horas y el
+  # frontend del kit es mínimo. Descomentá cuando la suite de TU frontend esté estable.
   # schedule:
   #   - cron: '0 4 * * 1,3,5'   # incremental lun/mié/vie
   #   - cron: '0 5 1 * *'       # full el día 1 de cada mes

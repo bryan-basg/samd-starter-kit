@@ -33,7 +33,7 @@ Controles que el starter kit ya implementa o tiene cableados en CI. El `ruta/arc
 | Control del kit | Dónde vive (path) | Evidencia de prueba |
 |---|---|---|
 | Cifrado en reposo AES-256-GCM (PII/PHI) | `app/models/types.py` (`EncryptedString` o equiv.) | {{test_encrypted_string_*}} |
-| Identidad solo del token (JWT-only) | `app/dependencies.py` (`get_current_user`) | {{test_idor_*}} |
+| Identidad solo del token (JWT-only) | `app/core/security.py` (`get_current_user_id`) | {{test_idor_*}} |
 | Autorización por recurso (anti-IDOR) | `app/routers/<recurso>.py` | {{Pendiente de evidencia}} |
 | Audit middleware de mutaciones (POST/PUT/DELETE/PATCH) | `app/middleware/audit.py` | {{Pendiente de evidencia}} |
 | Gestión de secretos / KMS (claves no hardcodeadas) | `app/core/config.py` + secret manager {{CLOUD_STACK}} | {{Pendiente de evidencia}} |
@@ -59,7 +59,7 @@ Anexo A 2022 organizado en 4 temas: **A.5** organizacionales, **A.6** personas, 
 |---|---|---|---|
 | A.5.7 Inteligencia de amenazas | Org. | `DATA_FLOW_DOCUMENTATION.md` (modelo de amenazas) | {{Pendiente de evidencia}} |
 | A.5.15 Control de acceso | Org. | Identidad JWT-only + autorización por recurso | {{Pendiente de evidencia}} |
-| A.5.16 Gestión de identidad | Org. | `app/dependencies.py` | {{Pendiente de evidencia}} |
+| A.5.16 Gestión de identidad | Org. | `app/core/security.py` | {{Pendiente de evidencia}} |
 | A.5.17 Información de autenticación | Org. | Tokens + gestión de secretos | {{Pendiente de evidencia}} |
 | A.5.18 Derechos de acceso | Org. | Autorización por recurso / roles | {{Pendiente de evidencia}} |
 | A.5.23 Seguridad para uso de servicios en la nube | Org. | Config {{CLOUD_STACK}} + BAA/DPA del proveedor | {{Pendiente de evidencia}} |

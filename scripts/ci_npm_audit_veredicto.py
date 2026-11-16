@@ -45,7 +45,7 @@ class Tolerado:
 # (por qué no hay parche y por qué el fallo no alcanza a tu producto) y una fecha
 # a ≤ 90 días — el test lo exige. Ejemplo:
 #
-#     "GHSA-xxxx-xxxx-xxxx": Tolerado(
+#     "<id GHSA del aviso>": Tolerado(
 #         paquete="<paquete>",
 #         caduca=date(AAAA, MM, DD),
 #         motivo="El parche solo existe en la major siguiente y migrar cambia ...",

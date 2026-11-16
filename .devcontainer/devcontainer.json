@@ -14,7 +14,7 @@
 
   // Node 24 para el frontend React/TS/Vite (mismo major que usa el CI: setup-node con node-version 24).
   "features": {
-    "ghcr.io/devcontainers/features/node:1": {
+    "ghcr.io/devcontainers/features/node:2": {
       "version": "24"
     }
   },

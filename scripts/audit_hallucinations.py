@@ -25,6 +25,7 @@ from __future__ import annotations
 import argparse
 import re
 import sys
+from collections.abc import Iterator
 from pathlib import Path
 
 # ----------------------------------------------------------------------------
@@ -126,14 +127,16 @@ def _is_allowlisted(rel: str, label: str, line: str) -> bool:
     return any(rel == f and label == lb and frag in line for f, lb, frag, _ in ALLOWLIST)
 
 
-def _iter_files(root: Path):
+def _iter_files(root: Path) -> Iterator[Path]:
     for path in root.rglob("*"):
         if not path.is_file():
             continue
+        # Las exclusiones miran SOLO la ruta relativa a la raíz escaneada: los directorios
+        # por encima de ella (un clon en `/build/app` o `~/examples/kit`) no cuentan (#96).
         rel_parts = path.relative_to(root).parts
         if any("/".join(rel_parts[:i]) in EXCLUDE_ROOT_DIRS for i in range(1, len(rel_parts))):
             continue
-        if any(part in EXCLUDE_DIRS for part in path.parts):
+        if any(part in EXCLUDE_DIRS for part in rel_parts):
             continue
         if path.name in EXCLUDE_FILES:
             continue
@@ -142,10 +145,12 @@ def _iter_files(root: Path):
         yield path
 
 
-def scan(root: Path) -> list[tuple[Path, int, str, str, str]]:
-    """Devuelve hallazgos: (archivo, línea, etiqueta, severidad, fragmento)."""
+def scan(root: Path) -> tuple[list[tuple[Path, int, str, str, str]], int]:
+    """Devuelve (hallazgos, archivos revisados). Hallazgo: (archivo, línea, etiqueta, severidad, fragmento)."""
     findings: list[tuple[Path, int, str, str, str]] = []
+    scanned = 0
     for path in _iter_files(root):
+        scanned += 1
         try:
             text = path.read_text(encoding="utf-8", errors="ignore")
         except OSError:
@@ -155,7 +160,7 @@ def scan(root: Path) -> list[tuple[Path, int, str, str, str]]:
             for regex, label, sev in _COMPILED:
                 if regex.search(line) and not _is_allowlisted(rel, label, line):
                     findings.append((path, lineno, label, sev, line.strip()[:120]))
-    return findings
+    return findings, scanned
 
 
 def main() -> int:
@@ -170,9 +175,14 @@ def main() -> int:
         print(f"❌ Ruta inexistente: {root}", file=sys.stderr)
         return 1
 
-    findings = scan(root)
+    findings, scanned = scan(root)
+    # Fail-closed: un gate que no miró nada no puede declarar limpio (#96).
+    if scanned == 0:
+        print(f"❌ Auditoría FALLIDA — 0 archivos escaneados en {root} "
+              "(ruta errónea o exclusiones que cubren todo el árbol).", file=sys.stderr)
+        return 1
     if not findings:
-        print("✅ Sin placeholders ni alucinaciones de IA detectadas.")
+        print(f"✅ Sin placeholders ni alucinaciones de IA detectadas ({scanned} archivos revisados).")
         return 0
 
     criticals = [f for f in findings if f[3] == "critical"]

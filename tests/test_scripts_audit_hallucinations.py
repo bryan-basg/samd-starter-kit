@@ -66,8 +66,42 @@ def test_credencial_demo_critica_da_rc1(tmp_path):
 def test_salidas_gitignoradas_de_la_raiz_no_se_escanean(tmp_path):
     for rel in ("site/a/index.html", "reports/r.txt", "audit/g.json", "frontend/reports/x.md"):
         _write(tmp_path, rel, f"{INC_ID} {FAKE_KEY}\n")
+    # Un archivo limpio que SÍ se escanea: sin él el árbol tendría 0 archivos y el gate
+    # fail-closed fallaría por otra razón, enmascarando lo que este test mide.
+    _write(tmp_path, "app/ok.py", "X = 1\n")
     res = _run(tmp_path)
     assert res.returncode == 0, res.stdout
+    assert "(1 archivos revisados)" in res.stdout
+
+
+# --- #96: las exclusiones no deben mirar los directorios POR ENCIMA de la raíz escaneada ---
+@pytest.mark.parametrize("ancestro", ["build", "dist", "examples", "node_modules", ".venv"])
+def test_raiz_bajo_directorio_excluido_se_escanea(tmp_path, ancestro):
+    root = tmp_path / ancestro / "repo"
+    _write(root, "app/config.py", f'API_KEY = "{FAKE_KEY}"\n')
+    res = _run(root)
+    assert res.returncode == 1, res.stdout + res.stderr
+    assert "app/config.py:1" in res.stdout
+
+
+def test_exclusion_por_nombre_sigue_valiendo_dentro_de_la_raiz(tmp_path):
+    # La contracara: dentro del repo, `build/` y `node_modules/` siguen sin escanearse.
+    _write(tmp_path, "build/x.py", f'API_KEY = "{FAKE_KEY}"\n')
+    _write(tmp_path, "frontend/node_modules/p/i.js", f'k = "{FAKE_KEY}"\n')
+    _write(tmp_path, "app/ok.py", "X = 1\n")
+    res = _run(tmp_path)
+    assert res.returncode == 0, res.stdout
+    assert "(1 archivos revisados)" in res.stdout
+
+
+# --- #96 (fail-closed): un gate que no revisó ningún archivo no puede declarar limpio ---
+def test_cero_archivos_escaneados_da_rc1(tmp_path):
+    _write(tmp_path, "build/x.py", "X = 1\n")  # todo excluido
+    _write(tmp_path, "imagen.png", "binario\n")  # sufijo fuera de INCLUDE_SUFFIXES
+    res = _run(tmp_path)
+    assert res.returncode == 1
+    assert "0 archivos escaneados" in res.stderr
+    assert "Sin placeholders" not in res.stdout
 
 
 @pytest.mark.parametrize("rel", ["app/site/x.py", "app/audit/x.py", "app/reports/x.py"])

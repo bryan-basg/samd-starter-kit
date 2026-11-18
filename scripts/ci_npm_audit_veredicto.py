@@ -40,17 +40,32 @@ class Tolerado:
 
 
 # Clave: id GHSA del aviso. Cada uno lleva fecha de caducidad: vencida, rojea.
-# Vacío a propósito: el esqueleto del kit no tiene avisos high/critical (medido el
-# 2026-11-16: 0 high, 0 critical, 8 moderate). Al tolerar uno, escribí el porqué
-# (por qué no hay parche y por qué el fallo no alcanza a tu producto) y una fecha
-# a ≤ 90 días — el test lo exige. Ejemplo:
+# Al tolerar uno, escribí el porqué (por qué no hay parche y por qué el fallo no
+# alcanza a tu producto) y una fecha a ≤ 90 días — el test lo exige. Ejemplo:
 #
 #     "<id GHSA del aviso>": Tolerado(
 #         paquete="<paquete>",
 #         caduca=date(AAAA, MM, DD),
 #         motivo="El parche solo existe en la major siguiente y migrar cambia ...",
 #     ),
-TOLERADOS: Dict[str, Tolerado] = {}
+TOLERADOS: Dict[str, Tolerado] = {
+    # Medido el 2026-11-18 (`npm audit` en frontend/): único aviso high/critical del kit.
+    "GHSA-fc5q-39xc-vjpf": Tolerado(
+        paquete="picomatch",
+        caduca=date(2026, 12, 18),
+        motivo=(
+            "ReDoS por extglobs repetidos (`+(*)`). Sin parche: el aviso declara afectadas "
+            "<= 4.0.7 y la 4.0.7 que usamos es la última publicada; el único 'fix' que ofrece "
+            "npm es bajar de major vite/vitest, que no corrige nada. No alcanza al producto: "
+            "picomatch es solo de desarrollo (`dev: true` en package-lock; la traen vite, "
+            "vitest y eslint) y no viaja en el bundle, y el disparo exige que el atacante "
+            "controle el PATRÓN glob, que aquí sale de archivos de configuración del repo. "
+            "GitHub marcó el aviso como retirado el 2026-11-18 pero el registro de npm aún "
+            "lo informa: al desaparecer de `npm audit`, este gate rojea pidiendo borrar la "
+            "entrada. Caducidad corta (30 días) por estar el aviso en revisión."
+        ),
+    ),
+}
 
 
 def avisos_que_frenan(informe: object) -> Dict[str, str]:

@@ -29,6 +29,12 @@ Uso:
     python scripts/check_translations.py              # resumen (conteos + %)
     python scripts/check_translations.py -v           # además lista las claves
     python scripts/check_translations.py --no-untranslated   # sólo paridad de claves
+
+Exit codes:
+    0 → todo lo auditado está en paridad (y traducido donde el gate es duro).
+    1 → faltantes/sobrantes/sin traducir, o NO se encontró nada que auditar
+        (ni locales frontend ni backend en las rutas configuradas): un gate que
+        no miró nada no puede declarar «sincronizado» (fail-closed, SaMD §5.7).
 """
 import json
 import os
@@ -171,12 +177,16 @@ def _report(label: str, base_items: dict[str, Any], path: str) -> bool:
     return gate_ok
 
 
-def audit_frontend() -> bool:
+def audit_frontend() -> tuple[bool, bool]:
+    """Devuelve (ok, auditado): `auditado` es False si no había locales que mirar."""
     base_dir = os.path.join(FRONTEND_DIR, BASE_LANG)
     if not os.path.isdir(base_dir):
         print(f"=== FRONTEND: no existe {base_dir}, omitido ===")
-        return True
+        return True, False
     namespaces = sorted(f for f in os.listdir(base_dir) if f.endswith(".json"))
+    if not namespaces:
+        print(f"=== FRONTEND: {base_dir} no tiene namespaces .json, omitido ===")
+        return True, False
     langs = sorted(
         d for d in os.listdir(FRONTEND_DIR)
         if os.path.isdir(os.path.join(FRONTEND_DIR, d)) and d != BASE_LANG
@@ -189,14 +199,15 @@ def audit_frontend() -> bool:
         print(f"\n  [{ns}] base = {len(base_items)} claves")
         for lng in langs:
             ok &= _report(lng, base_items, os.path.join(FRONTEND_DIR, lng, ns))
-    return ok
+    return ok, True
 
 
-def audit_backend() -> bool:
+def audit_backend() -> tuple[bool, bool]:
+    """Devuelve (ok, auditado): `auditado` es False si no había locales que mirar."""
     base = os.path.join(BACKEND_DIR, f"{BASE_LANG}.json")
     if not os.path.exists(base):
         print(f"\n=== BACKEND: no existe {base}, omitido ===")
-        return True
+        return True, False
     base_items = load_items(base)
     langs = sorted(
         f[:-5] for f in os.listdir(BACKEND_DIR)
@@ -207,12 +218,19 @@ def audit_backend() -> bool:
     ok = True
     for lng in langs:
         ok &= _report(lng, base_items, os.path.join(BACKEND_DIR, f"{lng}.json"))
-    return ok
+    return ok, True
 
 
 if __name__ == "__main__":
-    fe = audit_frontend()
-    be = audit_backend()
+    fe, fe_audited = audit_frontend()
+    be, be_audited = audit_backend()
+    # Fail-closed: sin locales en NINGUNA de las dos rutas no se auditó nada. Un proyecto
+    # con una sola superficie (solo frontend o solo backend) pasa; uno sin ninguna, no.
+    if not (fe_audited or be_audited):
+        print("\n❌ No se encontró NADA que auditar: ni locales frontend "
+              f"({FRONTEND_DIR}/{BASE_LANG}/*.json) ni backend ({BACKEND_DIR}/{BASE_LANG}.json).")
+        print("   Ajustá I18N_FRONTEND_DIR / I18N_BACKEND_DIR / I18N_BASE_LANG a tu proyecto.")
+        sys.exit(1)
     if fe and be:
         print("\n✨ Todas las traducciones están sincronizadas y traducidas.")
         sys.exit(0)

@@ -74,7 +74,8 @@ def _load_app_schema() -> object | None:
     if not callable(openapi):
         print(f"❌ '{APP_IMPORT}' no parece una app con método .openapi() (FastAPI).")
         return None
-    return openapi()
+    spec: object = openapi()
+    return spec
 
 
 def verify_sync() -> int:

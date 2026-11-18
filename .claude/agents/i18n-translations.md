@@ -38,7 +38,7 @@ La fuente de verdad es el conjunto de archivos de locales. Si agregás un idioma
 ## Comandos canónicos (adaptar)
 
 ```bash
-python scripts/check_translations.py     # auditor: faltantes + copiado-sin-traducir (exit !=0 si falla)
+python scripts/check_translations.py     # auditor: faltantes + copiado-sin-traducir (exit !=0 si falla o si no encuentra locales)
 bash scripts/run_local_ci.sh             # incluye el auditor i18n
 ```
 

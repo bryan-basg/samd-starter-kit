@@ -22,7 +22,7 @@ Uso:
 
 Exit codes:
     0 → limpio.
-    1 → al menos un smell (o error de parseo).
+    1 → al menos un smell, error de parseo, o 0 archivos `.py` escaneados (fail-closed).
 """
 
 from __future__ import annotations
@@ -30,6 +30,7 @@ from __future__ import annotations
 import ast
 import os
 import sys
+from collections.abc import Iterator
 from pathlib import Path
 
 BASE_DIR = Path(os.environ.get("BASE_DIR", "app"))
@@ -128,9 +129,11 @@ class SmellVisitor(ast.NodeVisitor):
         return False
 
 
-def _iter_py_files(root: Path):
+def _iter_py_files(root: Path) -> Iterator[Path]:
     for path in root.rglob("*.py"):
-        if any(part in EXCLUDE_DIRS for part in path.parts):
+        # Solo la ruta relativa a BASE_DIR: los directorios por encima (un BASE_DIR absoluto
+        # bajo `/build/` o `/work/dist/`) no deben excluir todo el árbol (mismo defecto que #96).
+        if any(part in EXCLUDE_DIRS for part in path.relative_to(root).parts):
             continue
         yield path
 
@@ -142,7 +145,9 @@ def main() -> int:
         return 1
 
     total = 0
+    scanned = 0
     for path in _iter_py_files(BASE_DIR):
+        scanned += 1
         try:
             tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
         except (SyntaxError, OSError) as exc:
@@ -154,8 +159,13 @@ def main() -> int:
             print(f"🔴 {path}:{lineno}  {msg}")
             total += 1
 
+    # Fail-closed: un gate que no miró nada no puede declarar limpio.
+    if scanned == 0:
+        print(f"❌ 0 archivos .py escaneados en {BASE_DIR.resolve()} "
+              "(BASE_DIR erróneo o exclusiones que cubren todo el árbol).", file=sys.stderr)
+        return 1
     if total == 0:
-        print(f"✅ Sin smells de robustez en {BASE_DIR}/.")
+        print(f"✅ Sin smells de robustez en {BASE_DIR}/ ({scanned} archivos revisados).")
         return 0
     print(f"\n❌ {total} smell(s) detectados — resolver antes de commitear.")
     return 1

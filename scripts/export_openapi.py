@@ -26,7 +26,7 @@ def main() -> int:
 
     try:
         # Adaptá esta ruta de import a tu aplicación FastAPI real.
-        from app.main import app  # type: ignore
+        from app.main import app
     except Exception as exc:  # pragma: no cover - guía de adaptación
         print(
             "No se pudo importar `app.main:app`. Ajustá el import a tu aplicación "

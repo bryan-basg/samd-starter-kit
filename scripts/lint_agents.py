@@ -47,9 +47,11 @@ import sys
 from pathlib import Path
 
 try:  # pyyaml es opcional — si no está, caemos al parser mínimo de abajo.
-    import yaml  # type: ignore
+    import yaml
 except ImportError:  # pragma: no cover - depende del entorno
-    yaml = None  # type: ignore
+    # `assignment` solo aparece si están instalados los stubs `types-PyYAML`; sin ellos
+    # `yaml` es Any y el ignore sobra. `unused-ignore` cubre los dos entornos.
+    yaml = None  # type: ignore[assignment, unused-ignore]
 
 
 REPO_ROOT = Path(__file__).resolve().parent.parent

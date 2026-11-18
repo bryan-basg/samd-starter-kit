@@ -103,7 +103,7 @@ Estas reglas no son negociables; son consecuencia directa de IEC 62304 §5.7.
 - `tests/test_workflows_pineados_a_sha.py` — guardián: toda acción de `.github/workflows/` pineada a SHA de 40 hex, una sola versión por acción.
 - `scripts/run_pytest_postgres.sh` — suite contra Postgres real (self-contained, docker).
 - `scripts/run_zap_dast.sh` — DAST (OWASP ZAP) contra la app corriendo.
-- `scripts/check_translations.py` — auditor i18n (paridad de claves + "copiado sin traducir").
+- `scripts/check_translations.py` — auditor i18n (paridad de claves + "copiado sin traducir"). Fail-closed: si no encuentra locales en ninguna de las rutas `I18N_*` sale con rc=1 (no declara "sincronizado" sin haber mirado). Tests: `tests/test_scripts_check_translations.py`.
 - `scripts/run_flaky_check.sh` — cazador de tests inestables.
 - `scripts/run_act.sh` — corre los workflows de Actions localmente (nektos/act).
 - `pytest.ini` — config de pytest + nota de cobertura reproducible.

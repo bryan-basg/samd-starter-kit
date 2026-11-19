@@ -336,8 +336,14 @@ def test_secret_guard_passes_with_real_secrets(monkeypatch):
         ("a-real-injected-production-secret", "", "ENCRYPTION_KEY"),
         ("a-real-injected-production-secret", "no-es-base64!!", "ENCRYPTION_KEY"),
         ("a-real-injected-production-secret", "eHh4eHh4eHh4eHh4eHh4eA==", "ENCRYPTION_KEY"),
+        # La MISMA clave válida en ambos roles rompe los dominios de confianza (RFC-001 §Clave).
+        ("eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHg=", "eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHg=", "SECRET_KEY"),
+        ("eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHg=", "eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHg=", "ENCRYPTION_KEY"),
     ],
-    ids=["secret-vacio", "secret-1-byte", "secret-31-bytes", "enc-vacia", "enc-no-base64", "enc-16-bytes"],
+    ids=[
+        "secret-vacio", "secret-1-byte", "secret-31-bytes", "enc-vacia", "enc-no-base64",
+        "enc-16-bytes", "misma-clave-secret", "misma-clave-enc",
+    ],
 )
 def test_secret_guard_aborts_on_empty_short_or_malformed(
     monkeypatch, secret_key, encryption_key, culpable
@@ -367,3 +373,65 @@ def test_lifespan_boots_in_testing_mode(monkeypatch):
     monkeypatch.setattr(settings, "testing", True)
     with TestClient(app) as c:
         assert c.get("/health").status_code == 200
+
+
+# --- A-1: la PHI no se loguea cuando la validación falla (GDPR Art. 5(1)(c)/32, HIPAA §164.312) ---
+
+_PHI = "PACIENTE-DIAGNOSTICO-SECRETO"
+
+
+@pytest.mark.security
+def test_validation_failure_does_not_log_the_submitted_text(client, caplog):
+    """Flujo real: POST autenticado con texto > máximo → 422, y el texto NO llega al log."""
+    import logging
+
+    caplog.set_level(logging.INFO, logger="app")
+    caplog.clear()
+    resp = client.post("/notes", json={"text": _PHI + "x" * 2001}, headers=auth("alice"))
+    assert resp.status_code == 422
+    assert _PHI not in caplog.text
+    # El diagnóstico sigue sirviendo (campo + motivo); si alguien borra la llamada al
+    # helper o el log entero, esta aserción rojea.
+    assert "string_too_long" in caplog.text
+    assert "text" in caplog.text
+
+
+@pytest.mark.security
+def test_unhandled_validation_error_does_not_log_the_value(caplog):
+    """Un `ValidationError` que salta DENTRO de una ruta cae en el handler global."""
+    import asyncio
+    import logging
+
+    from pydantic import BaseModel, Field, ValidationError
+    from starlette.requests import Request
+
+    from app.main import unhandled_exception_handler
+
+    class _Modelo(BaseModel):
+        texto: str = Field(max_length=5)
+
+    with pytest.raises(ValidationError) as excinfo:
+        _Modelo(texto=_PHI)
+
+    caplog.set_level(logging.INFO, logger="app")
+    caplog.clear()
+    resp = asyncio.run(unhandled_exception_handler(Request({"type": "http"}), excinfo.value))
+    assert resp.status_code == 500
+    assert _PHI not in caplog.text
+    assert "string_too_long" in caplog.text
+
+
+@pytest.mark.security
+def test_resumen_de_errores_never_carries_value_ctx_or_user_keys():
+    from app.main import _resumen_de_errores
+
+    errores = [
+        {"type": "string_too_long", "loc": ("body", "text"), "input": _PHI, "ctx": {"max_length": 2000}},
+        {"type": "extra_forbidden", "loc": ("body", "PHI-COMO-CLAVE"), "input": _PHI, "msg": _PHI},
+    ]
+    resumen = _resumen_de_errores(errores)
+    assert resumen == [
+        {"type": "string_too_long", "loc": ["body", "text"]},
+        {"type": "extra_forbidden", "loc": ["body", "<campo>"]},
+    ]
+    assert _PHI not in repr(resumen) and "PHI-COMO-CLAVE" not in repr(resumen)

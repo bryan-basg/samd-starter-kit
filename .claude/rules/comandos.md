@@ -37,6 +37,8 @@ bash scripts/run_mutmut.sh       # mutation backend
 bash scripts/run_schemathesis.sh # fuzz API contra el contrato OpenAPI
 bash scripts/run_zap_dast.sh     # DAST
 bash scripts/run_pytest_postgres.sh # tier de BD real con docker
+bash scripts/check_coverage.sh   # suite COMPLETA con cobertura (xdist): es la del job backend del CI
+bash scripts/run_flaky_check.sh  # la suite N veces para cazar flaky
 ```
 
 > **Dónde está el corte**: cualquier cosa **más larga que el SAST** cae del lado que pide OK. Ante la duda sobre una herramienta nueva, **pedí OK**. Esta lista es la canónica; `orquestacion.md` regla dura 2 apunta acá en vez de recopiarla.

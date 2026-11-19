@@ -20,7 +20,6 @@ PATTERN='\{\{[A-Z_]+\}\}'
 # (case glob: '*' matchea también las barras, así que matchea rutas completas.)
 is_allowlisted() {
   case "$1" in
-    CLAUDE.md)                    return 0 ;;  # la nota de cabecera cita {{...}} en prosa
     scripts/init_kit.sh)          return 0 ;;  # el reemplazador (contiene el patrón)
     scripts/check_placeholders.sh) return 0 ;; # este propio gate (patrón + ejemplos)
     *TEMPLATE.md)                 return 0 ;;  # RFC-TEMPLATE.md, *_TEMPLATE.md: blanks por uso

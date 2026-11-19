@@ -10,6 +10,7 @@ en vez de degradar en silencio a una postura insegura — ver `app.main.lifespan
 """
 
 import base64
+import hmac
 import binascii
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -62,8 +63,8 @@ class Settings(BaseSettings):
     def insecure_secrets(self) -> list[str]:
         """Nombres de los secretos que NO sirven para producción.
 
-        Inseguro = sigue con el default PÚBLICO de dev, está vacío o es demasiado
-        corto / mal formado. Lista vacía = todos los secretos son aptos.
+        Inseguro = sigue con el default PÚBLICO de dev, está vacío, es demasiado
+        corto / mal formado, o `SECRET_KEY` y `ENCRYPTION_KEY` son la misma clave. Lista vacía = todos los secretos son aptos.
         """
         insecure: list[str] = []
         if (
@@ -76,6 +77,11 @@ class Settings(BaseSettings):
             or decode_encryption_key(self.encryption_key) is None
         ):
             insecure.append("ENCRYPTION_KEY")
+        # Dominios de confianza separados (RFC-001 §Clave): firmar JWT y cifrar PHI con la
+        # MISMA clave deja que quien roba una rompa la otra. Detecta el copiar-y-pegar de
+        # la misma clave; una variante casi igual (clave + sufijo) no se detecta.
+        if hmac.compare_digest(self.secret_key.encode("utf-8"), self.encryption_key.encode("utf-8")):
+            insecure.extend(n for n in ("SECRET_KEY", "ENCRYPTION_KEY") if n not in insecure)
         return insecure
 
 

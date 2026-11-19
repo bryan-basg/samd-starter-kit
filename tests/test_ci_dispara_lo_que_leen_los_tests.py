@@ -23,6 +23,10 @@ ZONAS = {
     ".claude/": ".claude/**",
     '"docs"': "docs/**",
     "docs/": "docs/**",
+    # Dockerfile: `test_workflows_pineados_a_sha` hace `ROOT.glob("Dockerfile*")`.
+    "Dockerfile*": "Dockerfile*",
+    # scripts/*.sh: los tests copian y EJECUTAN los gates (`_sh`, `check_coverage.sh`...).
+    ".sh": "scripts/**/*.sh",
 }
 
 # Piso del detector: si el grep deja de encontrar lectores, el test no aprueba por vacío.

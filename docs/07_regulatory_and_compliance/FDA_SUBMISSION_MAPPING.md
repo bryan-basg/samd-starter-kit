@@ -72,7 +72,7 @@ Alineado con *Cybersecurity in Medical Devices: Quality System Considerations an
 | **Postmarket monitoring / patching plan** | `SOFTWARE_MAINTENANCE_PLAN.md`; `POST_MARKET_SURVEILLANCE_PLAN.md` | {{Pendiente de evidencia}} |
 
 > **Controles técnicos vivos referenciados** (la fuente de verdad es el código; el path se confirma en `COMPLIANCE_CHECKLIST.md`):
-> - Cifrado en reposo AES-256-GCM → `app/models/types.py` (ver checklist §A.1)
+> - Cifrado en reposo AES-256-GCM → `app/core/encryption.py::encrypt` / `app/core/encryption.py::decrypt` (ver checklist §A.1)
 > - Identidad JWT-only → `app/core/security.py` (ver checklist §A.2)
 > - Audit middleware de mutaciones → `app/middleware/audit.py` (ver checklist §B.3)
 > - SAST/SCA/SBOM en CI → `.github/workflows/` (ver checklist §A.4)

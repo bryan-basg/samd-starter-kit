@@ -77,6 +77,11 @@ jobs:
               # sin esta línea, tocar un script no dispara nada y el gate da verde
               # sin haber mirado el archivo que cambió.
               - 'scripts/**/*.py'
+              # Los guardianes también LEEN el `Dockerfile` (pineo por digest) y EJECUTAN
+              # `scripts/*.sh` (gates silenciosos, `check_coverage.sh`): un PR que toca solo
+              # uno de ellos tiene que correr el backend, no saltárselo en verde.
+              - 'Dockerfile*'
+              - 'scripts/**/*.sh'
               - 'pyproject.toml'
               - 'pytest.ini'
               - '.mypy.ini'
@@ -142,6 +147,12 @@ jobs:
         run: ruff check app/ --select F401,F841,F811
       - name: Type-check estricto
         run: mypy .
+      # Los mismos auditores del pre-commit (`.pre-commit-config.yaml`): sin estos pasos solo
+      # corrían si alguien tenía el hook instalado, y `.mypy.ini` los llama «gates del CI».
+      - name: Auditoría anti-alucinaciones y de smells
+        run: |
+          python scripts/audit_hallucinations.py
+          python scripts/audit_smells.py
       # Gate de cobertura (TESTING_TOOLS.md «Gate de PR backend»): corre la suite UNA sola vez
       # (xdist + cobertura) y exige los dos pisos del script (global y capa datos/SQL, ≥95%).
       # Reemplaza al `pytest -q` pelado: ya ejecuta `pytest tests/`, no se duplica la suite.

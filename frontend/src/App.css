@@ -6,6 +6,7 @@
   --muted: #475569; /* AA sobre blanco */
   --primary: #0d9488; /* teal-600 — UI/large */
   --primary-700: #0f766e; /* teal-700 — AA sobre blanco para texto */
+  --primary-800: #115e59; /* teal-800 — hover del botón: AA sobre blanco (el hover OSCURECE, no aclara) */
   --border: #cbd5e1;
 }
 
@@ -73,7 +74,7 @@ button {
 }
 
 button:hover:not(:disabled) {
-  background: var(--primary);
+  background: var(--primary-800);
 }
 
 button:disabled {

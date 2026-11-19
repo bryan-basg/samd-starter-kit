@@ -16,7 +16,7 @@ from collections.abc import Iterator
 _NPM_COMPLETOS_SIN_RUTA = frozenset({"test", "test:ci", "test:e2e", "test:e2e:headed",
                                      "test:e2e:chromium", "test:e2e:firefox", "test:e2e:webkit"})
 _SCRIPT_PESADO = re.compile(
-    r"(run_stryker|run_mutmut|run_schemathesis|run_zap_dast|run_pytest_postgres|run_local_ci)\.sh$")
+    r"(run_stryker|run_mutmut|run_schemathesis|run_zap_dast|run_pytest_postgres|run_local_ci|check_coverage|run_flaky_check)\.sh$")
 # Opciones de pytest que consumen el token siguiente (no es una ruta).
 _PYTEST_CON_VALOR = frozenset({"-k", "-m", "-n", "-p", "-c", "-o", "-W", "--dist", "--maxfail",
                                "--tb", "--rootdir", "--durations", "--timeout", "--cov",

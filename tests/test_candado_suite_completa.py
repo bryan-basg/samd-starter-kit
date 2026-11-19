@@ -32,6 +32,8 @@ BLOQUEADOS = [
     "bash scripts/run_schemathesis.sh",
     "bash scripts/run_zap_dast.sh",
     "bash scripts/run_pytest_postgres.sh",
+    "bash scripts/check_coverage.sh",
+    "bash scripts/run_flaky_check.sh",
     "cd frontend && npm test",
     "npm run test:e2e",
     "npx vitest run",

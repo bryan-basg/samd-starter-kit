@@ -18,7 +18,7 @@
 ### A.1 Seudonimización y cifrado (Art.32.1.a)
 
 - [ ] **Cifrado en reposo** de datos personales/de salud (AES-256 o superior).
-  Verificación: `<app/models/types.py::símbolo>` (tipo `EncryptedString` o equivalente).
+  Verificación: `app/core/encryption.py::encrypt` / `app/core/encryption.py::decrypt` (o el tipo equivalente de tu capa de datos).
 - [ ] **Cifrado en tránsito** TLS 1.2+ forzado; sin downgrade a HTTP.
   Verificación: `<app/main.py::símbolo>` (HSTS / redirect) + config {{CLOUD_STACK}}.
 - [ ] **Gestión de claves** vía secret manager (NUNCA hardcodeadas ni reusando
@@ -33,7 +33,7 @@
 - [ ] **Autorización por recurso** (anti-IDOR): cada acceso valida ownership.
   Verificación: `<app/routers/<recurso>.py::símbolo>`.
 - [ ] **Fail-safe explícito** ante fallo de dependencia (BD/IA/red): degradación
-  predecible, sin tracebacks al cliente. Verificación: `<app/core/error_handlers.py::símbolo>`.
+  predecible, sin tracebacks al cliente. Verificación: `app/main.py::unhandled_exception_handler`.
 - [ ] **Rate limiting / circuit breakers** en endpoints sensibles.
   Verificación: `<app/middleware/<rate_limit>.py::símbolo>`.
 - [ ] **Cabeceras de seguridad** (CSP, COOP, Permissions-Policy, X-Content-Type-Options).

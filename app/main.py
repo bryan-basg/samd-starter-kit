@@ -8,12 +8,14 @@ Borralo (o reemplazalo) cuando traigas tu aplicación real.
 """
 
 import logging
-from collections.abc import AsyncIterator
+import traceback
+from collections.abc import AsyncIterator, Iterable, Mapping
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request, status
-from fastapi.exceptions import RequestValidationError
+from fastapi.exceptions import RequestValidationError, ResponseValidationError
 from fastapi.responses import JSONResponse
+from pydantic import ValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.routing import Match
 
@@ -59,6 +61,29 @@ app = FastAPI(
 )
 
 
+def _resumen_de_errores(errores: Iterable[Mapping[str, object]]) -> list[dict[str, object]]:
+    """Qué campo falló y por qué (`loc` + `type`), NUNCA con el valor que mandó el usuario.
+
+    Puerta ÚNICA de todo lo que se loguea sobre una validación fallida (GDPR Art. 5(1)(c)/32,
+    HIPAA §164.312): los errores de pydantic traen `input` (el valor crudo: el texto de una
+    nota de paciente), `ctx` (a veces el valor interpolado en un `ValueError`) y `msg`
+    (copia el texto de los validadores propios). Ningún sitio de la app debe volver a
+    loguear `exc.errors()` ni `str(exc)` de una validación: usa esta función.
+
+    Límite conocido: en `extra_forbidden` el último segmento de `loc` ES la clave que mandó
+    el cliente y se enmascara; en campos `dict[str, X]` la clave del usuario también viaja
+    en `loc` y NO se detecta. Si tu modelo los tiene, recortá `loc` en esta función.
+    """
+    resumen: list[dict[str, object]] = []
+    for error in errores:
+        bruto = error.get("loc")
+        loc = list(bruto) if isinstance(bruto, (tuple, list)) else []
+        if error.get("type") == "extra_forbidden" and loc:
+            loc[-1] = "<campo>"
+        resumen.append({"type": error.get("type"), "loc": loc})
+    return resumen
+
+
 @app.exception_handler(Exception)
 async def unhandled_exception_handler(_request: Request, exc: Exception) -> JSONResponse:
     """Fail-safe global (ISO 14971 + SaMD §5.4): el usuario nunca ve un traceback.
@@ -66,7 +91,17 @@ async def unhandled_exception_handler(_request: Request, exc: Exception) -> JSON
     El detalle técnico se registra para diagnóstico; al cliente solo le llega un
     mensaje empático + el código HTTP correcto.
     """
-    logger.exception("Error no manejado", exc_info=exc)
+    if isinstance(exc, (ValidationError, ResponseValidationError)):
+        # `str(exc)` de una validación repite el valor inválido, y la última línea del
+        # traceback también: se registra el resumen + la pila SIN esa línea.
+        logger.error(
+            "Error no manejado: %s %s\n%s",
+            type(exc).__name__,
+            _resumen_de_errores(exc.errors()),
+            "".join(traceback.format_tb(exc.__traceback__)),
+        )
+    else:
+        logger.exception("Error no manejado", exc_info=exc)
     return JSONResponse(
         status_code=500,
         content={
@@ -104,10 +139,10 @@ async def validation_exception_handler(
     """Cuerpo inválido → mensaje empático, nunca el detalle técnico de validación.
 
     El default expone la ruta del campo, el tipo esperado y a veces parte del
-    cuerpo enviado — jerga que §5.4 prohíbe mostrarle a un usuario. El detalle
-    completo va al log, que es donde sirve.
+    cuerpo enviado — jerga que §5.4 prohíbe mostrarle a un usuario. Al log va el
+    campo y el motivo (`_resumen_de_errores`), nunca el valor: ese puede ser PHI.
     """
-    logger.info("Petición rechazada por validación: %s", exc.errors())
+    logger.info("Petición rechazada por validación: %s", _resumen_de_errores(exc.errors()))
     return JSONResponse(status_code=422, content={"detail": _CUERPO_ILEGIBLE})
 
 

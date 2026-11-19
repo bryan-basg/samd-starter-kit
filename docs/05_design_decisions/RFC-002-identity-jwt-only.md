@@ -63,7 +63,7 @@ Detalles de construcción:
 | Vínculo | Referencia |
 |---|---|
 | Requisito(s) | REQ-SEC-02 — Identidad solo del token (JWT-only) |
-| Riesgo(s) ISO 14971 | R-SEC-02 (≅ R002) — Escalada horizontal: otro usuario accede a PHI ajena por suplantación de identidad (Sev. Crítica × Prob. Remota → INACEPTABLE → residual Aceptable) |
+| Riesgo(s) ISO 14971 | R002 — Escalada horizontal: otro usuario accede a PHI ajena por suplantación de identidad (Sev. Crítica × Prob. Remota → INACEPTABLE → residual Aceptable) |
 | Código | `app/core/security.py::get_current_user_id`; regla "sin `user_id` de entrada" aplicada en `app/routers/notes.py::create_note` |
 | Test(s) de verificación | `tests/test_hard_rules.py::test_identity_comes_from_token_not_from_body`, `tests/test_hard_rules.py::test_owner_isolation_between_users`, `tests/test_hard_rules.py::test_token_missing_sub_claim`, `tests/test_hard_rules.py::test_expired_token_is_rejected` |
 | Entrada en Master Map | v1.0 (trazabilidad corregida en v1.1 de esta RFC) |

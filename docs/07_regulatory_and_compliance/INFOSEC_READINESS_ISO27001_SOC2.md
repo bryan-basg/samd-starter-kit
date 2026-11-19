@@ -32,12 +32,12 @@ Controles que el starter kit ya implementa o tiene cableados en CI. El `ruta/arc
 
 | Control del kit | Dónde vive (path) | Evidencia de prueba |
 |---|---|---|
-| Cifrado en reposo AES-256-GCM (PII/PHI) | `app/models/types.py` (`EncryptedString` o equiv.) | {{test_encrypted_string_*}} |
+| Cifrado en reposo AES-256-GCM (PII/PHI) | `app/core/encryption.py::encrypt` / `app/core/encryption.py::decrypt` | {{test_encrypted_string_*}} |
 | Identidad solo del token (JWT-only) | `app/core/security.py` (`get_current_user_id`) | {{test_idor_*}} |
 | Autorización por recurso (anti-IDOR) | `app/routers/<recurso>.py` | {{Pendiente de evidencia}} |
 | Audit middleware de mutaciones (POST/PUT/DELETE/PATCH) | `app/middleware/audit.py` | {{Pendiente de evidencia}} |
 | Gestión de secretos / KMS (claves no hardcodeadas) | `app/core/config.py` + secret manager {{CLOUD_STACK}} | {{Pendiente de evidencia}} |
-| Fail-safe sin tracebacks al cliente | `app/core/error_handlers.py` | {{test_error_handler_*}} |
+| Fail-safe sin tracebacks al cliente | `app/main.py::unhandled_exception_handler` | {{test_error_handler_*}} |
 | Cabeceras de seguridad (CSP/COOP/etc.) | `app/middleware.py` | {{Pendiente de evidencia}} |
 | Redacción de PII/PHI en logs | `app/core/logging_conf.py` | {{Pendiente de evidencia}} |
 | SAST (Semgrep) en CI | `.github/workflows/security-audit.yml` | {{Pendiente de evidencia}} |

@@ -1,4 +1,4 @@
-# Auditoría de seguridad SaMD — Trivy (CVEs) + Semgrep (SAST) + npm audit (deps del frontend).
+# Auditoría de seguridad SaMD — Trivy (CVEs) + Semgrep (SAST) + npm audit (frontend) + pip-audit (backend).
 # Nightly + en PRs que tocan código o dependencias. Gate: bloquea HIGH/CRITICAL sin waiver.
 name: Security Audit
 
@@ -68,3 +68,19 @@ jobs:
         # Sin `|| true`: el guion devuelve el veredicto. Un aviso high/critical sin parche
         # se tolera EN EL GUION (motivo + caducidad ≤ 90 días), nunca apagando el paso.
         run: python3 ../scripts/ci_npm_audit_veredicto.py --informe "$RUNNER_TEMP/npm-audit.json"
+
+  pip-audit:
+    name: pip-audit (deps del backend, SOUP)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+      # Trivy en modo `fs` solo ve lockfiles: `requirements.txt` son rangos `>=,<` y le es
+      # invisible, así que fastapi/pyjwt/cryptography/uvicorn no tenían ningún gate de CVE
+      # (IEC 62304 §7.1.3 y §8, SOUP). Sin `|| true`: un aviso conocido deja el job en rojo.
+      # Pineado por versión exacta para que el propio gate no cambie de la noche a la mañana.
+      - run: pip install pip-audit==2.10.1
+      - run: pip-audit -r requirements.txt --progress-spinner off

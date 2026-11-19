@@ -57,14 +57,14 @@ Detalles de construcción:
 - **Negativas / costo**: no se puede hacer `WHERE campo = ?` ni `LIKE` directo sobre columnas cifradas (requiere columna hash determinista aparte para lookups exactos); pequeño costo de CPU por fila; la clave perdida = datos irrecuperables (obliga a custodia y backup de clave disciplinados).
 - **Impacto en consumidores** (§5.6): cualquier servicio que filtre o ordene por un campo recién cifrado debe migrar a un índice ciego o columna hash. Búsqueda global obligatoria de los consumidores del campo antes de cifrarlo.
 - **Fail-safe**: un tag GCM inválido o una clave ausente **aborta la operación con error empático** (sin traceback al cliente) en vez de servir datos corruptos o en claro.
-- **Deuda técnica generada**: `D-SEC-ENCRYPTED-LOOKUP-01` — definir estrategia de búsqueda ciega para los campos cifrados que hoy requieren filtrado.
+- **Deuda técnica generada (backlog, sin ficha todavía)**: definir estrategia de búsqueda ciega para los campos cifrados que hoy requieren filtrado. Abrí su ficha `D-XXX` en `TECHNICAL_DEBT_SUMMARY.md` cuando el proyecto derivado tenga un campo cifrado que filtrar; el kit no filtra por campo cifrado (`app/routers/notes.py`).
 
 ## 6. Trazabilidad
 
 | Vínculo | Referencia |
 |---|---|
 | Requisito(s) | REQ-SEC-01 — Cifrado en reposo de PII/PHI (AES-256-GCM) |
-| Riesgo(s) ISO 14971 | R-SEC-01 — Exfiltración de PHI por copia/volcado del almacenamiento (Sev. Crítica × Prob. Remota → INACEPTABLE → residual Aceptable) |
+| Riesgo(s) ISO 14971 | R-SEC-03 — Exfiltración de PHI por copia/volcado del almacenamiento (Sev. Crítica × Prob. Remota → INACEPTABLE → residual Aceptable) |
 | Código | `app/core/encryption.py::encrypt`, `app/core/encryption.py::decrypt`; clave en gestor de secretos del {{CLOUD_STACK}} |
 | Test(s) de verificación | `tests/test_hard_rules.py::test_encryption_roundtrip_and_nonce_uniqueness`, `tests/test_hard_rules.py::test_tampered_ciphertext_is_rejected`, `tests/test_hard_rules.py::test_encryption_key_length_validation` |
 | Entrada en Master Map | v1.0 |

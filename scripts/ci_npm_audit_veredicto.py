@@ -48,24 +48,8 @@ class Tolerado:
 #         caduca=date(AAAA, MM, DD),
 #         motivo="El parche solo existe en la major siguiente y migrar cambia ...",
 #     ),
-TOLERADOS: Dict[str, Tolerado] = {
-    # Medido el 2026-11-18 (`npm audit` en frontend/): único aviso high/critical del kit.
-    "GHSA-fc5q-39xc-vjpf": Tolerado(
-        paquete="picomatch",
-        caduca=date(2026, 12, 18),
-        motivo=(
-            "ReDoS por extglobs repetidos (`+(*)`). Sin parche: el aviso declara afectadas "
-            "<= 4.0.7 y la 4.0.7 que usamos es la última publicada; el único 'fix' que ofrece "
-            "npm es bajar de major vite/vitest, que no corrige nada. No alcanza al producto: "
-            "picomatch es solo de desarrollo (`dev: true` en package-lock; la traen vite, "
-            "vitest y eslint) y no viaja en el bundle, y el disparo exige que el atacante "
-            "controle el PATRÓN glob, que aquí sale de archivos de configuración del repo. "
-            "GitHub marcó el aviso como retirado el 2026-11-18 pero el registro de npm aún "
-            "lo informa: al desaparecer de `npm audit`, este gate rojea pidiendo borrar la "
-            "entrada. Caducidad corta (30 días) por estar el aviso en revisión."
-        ),
-    ),
-}
+# Vacío desde el 2026-11-19: GHSA-fc5q-39xc-vjpf (picomatch) dejó de informarse en `npm audit`.
+TOLERADOS: Dict[str, Tolerado] = {}
 
 
 def avisos_que_frenan(informe: object) -> Dict[str, str]:

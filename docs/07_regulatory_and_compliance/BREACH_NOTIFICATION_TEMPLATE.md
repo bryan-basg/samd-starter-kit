@@ -11,10 +11,13 @@
 | Obligación | Marco | Plazo | Cuenta desde |
 |---|---|---|---|
 | Notificación a la autoridad de control | GDPR Art. 33 | **72 horas** | Conocimiento de la brecha por el responsable. |
+| Aviso del **encargado** al responsable (si tu empresa trata datos por cuenta de otro) | GDPR Art. 33(2) | **Sin demora indebida** | Conocimiento de la brecha por el encargado. |
 | Comunicación a los interesados | GDPR Art. 34 | **Sin demora indebida** | Confirmación de alto riesgo para derechos y libertades. |
 | Notificación a individuos | HIPAA §164.404 | **≤ 60 días** | Descubrimiento de la brecha. |
 | Notificación a HHS / autoridad (≥ umbral) | HIPAA §164.408 | **≤ 60 días** (o anual si < umbral) | Descubrimiento de la brecha. |
 | Notificación a medios (≥ <MEDIA_THRESHOLD> afectados) | HIPAA §164.406 | **≤ 60 días** | Descubrimiento de la brecha. |
+| Aviso del **business associate** a la *covered entity* (rol habitual de un proveedor de SaMD) | HIPAA §164.410 | **Sin demora, ≤ 60 días** | Descubrimiento por el business associate. |
+| App de salud fuera de HIPAA: individuos, y FTC a la vez si ≥ 500 afectados | FTC 16 CFR 318.4 | **Sin demora, ≤ 60 días** (< 500: registro anual a la FTC) | Descubrimiento de la brecha. |
 
 > Si no es posible aportar toda la información en plazo, GDPR Art. 33(4) permite **notificación por fases**. Documentar el retraso y su justificación.
 

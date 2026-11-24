@@ -1,6 +1,6 @@
 # RFC-001 — Cifrado en reposo de PII/PHI a nivel columna (AES-256-GCM)
 
-**Proyecto:** {{PROJECT_NAME}} · **Clase SaMD:** {{SAMD_CLASS}} · **Versión:** v1.1 · **Fecha:** 2026-11-07
+**Proyecto:** {{PROJECT_NAME}} · **Clase SaMD:** {{SAMD_CLASS}} · **Versión:** v1.2 · **Fecha:** 2026-11-24
 
 > RFC del SaMD Starter Kit. Ejemplo didáctico de una decisión de diseño de la capa de datos. Documenta cómo y por qué se cifra la información sensible del paciente antes de persistirla.
 
@@ -49,13 +49,13 @@ Detalles de construcción:
 - **Algoritmo:** AES-256-GCM (AEAD) vía librería criptográfica auditada (no implementación propia). Cada valor lleva su nonce de 96 bits único y su tag de autenticación; un tag inválido aborta la lectura (no se sirve dato corrupto).
 - **Clave:** `ENCRYPTION_KEY` de 256 bits, provista por el gestor de secretos de {{CLOUD_STACK}} (Secret Manager / KMS). **Está prohibido reutilizar `SECRET_KEY`** (la clave de firma de sesión/JWT) ni hardcodearla. Dominios de confianza separados: comprometer la firma de sesión no descifra PHI, y viceversa.
 - **Aplicación:** todo campo con PII/PHI pasa por `encrypt` antes de persistirse y por `decrypt` al leerse (en el kit, `app/routers/notes.py`); con ORM, las columnas declaran `EncryptedString` en lugar de `String`/`Text`.
-- **Rotación:** la clave admite versionado (prefijo de versión en el ciphertext) para rotar sin descifrar toda la tabla de golpe.
+- **Rotación: el kit NO la implementa.** `app/core/encryption.py::encrypt` guarda `nonce‖ciphertext` sin versión de clave y hay una sola clave: cambiarla deja ilegible todo lo anterior (`InvalidTag`). Si tu producto va a rotar —HIPAA §164.312(a)(2)(iv) y cualquier respuesta a una fuga lo piden—, agregá el prefijo de versión y un llavero **antes del primer dato real**: después es una migración con re-cifrado.
 
 ## 5. Consecuencias
 
 - **Positivas**: un volcado lógico o físico de la BD sale ilegible; integridad autenticada (GCM detecta manipulación); granularidad por campo; clave fuera del dominio de la BD.
 - **Negativas / costo**: no se puede hacer `WHERE campo = ?` ni `LIKE` directo sobre columnas cifradas (requiere columna hash determinista aparte para lookups exactos); pequeño costo de CPU por fila; la clave perdida = datos irrecuperables (obliga a custodia y backup de clave disciplinados).
-- **Impacto en consumidores** (§5.6): cualquier servicio que filtre o ordene por un campo recién cifrado debe migrar a un índice ciego o columna hash. Búsqueda global obligatoria de los consumidores del campo antes de cifrarlo.
+- **Impacto en consumidores** (§7.4): cualquier servicio que filtre o ordene por un campo recién cifrado debe migrar a un índice ciego o columna hash. Búsqueda global obligatoria de los consumidores del campo antes de cifrarlo.
 - **Fail-safe**: un tag GCM inválido o una clave ausente **aborta la operación con error empático** (sin traceback al cliente) en vez de servir datos corruptos o en claro.
 - **Deuda técnica generada (backlog, sin ficha todavía)**: definir estrategia de búsqueda ciega para los campos cifrados que hoy requieren filtrado. Abrí su ficha `D-XXX` en `TECHNICAL_DEBT_SUMMARY.md` cuando el proyecto derivado tenga un campo cifrado que filtrar; el kit no filtra por campo cifrado (`app/routers/notes.py`).
 
@@ -76,6 +76,7 @@ Detalles de construcción:
 | v0.1 | 2026-01-08 | Equipo de Plataforma | Propuesta inicial |
 | v1.0 | 2026-01-15 | Equipo de Plataforma | Aceptada e implementada; columnas PII/PHI migradas a `EncryptedString` |
 | v1.1 | 2026-11-07 | Equipo de Plataforma | Se corrige la trazabilidad al código real del kit (`app/core/encryption.py`, funciones `encrypt`/`decrypt`) y a sus tests existentes; la cita anterior (`app/models/types.py:11`, `tests/test_encryption_at_rest.py`) apuntaba a archivos que el kit no tiene. La decisión (AES-256-GCM a nivel campo) no cambia |
+| v1.2 | 2026-11-24 | Equipo de Plataforma | Se corrige §4 «Rotación»: decía que el ciphertext lleva versión de clave y no la lleva. El código no cambia (cambiar el formato es decisión del derivado) |
 
 ---
 **Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

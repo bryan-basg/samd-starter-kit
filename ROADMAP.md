@@ -26,7 +26,7 @@ What already ships in the kit today:
 - **50+ document Design History File** (`docs/`) — ISO 14971 risk matrix, SaMD traceability matrix, IEC 62304 plan, safety classification, SOUP, clinical evaluation/validation, post-market surveillance, IFU, user docs, privacy, runbooks.
 - **Runnable skeleton** (`app/` · `frontend/` · `tests/`) — a minimal FastAPI + React/TS example wiring the hard rules (token-only identity, AES-256-GCM at rest, fail-safe, flat accessible UI). Runs with zero infra.
 - **Worked examples** — `examples/auralog/` (a fictional Class B device, AuraLog) and `examples/dosificta/` (a fictional Class C insulin-dose calculator, DosiFicta, with what Class C adds: per-unit detailed design and acceptance criteria), each with its DHF filled in.
-- **Command, skill & review workflow** (`.claude/`) — `samd-trace` impact analysis (§5.6) and the `samd-review` adversarial diff review.
+- **Command, skill & review workflow** (`.claude/`) — `samd-trace` impact analysis (§7.4) and the `samd-review` adversarial diff review.
 - **Bilingual onboarding** — `README` / `CONTRIBUTING` / `GETTING_STARTED` in English and Spanish, with a pre-certification clinical glossary so text never claims an uncertified medical-device function.
 
 ## In progress
@@ -72,7 +72,7 @@ Lo que el kit ya trae hoy:
 - **Design History File de 50+ documentos** (`docs/`) — matriz de riesgo ISO 14971, matriz de trazabilidad SaMD, plan IEC 62304, clasificación de seguridad, SOUP, evaluación/validación clínica, post-market, IFU, docs de usuario, privacidad, runbooks.
 - **Esqueleto ejecutable** (`app/` · `frontend/` · `tests/`) — un ejemplo mínimo FastAPI + React/TS que cablea las reglas duras (identidad solo del token, AES-256-GCM en reposo, fail-safe, UI plana y accesible). Corre sin infra.
 - **Ejemplos trabajados** — `examples/auralog/` (dispositivo Clase B ficticio, AuraLog) y `examples/dosificta/` (calculadora de dosis de insulina Clase C ficticia, DosiFicta, con lo que suma la Clase C: diseño detallado y criterios de aceptación por unidad), cada uno con su DHF rellenado.
-- **Comando, skill y workflow de revisión** (`.claude/`) — el análisis de impacto `samd-trace` (§5.6) y la revisión adversarial de diff `samd-review`.
+- **Comando, skill y workflow de revisión** (`.claude/`) — el análisis de impacto `samd-trace` (§7.4) y la revisión adversarial de diff `samd-review`.
 - **Onboarding bilingüe** — `README` / `CONTRIBUTING` / `GETTING_STARTED` en inglés y español, con un glosario clínico pre-certificación para que ningún texto afirme una función de dispositivo médico no certificada.
 
 ## En curso

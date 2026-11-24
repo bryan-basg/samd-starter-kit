@@ -16,7 +16,7 @@
 #   humana: muchos archivos del kit (agentes, plantillas DHF, workflows) están
 #   pensados para que los adaptes, y un merge ciego pisaría tu personalización.
 #   Coherente con la regla SaMD: ningún cambio de arquitectura/algoritmo entra
-#   sin revisión y trazabilidad (IEC 62304 §5.6).
+#   sin revisión y trazabilidad (IEC 62304 §7.4).
 #
 # Uso:
 #   bash scripts/kit_upgrade.sh                       # usa el upstream por defecto

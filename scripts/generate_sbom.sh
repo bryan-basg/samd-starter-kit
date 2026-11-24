@@ -205,9 +205,8 @@ print(len(json.load(open(r'''$fe_file''')).get('components',[])))
 # SBOM Summary — ${DATE_TAG}
 
 > Generado por \`scripts/generate_sbom.sh\` el ${TS_TAG}.
-> Proyecto: {{PROJECT_NAME}} · Clase SaMD: {{SAMD_CLASS}}.
 > Formato fuente: CycloneDX 1.5 JSON.
-> Marco regulatorio: IEC 81001-5-1 §4.1.5 + FDA Cybersecurity 2023 + EO 14028 + EU CRA.
+> Marco regulatorio: IEC 81001-5-1 §4.1.5 + FDA Cybersecurity 2026 + EO 14028 + EU MDR Anexo I §17.
 
 ## Totales
 

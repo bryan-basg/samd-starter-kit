@@ -642,3 +642,16 @@ def test_resumen_de_errores_never_carries_value_ctx_or_user_keys():
         {"type": "extra_forbidden", "loc": ["body", "<campo>"]},
     ]
     assert _PHI not in repr(resumen) and "PHI-COMO-CLAVE" not in repr(resumen)
+
+
+def test_every_endpoint_is_async():
+    """«100 % async» (`app/README.md`): un `def` corre en hilos y dos notas compartían id."""
+    import inspect
+
+    from app.main import app
+    from app.routers import notes
+
+    handlers = [r.endpoint for r in notes.router.routes if hasattr(r, "endpoint")]
+    handlers += [r.endpoint for r in app.routes if getattr(r, "path", "") == "/health"]
+    assert len(handlers) >= 5
+    assert [h.__name__ for h in handlers if not inspect.iscoroutinefunction(h)] == []

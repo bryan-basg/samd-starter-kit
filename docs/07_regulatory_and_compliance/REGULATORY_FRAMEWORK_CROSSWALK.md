@@ -22,7 +22,7 @@
 
 | Marco | Edición de referencia |
 |---|---|
-| IEC 62304 | 2006 + Amд.1:2015 |
+| IEC 62304 | 2006 + Amd.1:2015 |
 | ISO 14971 | 2019 (+ ISO/TR 24971:2020 como guía) |
 | ISO 13485 | 2016 |
 | EU MDR | Reglamento (UE) 2017/745 |
@@ -37,30 +37,30 @@
 
 | Documento DHF | IEC 62304 | ISO 14971 | ISO 13485 | EU MDR 2017/745 | FDA | IMDRF SaMD |
 |---|---|---|---|---|---|---|
-| `ISO_14971_RISK_MATRIX.md` | §7 (gestión de riesgo) | §5–§8 (análisis, evaluación, control, riesgo residual) | §7.1 (planif. realización) | Anexo I §1–§9 (GSPR generales) | 21 CFR 820.30(g) | N12 (categorización de riesgo) |
-| `TRACEABILITY_MATRIX_SAMD.md` | §5.1, §5.7, §7.3.3 | §7.4 (verificación de control) | §7.3.x (diseño y desarrollo) | Anexo II §3 (info de diseño/fabricación) | 21 CFR 820.30(j) (DHF) | N12 §8 (consideraciones) |
+| `ISO_14971_RISK_MATRIX.md` | §7 (gestión de riesgo) | §5–§8 (análisis, evaluación, control, riesgo residual) | §7.1 (planif. realización) | Anexo I §1–§9 (GSPR generales) | 21 CFR 820.10(c) → ISO 13485 §7.1, §7.3 | N12 (categorización de riesgo) |
+| `TRACEABILITY_MATRIX_SAMD.md` | §5.1, §5.7, §7.3.3 | §7.2 (implementación y verificación de control) | §7.3.x (diseño y desarrollo) | Anexo II §3 (info de diseño/fabricación) | 21 CFR 820.10(c) → ISO 13485 §7.3.10 | N12 §8 (consideraciones) |
 | `SOFTWARE_SAFETY_CLASSIFICATION.md` | §4.3 (clasificación A/B/C) | §4 (proceso de riesgo) | N/A | Regla 11 (Anexo VIII) | Documentation Level (Basic/Enhanced) — guía Premarket Jun-2023 | N12 (categoría I–IV) |
-| `RISK_CONTROL_TRACEABILITY.md` | §7.3 (trazabilidad de control) | §7.4, §7.5 (verif. e impl. de control) | §7.3.6 (verif. de diseño) | Anexo I §4 (control de riesgo) | 21 CFR 820.30(f)(g) | N12 §7 |
+| `RISK_CONTROL_TRACEABILITY.md` | §7.3 (trazabilidad de control) | §7.2 (impl. y verif. de control), §7.5 (riesgos derivados del control) | §7.3.6 (verif. de diseño) | Anexo I §4 (control de riesgo) | 21 CFR 820.10(c) → ISO 13485 §7.3.6–§7.3.7 | N12 §7 |
 | `CRITICAL_MODULES_INVENTORY.md` | §4.3, §5.3 (arquitectura por clase) | §5.4 (identificación de peligros) | §7.3.3 (entradas de diseño) | Anexo I §17 (sist. electrónicos prog.) | System/Software Architecture Diagram (guía Premarket Jun-2023) + Risk Management File | N12 (significancia de info) |
 
 ### 2.2 Ciclo de vida y mantenimiento (`docs/07_*`)
 
 | Documento DHF | IEC 62304 | ISO 14971 | ISO 13485 | EU MDR 2017/745 | FDA | IMDRF SaMD |
 |---|---|---|---|---|---|---|
-| `SOUP_INVENTORY.md` | §5.1.5, §8.1.2 (SOUP) | §7 (riesgo de terceros) | §7.4 (compras) | Anexo I §17.2 | FDA Cybersecurity Guidance §V.B (SBOM) | N23 (QMS) |
-| `SOFTWARE_MAINTENANCE_PLAN.md` | §6 (proceso de mantenimiento) | §10 (post-producción) | §7.5 (provisión del servicio) | Art. 83 (vigilancia post-mercado) | 21 CFR 820.30(i) (cambios de diseño) | N23 |
-| `SOFTWARE_CONFIGURATION_MANAGEMENT_PLAN.md` | §8 (gestión de configuración) | N/A | §4.2.4/§4.2.5 (control de docs/registros) | Anexo II §1–§2 | 21 CFR 820.30(j), 21 CFR 11 | N23 |
-| `SOFTWARE_PROBLEM_RESOLUTION_PROCEDURE.md` | §9 (resolución de problemas) | §10 (info de producción/post-prod.) | §8.3, §8.5 (no conforme, CAPA) | Art. 87–88 (vigilancia, reporte) | 21 CFR 820.100 (CAPA) | N23 |
-| `SBOM_MANAGEMENT_PLAN.md` | §8, §5.1.4 | §7 (riesgo de SOUP) | §7.4 | FDA Cybersecurity Guidance (Sep 2023) §V.B; §524B FD&C | Art. 17 (CRA, mercado UE) | N23 |
-| `REGULATORY_VERSION_LOG.md` | §5.1, §8.2.4 | N/A | §4.2.4 (control de documentos) | Anexo II §1 (doc técnica) | 21 CFR 820.40 (control de documentos) | N23 |
+| `SOUP_INVENTORY.md` | §5.1.5, §8.1.2 (SOUP) | §7 (riesgo de terceros) | §7.4 (compras) | Anexo I §17.2 | FDA Cybersecurity Guidance §V.A.4 (SBOM) | N23 (QMS) |
+| `SOFTWARE_MAINTENANCE_PLAN.md` | §6 (proceso de mantenimiento) | §10 (post-producción) | §7.5 (provisión del servicio) | Art. 83 (vigilancia post-mercado) | 21 CFR 820.10(c) → ISO 13485 §7.3.9 | N23 |
+| `SOFTWARE_CONFIGURATION_MANAGEMENT_PLAN.md` | §8 (gestión de configuración) | N/A | §4.2.4/§4.2.5 (control de docs/registros) | Anexo II §1–§2 | 21 CFR 820.35; 21 CFR 11 | N23 |
+| `SOFTWARE_PROBLEM_RESOLUTION_PROCEDURE.md` | §9 (resolución de problemas) | §10 (info de producción/post-prod.) | §8.3, §8.5 (no conforme, CAPA) | Art. 87–88 (plazos en `POST_MARKET_SURVEILLANCE_PLAN.md` §7) | 21 CFR 820.10(a) → ISO 13485 §8.5 | N23 |
+| `SBOM_MANAGEMENT_PLAN.md` | §8, §5.1.4 | §7 (riesgo de SOUP) | §7.4 | Anexo I §17.2 y §17.4 (el CRA excluye los productos bajo MDR: Reg. 2024/2847 Art. 2(2)) | FDA Cybersecurity Guidance (feb-2026) §V.A.4, §VII.C.3; §524B FD&C | N23 |
+| `REGULATORY_VERSION_LOG.md` | §5.1, §8.2.4 | N/A | §4.2.4 (control de documentos) | Anexo II §1 (doc técnica) | 21 CFR 820.10(a) → ISO 13485 §4.2.4; 820.35 | N23 |
 
 ### 2.3 Evidencia clínica y post-market (`docs/07_*`)
 
 | Documento DHF | IEC 62304 | ISO 14971 | ISO 13485 | EU MDR 2017/745 | FDA | IMDRF SaMD |
 |---|---|---|---|---|---|---|
-| `CLINICAL_EVALUATION_PLAN.md` | N/A | §3 (uso previsto) | §7.3.3 (entradas de diseño) | Art. 61 + Anexo XIV Parte A | Guía FDA *SaMD: Clinical Evaluation* (3 pilares IMDRF: asociación clínica válida, validación analítica, validación clínica) | N41 (eval. clínica) |
-| `CLINICAL_VALIDATION_REPORT.md` | §5.7 (verif. de sistema) | §7.4 (verif. de control) | §7.3.7 (validación de diseño) | Art. 61 + Anexo XIV | 21 CFR 820.30(g) (validación) | N41 |
-| `POST_MARKET_SURVEILLANCE_PLAN.md` | §6.1 (plan de mantenimiento) | §10 (post-producción) | §8.2.1 (retroalimentación) | Art. 83–86 + Anexo III | 21 CFR 803 (reporte rutinario de eventos); 21 CFR 822 solo si la FDA emite una orden §522 | N23 |
+| `CLINICAL_EVALUATION_PLAN.md` | N/A | §5.2 (uso previsto) | §7.3.3 (entradas de diseño) | Art. 61 + Anexo XIV Parte A | IMDRF N41 (3 pilares: asociación clínica válida, validación analítica, validación clínica); la guía FDA *SaMD: Clinical Evaluation* fue retirada en 2026 | N41 (eval. clínica) |
+| `CLINICAL_VALIDATION_REPORT.md` | §5.7 (verif. de sistema) | §7.2 (verif. de control) | §7.3.7 (validación de diseño) | Art. 61 + Anexo XIV | 21 CFR 820.10(c) → ISO 13485 §7.3.7 | N41 |
+| `POST_MARKET_SURVEILLANCE_PLAN.md` | §6.1 (plan de mantenimiento) | §10 (post-producción) | §8.2.1 (retroalimentación) | Art. 83–86 + Anexo III | 21 CFR 803 (reporte de eventos: 30 días / 5 días hábiles); 21 CFR 822 solo si la FDA emite una orden §522 | N23 |
 
 ### 2.4 Etiquetado e instrucciones (`docs/07_*`)
 
@@ -73,7 +73,7 @@
 
 | Documento DHF | IEC 62304 | ISO 14971 | ISO 13485 | EU MDR 2017/745 | FDA | IMDRF SaMD |
 |---|---|---|---|---|---|---|
-| `COMPLIANCE_AND_SECURITY_MASTER.md` | §5.1 (planificación) | §4 (proceso) | §4.1 (QMS general) | Anexo I §17.4 (ciberseguridad) | FDA Cybersecurity Guidance (Sep 2023) | N23 |
+| `COMPLIANCE_AND_SECURITY_MASTER.md` | §5.1 (planificación) | §4 (proceso) | §4.1 (QMS general) | Anexo I §17.4 (ciberseguridad) | FDA Cybersecurity Guidance (feb-2026) | N23 |
 | `COMPLIANCE_CHECKLIST.md` | §5.5 (implementación) | §7 (control) | §7.5 | Anexo I §17.2 | FDA Cybersecurity Guidance §V | N/A |
 | `PRIVACY_POLICY.md` | N/A | N/A | N/A | (GDPR — fuera de MDR) | HIPAA 45 CFR 164 | N/A |
 | `DATA_RETENTION_POLICY.md` | N/A | N/A | §4.2.5 (control de registros) | (GDPR Art. 5) | HIPAA 45 CFR 164.310(d) | N/A |
@@ -96,15 +96,15 @@
 
 | Documento DHF | IEC 62304 | ISO 14971 | ISO 13485 | EU MDR 2017/745 | FDA | IMDRF SaMD |
 |---|---|---|---|---|---|---|
-| `02_architecture_and_design/ARCHITECTURE_OVERVIEW.md` | §5.3 (arquitectura) | §5.4 | §7.3.3 | Anexo I §17.1 | 21 CFR 820.30(c)(d) | N12 |
-| `03_software_development_plan/SOFTWARE_DEVELOPMENT_PLAN.md` | §5.1 (plan de desarrollo) | §4.4 (plan de riesgo) | §7.3.2 (planif. de diseño) | Anexo II §6 | 21 CFR 820.30(b) | N23 |
-| `03_software_development_plan/COMPLETE_TESTING_STRATEGY.md` | §5.5–§5.7 (verif.) | §7.4 | §7.3.6 (verif. de diseño) | Anexo II §6.1 | 21 CFR 820.30(f) | N23 |
-| `03_software_development_plan/AUDIT_PROTOCOL.md` | §5.1.4, §9 | §9 (revisión) | §8.2.4 (auditoría interna) | Anexo II | 21 CFR 820.22 | N23 |
-| `01_governance_and_strategy/VISION_AND_GOVERNANCE.md` | §5.1.1 (proceso) | §4.2 (responsabilidades) | §5 (resp. de dirección) | Art. 10 §9 | 21 CFR 820.20 (mgmt resp.) | N23 |
+| `02_architecture_and_design/ARCHITECTURE_OVERVIEW.md` | §5.3 (arquitectura) | §5.4 | §7.3.3 | Anexo I §17.1 | 21 CFR 820.10(c) → ISO 13485 §7.3.3–§7.3.4 | N12 |
+| `03_software_development_plan/SOFTWARE_DEVELOPMENT_PLAN.md` | §5.1 (plan de desarrollo) | §4.4 (plan de riesgo) | §7.3.2 (planif. de diseño) | Anexo II §6 | 21 CFR 820.10(c) → ISO 13485 §7.3.2 | N23 |
+| `03_software_development_plan/COMPLETE_TESTING_STRATEGY.md` | §5.5–§5.7 (verif.) | §7.4 | §7.3.6 (verif. de diseño) | Anexo II §6.1 | 21 CFR 820.10(c) → ISO 13485 §7.3.6 | N23 |
+| `03_software_development_plan/AUDIT_PROTOCOL.md` | §5.1.4, §9 | §9 (revisión) | §8.2.4 (auditoría interna) | Anexo II | 21 CFR 820.10(a) → ISO 13485 §8.2.4 | N23 |
+| `01_governance_and_strategy/VISION_AND_GOVERNANCE.md` | §5.1.1 (proceso) | §4.2 (responsabilidades) | §5 (resp. de dirección) | Art. 10 §9 | 21 CFR 820.10(a) → ISO 13485 §5 | N23 |
 | `04_user_documentation/USER_GUIDE.md` | N/A | §8 (info de seguridad) | §7.2.1 | Anexo I §23 (IFU) | 21 CFR 801 | N10 |
-| `05_design_decisions/RFC-*.md` | §5.4 (diseño detallado) | §7.1 (opciones de control) | §7.3.3 | Anexo II §3 | 21 CFR 820.30(c) | N/A |
-| `06_operations_and_runbooks/DEPLOY_RUNBOOK.md` | §5.8 (release) | N/A | §7.5.1 | N/A | 21 CFR 820.70 | N/A |
-| `08_verification_and_audits/TECHNICAL_DEBT_SUMMARY.md` | §5.7, §9 (problemas conocidos) | §10 | §8.3 (no conforme) | Art. 88 (tendencias) | 21 CFR 820.100 (CAPA) | N23 |
+| `05_design_decisions/RFC-*.md` | §5.4 (diseño detallado) | §7.1 (opciones de control) | §7.3.3 | Anexo II §3 | 21 CFR 820.10(c) → ISO 13485 §7.3.3–§7.3.4 | N/A |
+| `06_operations_and_runbooks/DEPLOY_RUNBOOK.md` | §5.8 (release) | N/A | §7.5.1 | N/A | 21 CFR 820.10(a) → ISO 13485 §7.5.1 | N/A |
+| `08_verification_and_audits/TECHNICAL_DEBT_SUMMARY.md` | §5.7, §9 (problemas conocidos) | §10 | §8.3 (no conforme) | Art. 88 (tendencias) | 21 CFR 820.10(a) → ISO 13485 §8.5 | N23 |
 
 ---
 
@@ -131,7 +131,7 @@ Marcá acá toda celda donde el mapeo está incompleto o pendiente de verificaci
 | Hueco | Marco afectado | Acción pendiente | Responsable |
 |---|---|---|---|
 | Nivel de documentación FDA por riesgo (Basic/Enhanced) sin fijar | FDA | Determinar nivel según *Content of Premarket Submissions for Device Software Functions* (Jun 2023) | {{OWNER}} |
-| Referencias de cláusula de la §2 | Varios | Verificadas contra fuentes oficiales (FDA/EUR-Lex/IMDRF/AICPA); reconfirmar contra la edición vigente antes de una sumisión | ✓ verificado |
+| Referencias de cláusula de la §2 | Varios | La columna FDA, las de ISO 14971 citadas y la fila SBOM se contrastaron el 2026-11-24 con fuentes oficiales (eCFR, EUR-Lex, índices de norma); el resto, no. Reconfirmar contra la edición vigente antes de una sumisión | {{OWNER}} |
 | Mapeo de GSPR Anexo I por requisito individual | EU MDR | Completar en `EU_MDR_MAPPING.md` §GSPR | {{OWNER}} |
 
 ---

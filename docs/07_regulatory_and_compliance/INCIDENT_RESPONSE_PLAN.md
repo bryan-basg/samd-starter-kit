@@ -66,7 +66,7 @@ Definir cómo **{{PROJECT_NAME}}** detecta, contiene, erradica y se recupera de 
 
 | Destinatario | Plazo | Base legal | Condición |
 |---|---|---|---|
-| Autoridad de control (p. ej. AEPD/EDPB) | **72 h** desde el conocimiento | GDPR Art. 33 | Brecha con riesgo para derechos y libertades |
+| Autoridad de control competente (p. ej. AEPD; el EDPB no recibe notificaciones) | **72 h** desde el conocimiento | GDPR Art. 33 | Brecha con riesgo para derechos y libertades |
 | Titulares afectados | Sin dilación indebida | GDPR Art. 34 | Alto riesgo para el titular |
 | Autoridades HIPAA / afectados | Sin demora, máx. 60 días | HIPAA §164.404–410 | Brecha de PHI no asegurada |
 

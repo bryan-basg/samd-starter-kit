@@ -44,6 +44,16 @@ validate_class() {
   esac
 }
 
+# Los valores se escriben TAL CUAL dentro de Markdown, YAML, JSON, Python y shell: un carácter
+# que alguno de esos formatos interpreta rompe el archivo (o ejecuta lo que sigue). Se valida
+# una vez, acá, antes de tocar nada.
+valor_apto() {
+  case "$1" in
+    *'"'*|*"'"*|*\\*|*'`'*|*'$'*|*': '*|*' #'*|*'{{'*|*$'\n'*) return 1 ;;
+  esac
+}
+AVISO_VALOR="no puede llevar comillas rectas, \\, \`, \$, ': ', ' #', '{{' ni saltos de línea (usá comillas tipográficas: ’ “ ”)"
+
 if [[ "${1:-}" != "--yes" ]]; then
   echo "Completá los valores del proyecto (Enter para dejar el marcador sin reemplazar):"
   for k in "${PROMPTS[@]}"; do
@@ -56,6 +66,8 @@ if [[ "${1:-}" != "--yes" ]]; then
         else
           echo "    ↳ La clase debe ser A, B o C. Probá de nuevo (o Enter para decidirla luego)."
         fi
+      elif ! valor_apto "$val"; then
+        echo "    ↳ El valor $AVISO_VALOR. Probá de nuevo."
       else
         VARS[$k]="$val"; break
       fi
@@ -71,6 +83,13 @@ else
   fi
 fi
 
+for k in "${PROMPTS[@]}"; do
+  if ! valor_apto "${VARS[$k]}"; then
+    echo "ERROR: $k $AVISO_VALOR. No se cambió nada." >&2
+    exit 1
+  fi
+done
+
 echo
 echo "Reemplazando marcadores en $ROOT ..."
 for k in "${PROMPTS[@]}"; do
@@ -78,22 +97,25 @@ for k in "${PROMPTS[@]}"; do
   [[ -z "$val" ]] && continue
   # Escapar caracteres especiales de sed en el valor
   esc=$(printf '%s' "$val" | sed -e 's/[\/&]/\\&/g')
-  grep -rlZ --binary-files=without-match "{{$k}}" "$ROOT" \
+  # `|| true`: al re-correr, un marcador ya reemplazado da «sin coincidencias» (grep sale con 1)
+  # y `pipefail` mataba el script sin aplicar los que faltaban.
+  { grep -rlZ --binary-files=without-match "{{$k}}" "$ROOT" \
     --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=venv --exclude-dir=.venv \
     --exclude-dir=.mypy_cache --exclude-dir=.pytest_cache --exclude-dir=.ruff_cache --exclude-dir=dist \
-    --exclude="init_kit.sh" 2>/dev/null \
+    --exclude="init_kit.sh" 2>/dev/null || true; } \
     | xargs -0 -r sed -i "s/{{$k}}/$esc/g"
   echo "  {{$k}} -> $val"
 done
 
 echo
-remaining="$(grep -rl "{{[A-Z_]*}}" "$ROOT" --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=venv --exclude-dir=.venv --exclude-dir=.mypy_cache --exclude-dir=.pytest_cache --exclude-dir=.ruff_cache --exclude-dir=dist --exclude="init_kit.sh" 2>/dev/null || true)"
+# Se captura entero y se recorta después: `grep | head` bajo `pipefail` moría por SIGPIPE (141)
+# y los «Próximos pasos» no salían nunca.
+remaining="$(grep -rn "{{[A-Z_]*}}" "$ROOT" --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=venv --exclude-dir=.venv --exclude-dir=.mypy_cache --exclude-dir=.pytest_cache --exclude-dir=.ruff_cache --exclude-dir=dist --exclude="init_kit.sh" 2>/dev/null || true)"
 if [[ -n "$remaining" ]]; then
-  echo "Marcadores sin reemplazar (los podés completar luego o re-correr este script):"
-  grep -rn "{{[A-Z_]*}}" "$ROOT" --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=venv --exclude-dir=.venv --exclude-dir=.mypy_cache --exclude-dir=.pytest_cache --exclude-dir=.ruff_cache --exclude-dir=dist --exclude="init_kit.sh" 2>/dev/null \
-    | sed 's/^/  /' | head -20
-  total="$(grep -rho "{{[A-Z_]*}}" "$ROOT" --exclude-dir=.git --exclude-dir=node_modules --exclude-dir=venv --exclude-dir=.venv --exclude-dir=.mypy_cache --exclude-dir=.pytest_cache --exclude-dir=.ruff_cache --exclude-dir=dist --exclude="init_kit.sh" 2>/dev/null | wc -l | tr -d ' ')"
-  [[ "$total" -gt 20 ]] && echo "  ... y más (total $total ocurrencias)"
+  echo "Marcadores sin reemplazar (los de este script: re-corrélo; los {{TODO}} y afines se completan a mano):"
+  total="$(wc -l <<< "$remaining")"
+  head -20 <<< "$remaining" | sed 's/^/  /'
+  [[ "$total" -gt 20 ]] && echo "  ... y más (total $total líneas)"
 else
   echo "✓ No quedan marcadores sin reemplazar."
 fi
@@ -110,6 +132,9 @@ echo "      docs/07_regulatory_and_compliance/SOFTWARE_SAFETY_CLASSIFICATION.md"
 echo " 3. Completá los 4 documentos base, en orden:"
 echo "      clasificación → Master Map → matriz de riesgo ISO 14971 → matriz de trazabilidad"
 echo "    (mirá examples/auralog/ para verlos rellenos en un dispositivo Clase B ficticio)"
+echo " 4. Poné lo tuyo donde el kit trae lo suyo: .github/CODEOWNERS (hoy pide revisión al dueño"
+echo "    del kit: en tu repo no protege nada) y repo_url / site_author en mkdocs.yml."
+echo " 5. Activá el gate de marcadores cuando termines de adaptar:  touch .kit-adapted"
 if [[ "$cls" == "C" ]]; then
   echo "    Clase C: leé examples/dosificta/CLASS_C_DELTA.md — qué exige además (diseño detallado por unidad)."
 fi

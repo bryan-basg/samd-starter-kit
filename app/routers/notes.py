@@ -44,7 +44,9 @@ class _StoredNote(TypedDict):
     ciphertext: str
 
 
-# user_id -> lista de notas cifradas. El texto NUNCA se guarda en claro.
+# user_id -> lista de notas cifradas. El texto NUNCA se guarda en claro. En memoria: vale para UN
+# solo worker (cada proceso tendría su propio almacén). Los handlers son `async` sin `await` entre
+# calcular el id y guardar: en un `def` correrían en hilos y dos notas podían salir con el mismo id.
 _STORE: dict[str, list[_StoredNote]] = {}
 
 
@@ -54,7 +56,7 @@ _STORE: dict[str, list[_StoredNote]] = {}
     status_code=status.HTTP_201_CREATED,
     responses=_BODY_RESPONSES,
 )
-def create_note(note: NoteIn, user_id: str = Depends(get_current_user_id)) -> NoteOut:
+async def create_note(note: NoteIn, user_id: str = Depends(get_current_user_id)) -> NoteOut:
     bucket = _STORE.setdefault(user_id, [])
     item: _StoredNote = {"id": len(bucket) + 1, "ciphertext": encryption.encrypt(note.text)}
     bucket.append(item)
@@ -62,7 +64,7 @@ def create_note(note: NoteIn, user_id: str = Depends(get_current_user_id)) -> No
 
 
 @router.get("/notes", response_model=list[NoteOut], responses=_AUTH_RESPONSES)
-def list_notes(user_id: str = Depends(get_current_user_id)) -> list[NoteOut]:
+async def list_notes(user_id: str = Depends(get_current_user_id)) -> list[NoteOut]:
     return [
         NoteOut(id=i["id"], text=encryption.decrypt(i["ciphertext"]))
         for i in _STORE.get(user_id, [])
@@ -70,7 +72,7 @@ def list_notes(user_id: str = Depends(get_current_user_id)) -> list[NoteOut]:
 
 
 @router.get("/demo/unavailable")
-def demo_unavailable() -> None:
+async def demo_unavailable() -> None:
     """Ilustra el fusible: cuando una dependencia cae, degradamos así (no 500 seco)."""
     raise HTTPException(
         status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
@@ -80,6 +82,6 @@ def demo_unavailable() -> None:
 
 
 @router.get("/demo/internal-error")
-def demo_internal_error() -> None:
+async def demo_internal_error() -> None:
     """Ilustra el handler global: un error inesperado NO filtra traceback al usuario."""
     raise RuntimeError("fallo interno simulado con detalle sensible que no debe filtrarse")

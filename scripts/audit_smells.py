@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Auditor de smells de robustez backend — {{PROJECT_NAME}} (SaMD {{SAMD_CLASS}}).
+"""Auditor de smells de robustez backend (SaMD).
 
 IEC 62304 §5.5 — implementación robusta. Dos smells que ni el linter ni los
 tests cazan de forma fiable y que en un backend asíncrono son bugs reales:

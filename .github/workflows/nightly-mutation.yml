@@ -44,9 +44,9 @@ jobs:
       - name: Stryker
         run: |
           if [ "${{ github.event.inputs.full_run }}" = "true" ] || [ "${{ github.event.schedule }}" = "0 5 1 * *" ]; then
-            npx stryker run                       # full: ignoreStatic:true + dryRunTimeoutMinutes:30 en la config
+            npx --no-install stryker run                       # full: ignoreStatic:true + dryRunTimeoutMinutes:30 en la config
           else
-            npx stryker run --incremental         # incremental barato
+            npx --no-install stryker run --incremental         # incremental barato
           fi
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()

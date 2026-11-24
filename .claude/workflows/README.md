@@ -6,7 +6,7 @@ Scripts de orquestación determinista (loops, fan-out, pipelines, verificación 
 
 ## Patrón canónico SaMD — revisión por dimensiones con verificación adversarial
 
-`samd-review.workflow.js` revisa el diff de la rama actual contra varias dimensiones de riesgo (seguridad, fail-safe clínico, trazabilidad, neuro-UX) en paralelo, y **refuta cada hallazgo con un agente independiente** antes de reportarlo — consecuencia directa de SaMD §5.6 (verificación adversarial obligatoria sobre hallazgos clínicos/seguridad).
+`samd-review.workflow.js` revisa el diff de la rama actual contra varias dimensiones de riesgo (seguridad, fail-safe clínico, trazabilidad, neuro-UX) en paralelo, y **refuta cada hallazgo con un agente independiente** antes de reportarlo — consecuencia directa de SaMD §7.4 (verificación adversarial obligatoria sobre hallazgos clínicos/seguridad).
 
 Pipeline: cada dimensión revisa → cada hallazgo se verifica apenas su dimensión termina (sin barrera) → se reportan solo los confirmados.
 

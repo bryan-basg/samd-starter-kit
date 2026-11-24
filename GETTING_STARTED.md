@@ -29,7 +29,7 @@ my-medical-device/
 ├── .claude/
 │   ├── rules/           ← the rest of the ruleset: 5 path-scoped (load per layer) + 2 cross-cutting
 │   ├── agents/          ← 12 layer specialists (backend, clinical, frontend, db, …)
-│   ├── commands/ skills/← samd-trace: impact analysis (§5.6)
+│   ├── commands/ skills/← samd-trace: impact analysis (§7.4)
 │   └── workflows/       ← samd-review: multi-agent diff review
 ├── .agents/workflows/   ← agent-agnostic mirror of the process
 ├── app/                 ← your backend        (bring your code)
@@ -40,7 +40,7 @@ my-medical-device/
 │   ├── 02_… 03_…        ← architecture · development & testing plan
 │   ├── 04_user_documentation/  ← user guide, release notes
 │   ├── 05_design_decisions/    ← RFCs (3 real ones, filled in)
-│   ├── 06_… 07_…        ← runbooks · regulatory & compliance (25 templates)
+│   ├── 06_… 07_…        ← runbooks · regulatory & compliance (30 templates)
 │   └── 08_… 09_…        ← verification & audits · engineering lessons
 ├── examples/auralog/    ← a fictional Class B device with its DHF filled in
 ├── examples/dosificta/  ← a fictional Class C device: what changes when a bug can kill
@@ -99,7 +99,7 @@ The class is assigned **after** considering external risk controls (IEC 62304 §
 
 ### Step 2 — Fill the foundation documents (in order)
 
-Don't open all 40 documents. Fill these **four**, in this order — each one feeds the next:
+Don't open all 50+ documents. Fill these **four**, in this order — each one feeds the next:
 
 | # | Document | Why it's first |
 |---|---|---|
@@ -141,7 +141,7 @@ npm test                        # all green
 npm run dev                     # http://localhost:5173
 ```
 
-**Delete the example when you bring your own app** — it's clearly marked. Then bring your code in, honoring the hard rules:
+**Delete the example when you bring your own app** — it's clearly marked, and [`tests/README.md`](tests/README.md) lists the guardians to re-anchor (not delete). Then bring your code in, honoring the hard rules:
 
 - **`app/`** — your backend. Hard rules: identity from the token only, fully async, strict typing, no tracebacks to the user, fail-safe with `503 + Retry-After`. See [`.claude/rules/backend.md`](.claude/rules/backend.md) (loads automatically when the agent touches this layer) and [`.claude/agents/backend.md`](.claude/agents/backend.md).
 - **`frontend/`** — your client. Hard rules: offline-first, `prefers-reduced-motion` honored unconditionally, WCAG AA contrast, canonical overlays, accessible labels. See [`.claude/rules/frontend-ux.md`](.claude/rules/frontend-ux.md) and [`.claude/agents/frontend.md`](.claude/agents/frontend.md).
@@ -182,7 +182,9 @@ The full rulebook is [`CLAUDE.md`](CLAUDE.md) (core) plus [`.claude/rules/`](.cl
 ## First-hour checklist
 
 - [ ] Cloned, re-init'd git, ran `scripts/init_kit.sh`
-- [ ] No stray `{{...}}` placeholders left (`grep -rn "{{[A-Z_]*}}" . --exclude-dir=.git`)
+- [ ] No stray `{{...}}` placeholders left (`bash scripts/check_placeholders.sh`), then `touch .kit-adapted` so CI keeps checking
+- [ ] Replaced the kit's own owner in `.github/CODEOWNERS` and `repo_url` / `site_author` in `mkdocs.yml`
+- [ ] Added your critical modules to `CLINICAL_PATTERNS` in `.claude/scripts/audit_clinical_log.py`
 - [ ] Safety class decided and recorded
 - [ ] Read the four foundation docs in the AuraLog example
 - [ ] Skimmed `CLAUDE.md` (Rule 0) and `CONTRIBUTING.md`

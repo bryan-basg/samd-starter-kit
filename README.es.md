@@ -104,7 +104,7 @@ La regla central es la **Regla 0**: *toda decisión técnica se subordina al cum
 1. **Trazabilidad obligatoria** (§5.1/§5.7): cada cambio clínico/schema/seguridad deja rastro en el DHF en el mismo PR.
 2. **Verificación demostrable** (§5.7): nada se declara "verde" sin correr los tests vinculados y reportar números.
 3. **Fail-safe explícito** (ISO 14971): cuando algo falla, degrada de forma segura y predecible — nunca en silencio.
-4. **Análisis de impacto antes de fixear** (§5.6): un bug se arregla tras revisar TODOS los consumidores del símbolo.
+4. **Análisis de impacto antes de fixear** (§7.4): un bug se arregla tras revisar TODOS los consumidores del símbolo.
 
 Y unas pocas **reglas duras** que un modelo mejor no anula:
 
@@ -169,7 +169,7 @@ Mantenido por [@bryan-basg](https://github.com/bryan-basg). Si te ahorra aprende
 
 **¿Estás usando este kit — en una clínica, un servicio de radiología, una startup o un curso?** Contanos en [Discussions → Show and tell](https://github.com/bryan-basg/samd-starter-kit/discussions/categories/show-and-tell). Las preguntas van a [Q&A](https://github.com/bryan-basg/samd-starter-kit/discussions/categories/q-a). El uso real es lo que define la próxima versión.
 
-Ver [CONTRIBUTING.es.md](CONTRIBUTING.es.md). Reportes de seguridad: en privado, ver [SECURITY.md](.github/SECURITY.md).
+Ver [CONTRIBUTING.es.md](CONTRIBUTING.es.md). Reportes de seguridad: en privado, ver [SECURITY.md](.github/SECURITY.md). Sé amable: [Código de conducta](CODE_OF_CONDUCT.md).
 
 ## Licencia
 

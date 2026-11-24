@@ -20,6 +20,10 @@ on:
     paths:
       - "app/**"
       - "frontend/**"
+      # Un parche de dependencia o de imagen base también se despliega (SOUP, IEC 62304 §8).
+      - "requirements.txt"
+      - "Dockerfile*"
+      - "alembic/**"
   workflow_dispatch: {}
 
 concurrency:

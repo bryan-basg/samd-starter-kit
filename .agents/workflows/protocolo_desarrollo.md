@@ -21,7 +21,7 @@ Consecuencias prácticas:
 3. **Prohibido eliminar documentación** sobre arquitectura o algoritmos clínicos sin reporte de trazabilidad.
 4. **Verificación obligatoria** (§5.7): no se declara "verde" sin correr los tests vinculados y reportar números.
 5. **Fail-safe explícito** (ISO 14971): cuando un módulo clínico falle, el sistema degrada de forma segura y predecible — nunca silenciosa, nunca con tracebacks expuestos.
-6. **Análisis de impacto antes de fixear** (§5.6): un bug se arregla solo tras revisar **todos los consumidores** del símbolo modificado.
+6. **Análisis de impacto antes de fixear** (§7.4): un bug se arregla solo tras revisar **todos los consumidores** del símbolo modificado.
 
 ---
 
@@ -39,9 +39,9 @@ Antes de cualquier cambio estructural, leer: `docs/00_master/MASTER_MAP.md`, el 
 
 ## 3. Boy Scout (mantenibilidad — §5.7)
 
-Deja el código más limpio que lo encontraste (refactorizá al menos un pedazo de deuda en el archivo tocado). Documentá junto con el cambio — Master Map y DHF en el mismo PR.
+Deja el código más limpio que lo encontraste, de forma **oportunista**: la deuda chica y evidente del archivo tocado se limpia; la que infla el diff de un fix puntual se anota en `TECHNICAL_DEBT_SUMMARY.md` y se ataca aparte. Documentá junto con el cambio — Master Map y DHF en el mismo PR.
 
-## 4. Análisis de impacto antes de declarar "arreglado" (§5.6)
+## 4. Análisis de impacto antes de declarar "arreglado" (§7.4)
 
 - Búsqueda global al modificar parámetro, retorno, schema o constante.
 - Cambio de endpoint → actualizar consumidor frontend + regenerar tipos del contrato.
@@ -61,7 +61,7 @@ Adaptá a tu stack ({{FRONTEND_STACK}}). Principios: offline-first (mutaciones p
 ## 7. Testing (verificación SaMD §5.7 — no negociable)
 
 - Tests rigurosos, no de humo. Tras cada Edit/Write, correr los tests vinculados y reportar números.
-- Mutation score: frontend GLOBAL ≥90%, backend ≥80% en módulos clínicos (ajustá a tu Clase).
+- Mutation score: frontend ≥90% en módulos clínicos y ≥75% piso en el resto; backend ≥80% en módulos clínicos (ajustá a tu Clase).
 - Mocks asíncronos firmes + aislamiento de estado global. Mock con whitelist para `hasattr`/duck-typing.
 - No correr tests/type-checker mientras corre mutation testing.
 - El motor de mutation NUNCA en paralelo con agentes que escriben tests.
@@ -77,7 +77,7 @@ Adaptá a tu stack ({{FRONTEND_STACK}}). Principios: offline-first (mutaciones p
 
 1. El código pasa linting + CI local.
 2. Los tests vinculados verdes y los números reportados.
-3. Se redujo deuda técnica en al menos un punto (Boy Scout).
+3. Boy Scout oportunista: la deuda chica y evidente del archivo tocado quedó limpia o anotada.
 4. La documentación está al día (Master Map, spec, TECHNICAL_DEBT, TRACEABILITY, y Risk Matrix si aplica).
 5. La UI es accesible (contraste WCAG AA, diseño plano, modales canónicos).
 6. El cambio fue comunicado al dueño con genealogía clara antes de commit, y autorizado explícitamente.

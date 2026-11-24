@@ -38,6 +38,43 @@ BLOQUEADOS = [
     "npm run test:e2e",
     "npx vitest run",
     "cd x && pytest tests/test_a.py && pytest -q",
+    # Envoltorios corrientes (auditoría 2026-11-24: pasaban todos).
+    "uv run pytest",
+    "poetry run pytest -q",
+    "bash -c 'pytest -q'",
+    'sh -c "cd x && pytest"',
+    "bash -lc 'pytest'",
+    "eval pytest",
+    "(pytest -q)",
+    "nohup pytest &",
+    "nice -n 10 pytest",
+    "sudo pytest",
+    "timeout 60 pytest -q",
+    "FOO=1 pytest",
+    "python3.12 -m pytest -q",
+    "python -mpytest",
+    "coverage run -m pytest",
+    "python -m coverage run -m pytest",
+    "pytest ./",
+    "pytest tests/./",
+    "pytest -q tests/../tests",
+    "pytest /repo/tests",
+    "pytest -q tests/test_a.py tests/",
+    "pytest -q --cov-config .coveragerc",
+    "pytest --numprocesses auto",
+    "pnpm test",
+    "yarn test",
+    "npm --prefix frontend test",
+    "npm test --prefix frontend",
+    "npm exec vitest",
+    "npx -y vitest run",
+    "npx playwright test",
+    "mutmut run",
+    "bash -x scripts/check_coverage.sh",
+    "source scripts/check_coverage.sh",
+    "bash <<'X'\npytest -q\nX",
+    "cat <<< hola\npytest",
+    "echo $((1 << 2))\npytest",
 ]
 
 # Comandos que un subagente SÍ puede correr (sus propios tests / escaneos cortos).
@@ -51,6 +88,24 @@ PERMITIDOS = [
     "bash scripts/run_semgrep.sh",
     "git status --short",
     "cat <<'EOF'\npytest -q\nEOF",
+    "cat > f.sh <<EOF\npytest\nEOF",
+    "pytest --version",
+    "pytest --collect-only -q",
+    "pytest tests/ --co",
+    "vitest --version",
+    "uv run pytest tests/test_a.py",
+    "bash -c 'pytest tests/test_a.py'",
+    "python3.12 -m pytest tests/test_a.py",
+    "npm --prefix frontend test -- src/a.test.ts",
+    "pnpm test src/a.test.ts",
+    "npm ci",
+    "npm run lint",
+    "bash scripts/sast.sh",
+    "make test",
+    "echo pytest",
+    "pip install pytest",
+    "git commit -m 'x; pytest'",
+    "pytest tests/unit/",
 ]
 
 
@@ -115,3 +170,15 @@ def test_el_texto_del_motivo_no_afirma_que_npm_test_con_archivo_se_deniega() -> 
     razon = json.loads(res.stdout)["hookSpecificOutput"]["permissionDecisionReason"]
     assert "npm test --" not in razon
     assert "pytest tests/ -k" in razon
+
+
+def test_el_hook_esta_enchufado_a_bash_y_apunta_al_script() -> None:
+    """El enchufe, no solo la pieza: matcher `Bash` y una ruta que existe."""
+    raiz = SCRIPT.parents[2]
+    hooks = json.loads((raiz / ".claude" / "settings.json").read_text(encoding="utf-8"))["hooks"]
+    comandos = [
+        h["command"]
+        for grupo in hooks["PreToolUse"] if grupo["matcher"] == "Bash"
+        for h in grupo["hooks"]
+    ]
+    assert any(SCRIPT.relative_to(raiz).as_posix() in c for c in comandos), hooks["PreToolUse"]

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Auditor anti-alucinaciones de IA — {{PROJECT_NAME}} (SaMD {{SAMD_CLASS}}).
+"""Auditor anti-alucinaciones de IA (SaMD).
 
 IEC 62304 §5.5/§5.7 — el código generado por asistentes de IA suele dejar
 placeholders, credenciales de ejemplo o claims sin resolver que NUNCA deben
@@ -117,8 +117,11 @@ EXCLUDE_FILES = {"audit_hallucinations.py"}
 INCLUDE_SUFFIXES = {
     ".py", ".ts", ".tsx", ".js", ".jsx", ".json", ".yaml", ".yml",
     ".toml", ".ini", ".cfg", ".env", ".sh", ".tf", ".md", ".txt",
-    ".html", ".cjs", ".mjs",
+    ".html", ".cjs", ".mjs", ".conf", ".sql", ".tfvars", ".properties",
 }
+# Archivos sin sufijo útil, por nombre: `Path(".env").suffix` es "" y el de `.env.example`,
+# ".example", así que la lista de sufijos nunca los veía.
+INCLUDE_NAMES = re.compile(r"^(\.env(\..+)?|Dockerfile(\..+)?|Makefile|.*\.mk)$")
 
 _COMPILED = [(re.compile(rx, re.IGNORECASE), label, sev) for rx, label, sev in PATTERNS]
 
@@ -140,7 +143,7 @@ def _iter_files(root: Path) -> Iterator[Path]:
             continue
         if path.name in EXCLUDE_FILES:
             continue
-        if path.suffix.lower() not in INCLUDE_SUFFIXES:
+        if path.suffix.lower() not in INCLUDE_SUFFIXES and not INCLUDE_NAMES.match(path.name):
             continue
         yield path
 

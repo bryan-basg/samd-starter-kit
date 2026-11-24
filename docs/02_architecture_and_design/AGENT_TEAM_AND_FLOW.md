@@ -14,7 +14,7 @@
 
 El kit reparte el trabajo en **especialistas por capa**: cada agente carga las reglas
 SaMD de su capa y trabaja aislado del contexto de las demás (consecuencia de IEC 62304
-§5.6 análisis de impacto + §5.7 verificación). Cuando una tarea encaja claramente en una
+§7.4 análisis de impacto + §5.7 verificación). Cuando una tarea encaja claramente en una
 capa, se delega al especialista en vez de trabajar "a mano alzada".
 
 ```mermaid
@@ -114,7 +114,7 @@ flowchart TD
     CLASS{"Clasificación SaMD<br/>Clase A / B / C<br/><small>IEC 62304 §4.3</small>"}
     RISK["Gestión de riesgo<br/><small>ISO 14971 · matriz de riesgo<br/>fail-safe explícito por módulo</small>"]
     DEV["Desarrollo<br/><small>el agente de la capa construye</small>"]
-    IMPACT["Análisis de impacto<br/><small>§5.6 · revisar TODOS los<br/>consumidores del símbolo</small>"]
+    IMPACT["Análisis de impacto<br/><small>§7.4 · revisar TODOS los<br/>consumidores del símbolo</small>"]
     VERIF["Verificación<br/><small>§5.7 · tests vinculados corridos<br/>+ números reportados</small>"]
     DHF["DHF / Trazabilidad<br/><small>§5.1 · Master Map · matrices<br/>deuda técnica · RFCs</small>"]
     GATE{"¿Auditoría de<br/>trazabilidad OK?"}
@@ -144,7 +144,7 @@ flowchart TD
    persona usuaria recibe su análisis de riesgo y su **fail-safe explícito**: cuando algo
    falla, degrada de forma segura y visible, nunca en silencio. Ver
    [ISO 14971 Risk Matrix](../07_regulatory_and_compliance/ISO_14971_RISK_MATRIX.md).
-3. **Desarrollo → Análisis de impacto (§5.6).** Un cambio no termina en el archivo donde
+3. **Desarrollo → Análisis de impacto (§7.4).** Un cambio no termina en el archivo donde
    se tocó: se revisan **todos** los consumidores del símbolo modificado (búsqueda global).
 4. **Verificación (§5.7).** Nada se declara "verde" sin correr los tests vinculados y
    **reportar los números**. Si la verificación da rojo, el sistema vuelve a desarrollo con

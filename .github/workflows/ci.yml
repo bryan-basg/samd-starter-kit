@@ -167,6 +167,31 @@ jobs:
       - name: Tests + piso de cobertura (global y datos/SQL)
         run: bash scripts/check_coverage.sh
 
+  # El `Dockerfile` también es producto: sin este job nadie construía la imagen, y un PR que la
+  # rompía (versión base, COPY, dependencia sin rueda) salía verde. No sube nada a ningún registro.
+  imagen:
+    name: Imagen del backend (construir y arrancar)
+    needs: changes
+    if: needs.changes.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Construir
+        run: docker build -t kit-ci .
+      - name: Arranca y responde
+        run: |
+          docker run -d --name kit -e TESTING=True -p 8000:8000 kit-ci
+          for _ in $(seq 1 20); do curl -fs http://127.0.0.1:8000/health && exit 0; sleep 1; done
+          docker logs kit
+          exit 1
+      - name: Sin secretos se niega a arrancar (fail-safe)
+        run: |
+          if timeout 30 docker run --rm -e TESTING=False kit-ci uvicorn app.main:app --port 8001; then
+            echo "::error::La imagen arrancó con las claves públicas de dev"
+            exit 1
+          fi
+
   contract-sync:
     name: Drift del contrato OpenAPI
     needs: changes

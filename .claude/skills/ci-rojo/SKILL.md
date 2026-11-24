@@ -5,7 +5,7 @@ description: Diagnóstico de un workflow de CI en rojo — logs frescos, reprodu
 
 # ci-rojo — Diagnóstico de un CI en rojo
 
-Diagnosticá un CI en rojo sin teorizar sobre el código antes de mirar los logs REALES. (IEC 62304 §5.6 — análisis de impacto: primero evidencia, después hipótesis.)
+Diagnosticá un CI en rojo sin teorizar sobre el código antes de mirar los logs REALES. (IEC 62304 §7.4 — análisis de impacto: primero evidencia, después hipótesis.)
 
 ## Cuándo usarla
 

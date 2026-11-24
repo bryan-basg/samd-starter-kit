@@ -1,6 +1,6 @@
 # Plan de Gestión de Configuración del Software (SCM)
 
-**Proyecto:** {{PROJECT_NAME}} · **Clase SaMD:** {{SAMD_CLASS}} · **Versión:** v1.17 · **Fecha:** 2026-11-24
+**Proyecto:** {{PROJECT_NAME}} · **Clase SaMD:** {{SAMD_CLASS}} · **Versión:** v1.18 · **Fecha:** 2026-11-24
 
 > Plantilla conforme a IEC 62304 §5.1.9 (planificación de gestión de configuración) y §8 (gestión de configuración del software). Ajuste ramas, herramientas y baselines a la realidad del proyecto.
 
@@ -80,7 +80,7 @@ Documentá acá cuál de los dos regímenes aplica a tu proyecto. Un plan que de
 ## 5. Gestión de cambios
 
 1. Todo cambio nace de un ítem rastreable (issue/ticket/problema).
-2. **Análisis de impacto** (IEC 62304 §5.6): identificar todos los consumidores del símbolo/esquema modificado antes de aprobar.
+2. **Análisis de impacto** (IEC 62304 §7.4): identificar todos los consumidores del símbolo/esquema modificado antes de aprobar.
 3. Revisión por pares vía PR.
 4. Verificación: tests vinculados ejecutados y reportados (§5.7).
 5. Trazabilidad documental actualizada en el mismo cambio (DHF / matriz de trazabilidad).
@@ -113,7 +113,7 @@ Documentá acá cuál de los dos regímenes aplica a tu proyecto. Un plan que de
 
 ### 7.1 Dependencias de terceros (SOUP, IEC 62304 §8)
 
-- **Qué vigila Dependabot** (`.github/dependabot.yml`): `npm` (`frontend/`), `pip` (`requirements*.txt` de la raíz), `docker` (`Dockerfile`, salvo la X.Y de Python, que se sube a mano), `devcontainers` y `github-actions`. Cada actualización entra por PR con el CI en verde; las de efecto real (versión mayor, seguridad, la librería de cifrado de PHI) se registran en el `CHANGELOG.md` con su análisis de impacto (§5.6).
+- **Qué vigila Dependabot** (`.github/dependabot.yml`): `npm` (`frontend/`), `pip` (`requirements*.txt` de la raíz), `docker` (`Dockerfile`, salvo la X.Y de Python, que se sube a mano), `devcontainers` y `github-actions`. Cada actualización entra por PR con el CI en verde; las de efecto real (versión mayor, seguridad, la librería de cifrado de PHI) se registran en el `CHANGELOG.md` con su análisis de impacto (§7.4).
 - **Un piso (`>=`) no cambia lo que el CI instala**: `pip` toma la última versión que cumple el rango. Antes de dar por probado un cambio de piso se mira en el log del job qué versión se instaló de verdad; mover un **techo** (`<`) sí cambia lo instalado.
 - **Las excepciones llevan su motivo y su condición de retiro** en el propio `dependabot.yml`. Se frena solo con `update-types: ["version-update:semver-major"]` y nunca con `versions:`, que también silenciaría los avisos de seguridad.
 - **Paquetes que se declaran entre sí viajan juntos**: `react`, `react-dom` y sus tipos son un solo grupo (un PR); subirlos por separado rompe `npm ci` por dependencias de pares.
@@ -153,6 +153,7 @@ Verificación periódica de que el estado desplegado coincide con el baseline ap
 | v1.15 | 2026-11-24 | Claude Opus 5.5 | Dos defectos de seguridad de la auditoría de 11 agentes, con refutador independiente (§5.6) que descartó dos arreglos previos. Corrige a v1.14: **A-1 no estaba cerrado** (su test llamaba al handler a mano; el servidor real volvía a escribir el valor). (1) R-SEC-01: salida única `app/main.py::AppSinDatosEnElLog`, probada con uvicorn real; (2) `.env.example` sin comentarios en línea y `Settings.insecure_secrets` rechaza el texto que el repo publicó; (3) el guard de arranque se prueba por el `lifespan` y cada default por separado; (4) el filtro `backend` de `ci.yml` cubre `.env.example`. Verificado: ver CHANGELOG [Unreleased]. |
 | v1.16 | 2026-11-24 | Claude Opus 5.5 | Sincronización con el proyecto de referencia (12 commits del cerebro revisados; 3 portables). Proceso: (1) skill `/revision-visual` (`.claude/skills/revision-visual/` + espejo en `.claude/commands/`), generalizada y con el manual de marca como plantilla; (2) caché de GitHub solo en runners de la nube (`.claude/rules/github-actions.md` y agente `cloud-ops`); (3) RFC-003 v1.2 prefiere OIDC. Producto (esqueleto): (4) guardianes de diseño plano, movimiento reducido y contraste completo, que `.claude/rules/frontend-ux.md` ya exigía; (5) el borde del campo de texto pasa de 1,48:1 a ≥ 3:1 (WCAG 1.4.11). No portado: `/vigilar-mutacion` (la mutación nocturna del kit viene apagada), detector de crisis y horarios propios. Verificado: ver CHANGELOG [Unreleased]. |
 | v1.17 | 2026-11-24 | Claude Opus 5.5 | Verdes que mentían (auditoría del 2026-11-24), sin cambios en el producto: (1) el piso de cobertura de datos/SQL podía no fallar nunca y un `...` en un comentario ocultaba ramas (`.coveragerc`); (2) los pasos del CI quedan anclados uno por uno (`tests/test_ci_backend_gates.py`); (3) `check_placeholders.sh`, `check_doc_links.sh`, `kit_upgrade.sh`, `run_gitleaks.sh`, `generate_sbom.sh`, `lint_agents.py` y `check_translations.py` fallan si no miraron; (4) una sola versión de Python y de Node (`tests/test_versiones_coherentes.py`), y Dependabot deja de proponer la X.Y de Python solo en el `Dockerfile`; (5) se corrigen textos que declaraban controles inexistentes (Trivy sobre imágenes, Gitleaks en CI, SBOM automático). Verificado: ver CHANGELOG [Unreleased]. |
+| v1.18 | 2026-11-24 | Claude Opus 5.5 | Resto de la auditoría del 2026-11-24. Regulatorio: plazos MDR Art. 87 (10 días) y 21 CFR 803, §5.7 en Clase A (Amd 1:2015), QMSR en vez de secciones *Reserved*, guías FDA vigentes, CRA no aplicable, GSPR, reloj de brechas del encargado y numeración de cláusulas (el análisis de impacto de un cambio es IEC 62304 §7.4, no §5.6, que es integración; las entradas históricas conservan el número con que se escribieron). Adopción: `init_kit.sh` valida valores, se puede re-correr y termina; gate de marcadores con lista cerrada; fixtures que toleran borrar el ejemplo. Proceso/CI: la imagen se construye y arranca en cada PR de backend; el candado de suite cubre los envoltorios corrientes y su enchufe queda anclado; `check_translations` compara marcadores y plurales; `audit_hallucinations` mira Dockerfile y `.env`; CI local alineado. Trazabilidad: REQ-SEC-03/04, MOD-07/08, estados de riesgo coherentes, RFC-001 v1.2. Producto (esqueleto): endpoints `async`. Verificado: ver CHANGELOG [Unreleased]. |
 
 ---
 **Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

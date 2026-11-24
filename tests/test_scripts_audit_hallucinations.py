@@ -137,3 +137,24 @@ def test_cada_entrada_de_la_allowlist_apunta_a_un_archivo_vivo(auditor):
         assert f.is_file(), f"allowlist huérfana: {rel}"
         assert frag in f.read_text(encoding="utf-8"), f"fragmento ausente en {rel}: {frag}"
         assert motivo.strip()
+
+
+@pytest.mark.parametrize(
+    "archivo",
+    ["Dockerfile", "Dockerfile.prod", "Makefile", ".env", ".env.example", "app/x.conf", "db/x.sql", "infra/x.tfvars"],
+)
+def test_mira_archivos_sin_sufijo_de_codigo(tmp_path, archivo):
+    """Antes eran invisibles: un Dockerfile con una credencial demo daba «limpio»."""
+    _write(tmp_path, archivo, f"DB_PASSWORD={DEMO_SECRET}\n")
+    res = _run(tmp_path)
+    assert res.returncode == 1 and archivo in res.stdout, res.stdout
+
+
+@pytest.mark.parametrize(
+    "texto",
+    ["CHANGE" + "ME", "REPLACE" + "_ME", "all" + "Users", "roles/" + "owner", "change" + "it",
+     "password" + "123", "TODO" + " SECURITY", "raise NotImplemented" + "Error", LOCAL_OTHER],
+)
+def test_cada_patron_caza_lo_suyo(tmp_path, texto):
+    _write(tmp_path, "app/x.py", f"# {texto}\n")
+    assert _run(tmp_path).returncode == 1, texto

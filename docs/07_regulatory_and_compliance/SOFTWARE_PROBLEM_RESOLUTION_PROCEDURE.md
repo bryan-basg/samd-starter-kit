@@ -28,7 +28,7 @@ Todo problema se documenta en un registro central con, como mínimo:
 
 ---
 
-## 3. Análisis de impacto (IEC 62304 §9.2 y §5.6)
+## 3. Análisis de impacto (IEC 62304 §9.2 y §7.4)
 
 Para cada problema se evalúa:
 
@@ -52,7 +52,7 @@ Los problemas con impacto en seguridad se enlazan con `INCIDENT_RESPONSE_PLAN.md
 
 ---
 
-## 5. Corrección (IEC 62304 §9.3)
+## 5. Corrección bajo control de cambios (IEC 62304 §9.4)
 
 - La corrección se realiza bajo gestión de cambios (ver `SOFTWARE_CONFIGURATION_MANAGEMENT_PLAN.md` §5): rama, PR, revisión por pares.
 - El cambio referencia el ID del problema.
@@ -60,7 +60,7 @@ Los problemas con impacto en seguridad se enlazan con `INCIDENT_RESPONSE_PLAN.md
 
 ---
 
-## 6. Verificación (IEC 62304 §9.4 y §5.7)
+## 6. Verificación (IEC 62304 §9.7 y §5.7)
 
 - No se declara un problema "resuelto" sin ejecutar los tests vinculados y reportar los números.
 - Se añade/actualiza un test que reproduce el problema (regresión) cuando es posible.
@@ -68,7 +68,7 @@ Los problemas con impacto en seguridad se enlazan con `INCIDENT_RESPONSE_PLAN.md
 
 ---
 
-## 7. Comunicación (IEC 62304 §9.5)
+## 7. Comunicación (IEC 62304 §9.3)
 
 | Parte interesada | Qué se comunica | Cuándo |
 |---|---|---|

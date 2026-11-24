@@ -5,8 +5,13 @@ Hook `PreToolUse` sobre `Bash`: si el comando lo pide un subagente (la entrada t
 `agent_id`) y EJECUTA la suite completa o un proceso pesado, se deniega con el motivo.
 La sesión principal pasa siempre: ella corre la suite con OK de {{OWNER}}. Falla ABIERTO:
 un error del candado no puede bloquear todo `Bash`.
+
+Límite honesto: lee el TEXTO del comando. Cubre los envoltorios corrientes (`uv run`, `bash -c`,
+`npm --prefix`, rutas sin normalizar, heredoc hacia un shell), no a quien quiera esquivarlo
+(un alias, un script propio, `make test`, variables).
 """
 import json
+import posixpath
 import re
 import shlex
 import sys
@@ -20,22 +25,34 @@ _SCRIPT_PESADO = re.compile(
 # Opciones de pytest que consumen el token siguiente (no es una ruta).
 _PYTEST_CON_VALOR = frozenset({"-k", "-m", "-n", "-p", "-c", "-o", "-W", "--dist", "--maxfail",
                                "--tb", "--rootdir", "--durations", "--timeout", "--cov",
-                               "--cov-report", "--junitxml", "--basetemp", "--ignore",
-                               "--deselect"})
-_RUTAS_QUE_SON_TODO = frozenset({"tests", "tests/", "./tests", "./tests/", "."})
-_PREFIJOS = frozenset({"time", "nice", "env", "exec", "command"})
+                               "--cov-report", "--cov-config", "--junitxml", "--basetemp",
+                               "--ignore", "--deselect", "--numprocesses"})
+# Con estas, pytest informa y no ejecuta ningún test.
+_PYTEST_SOLO_INFORMA = frozenset({"--version", "-V", "--help", "-h", "--collect-only", "--co",
+                                  "--fixtures", "--markers"})
+_PREFIJOS = frozenset({"time", "env", "exec", "command", "nohup", "sudo", "xargs", "then", "do"})
+_CORREDORES = frozenset({"uv", "poetry", "pipenv", "pdm", "hatch"})  # `uv run <comando>`
+_SHELLS = frozenset({"bash", "sh", "zsh", "dash"})
+_GESTORES_JS = frozenset({"npm", "pnpm", "yarn", "bun"})
 _REDIRECCION = re.compile(r"(?:^|\s)\d*(?:>>?|<)&?(?:\d+\b|\s*[^\s]+)")
 
 
-def _lineas_sin_heredoc(comando: str) -> Iterator[str]:
-    """Descarta el cuerpo de los heredoc: es texto que se escribe, no se ejecuta."""
-    fin = None
+def _lineas_que_se_ejecutan(comando: str) -> Iterator[str]:
+    """Descarta el cuerpo de un heredoc (texto que se escribe), salvo si lo recibe un shell."""
+    fin, ejecuta = None, False
     for linea in comando.split("\n"):
         if fin is not None:
-            fin = None if linea.strip() == fin else fin
+            if linea.strip() == fin:
+                fin = None
+            elif ejecuta:
+                yield linea
             continue
-        marca = re.search(r"<<-?\s*['\"]?(\w+)['\"]?", linea)
-        fin = marca.group(1) if marca else None
+        # `<<<` (here-string) y `$((1 << 2))` no abren un heredoc.
+        marca = re.search(r"(?<!<)<<(?!<)-?\s*(['\"]?)([A-Za-z_]\w*)\1", linea)
+        fin = marca.group(2) if marca else None
+        if marca:
+            toks = _tokens(re.split(r"[;&|]", linea[: marca.start()])[-1])
+            ejecuta = bool(toks) and posixpath.basename(toks[0]) in _SHELLS
         yield linea
 
 
@@ -62,7 +79,7 @@ def _tramos(linea: str) -> Iterator[str]:
 
 
 def _tokens(tramo: str) -> list[str]:
-    tramo = _REDIRECCION.sub(" ", tramo)
+    tramo = _REDIRECCION.sub(" ", tramo.strip().lstrip("({ ").rstrip(")} "))
     try:
         toks = shlex.split(tramo)
     except ValueError:
@@ -76,6 +93,10 @@ def _tokens(tramo: str) -> list[str]:
             while toks and toks[0].startswith("-"):
                 toks = toks[2:] if toks[0] in ("-s", "-k", "--signal", "--kill-after") else toks[1:]
             toks = toks[1:]  # la duración
+        elif toks[0] == "nice":
+            toks = toks[3:] if toks[1:2] == ["-n"] else toks[1:]
+        elif toks[0] in _CORREDORES and toks[1:2] == ["run"]:
+            toks = toks[2:]
         else:
             break
     return toks
@@ -94,39 +115,77 @@ def _posicionales(args: list[str], con_valor: frozenset[str] = frozenset()) -> l
     return sueltos
 
 
+def _es_todo(ruta: str) -> bool:
+    """`.`, `tests`, `./tests/`, `tests/../tests` o `/abs/…/tests`: recorre la suite entera."""
+    normal = posixpath.normpath(ruta.split("::")[0])
+    return normal == "." or posixpath.basename(normal) == "tests"
+
+
 def _es_pesado(toks: list[str]) -> bool:
-    cabeza = toks[0].rsplit("/", 1)[-1]
-    if cabeza in ("bash", "sh") and len(toks) > 1:
-        toks, cabeza = toks[1:], toks[1].rsplit("/", 1)[-1]
+    cabeza = posixpath.basename(toks[0])
+    if cabeza in _SHELLS | {"source", "."}:
+        resto = toks[1:]
+        while resto and resto[0].startswith("-"):
+            if resto[0].endswith("c") and not resto[0].startswith("--") and len(resto) > 1:
+                return motivo_de_bloqueo(resto[1]) is not None  # bash -c "<comando>"
+            resto = resto[1:]
+        if not resto:
+            return False
+        toks, cabeza = resto, posixpath.basename(resto[0])
+    if cabeza == "eval":
+        return motivo_de_bloqueo(" ".join(toks[1:])) is not None
     if _SCRIPT_PESADO.search(cabeza):
         return True
-    if cabeza == "npx" and len(toks) > 1:
-        toks, cabeza = toks[1:], toks[1]
+    if cabeza in ("npx", "bunx"):
+        toks = [x for i, x in enumerate(toks[1:]) if i or not x.startswith("-")]
+        while toks and toks[0].startswith("-"):
+            toks = toks[1:]
+        if not toks:
+            return False
+        cabeza = toks[0]
+    if cabeza in _GESTORES_JS:
+        args = toks[1:]
+        while args and args[0].startswith("-"):  # `npm --prefix frontend test`
+            args = args[2:] if args[0] in ("--prefix", "-C", "--dir", "--cwd") else args[1:]
+        if args[:1] == ["exec"] or (args[:1] and args[0] in ("vitest", "playwright", "stryker")):
+            args = [a for a in (args[1:] if args[0] == "exec" else args) if a != "--"]
+            return bool(args) and _es_pesado(args)
+        if args[:1] == ["run"]:
+            args = args[1:]
+        elif args[:1] not in (["test"], ["t"]):
+            return False
+        if not args:
+            return False
+        script = "test" if args[0] == "t" else args[0]
+        return script in _NPM_COMPLETOS_SIN_RUTA and not _posicionales(args[1:], frozenset({"--prefix"}))
     if cabeza in ("stryker", "schemathesis") or (cabeza == "mutmut" and toks[1:2] == ["run"]):
         return True
-    if cabeza == "npm":
-        if toks[1:2] == ["test"]:
-            script, resto = "test", toks[2:]
-        elif toks[1:2] == ["run"] and len(toks) > 2:
-            script, resto = toks[2], toks[3:]
-        else:
-            return False
-        return script in _NPM_COMPLETOS_SIN_RUTA and not _posicionales(resto)
     if cabeza == "vitest":
+        if "--version" in toks or "--help" in toks:
+            return False
         return not _posicionales(toks[1:])
     if cabeza == "playwright" and toks[1:2] == ["test"]:
         return not _posicionales(toks[2:])
-    if cabeza in ("python", "python3") and toks[1:3] == ["-m", "pytest"]:
-        toks, cabeza = toks[2:], "pytest"
-    if cabeza == "pytest":
+    if cabeza == "coverage" and toks[1:2] == ["run"]:
+        return "pytest" in toks and _es_pesado(toks[toks.index("pytest"):])
+    if re.fullmatch(r"python(\d+(\.\d+)?)?", cabeza):
+        if toks[1:2] == ["-mpytest"]:
+            toks, cabeza = ["pytest", *toks[2:]], "pytest"
+        elif toks[1:3] == ["-m", "pytest"]:
+            toks, cabeza = toks[2:], "pytest"
+        elif toks[1:3] == ["-m", "coverage"]:
+            return _es_pesado(toks[2:])
+    if cabeza in ("pytest", "py.test"):
+        if _PYTEST_SOLO_INFORMA & set(toks[1:]):
+            return False
         rutas = _posicionales(toks[1:], _PYTEST_CON_VALOR)
-        return not rutas or all(r in _RUTAS_QUE_SON_TODO for r in rutas)
+        return not rutas or any(_es_todo(r) for r in rutas)
     return False
 
 
 def motivo_de_bloqueo(comando: str) -> str | None:
     """Devuelve el tramo que ejecuta la suite completa o un proceso pesado, o None."""
-    for linea in _lineas_sin_heredoc(comando):
+    for linea in _lineas_que_se_ejecutan(comando):
         for tramo in _tramos(linea):
             toks = _tokens(tramo.strip())
             if toks and _es_pesado(toks):

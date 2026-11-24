@@ -54,7 +54,7 @@ Superar un umbral dispara el proceso de **acciones correctivas y preventivas (CA
 |---|---|---|
 | Revisión operativa de indicadores | `<mensual>` | Tablero de KPIs |
 | Revisión por la dirección | `<según ISO 13485 §5.6>` | Acta de revisión |
-| Informe periódico de seguridad (PSUR) — Clase IIa+/SaMD B–C | `<anual o bienal, MDR Art. 86>` | PSUR |
+| Informe periódico de seguridad (PSUR) — Clase MDR IIa, IIb o III (la clase MDR no se deduce de la A/B/C de IEC 62304) | `<anual o bienal, MDR Art. 86>` | PSUR |
 | Informe de vigilancia post-comercialización — Clase I | `<según necesidad, MDR Art. 85>` | PMS Report |
 
 ---
@@ -89,7 +89,11 @@ Si el producto se declara **exento de PMCF**, justifíquese aquí: `<justificaci
 
 | Evento | Plazo de reporte | Autoridad | Referencia |
 |---|---|---|---|
-| Incidente grave | `<≤ 15 días; ≤ 2 días si amenaza grave a la salud pública>` | `<autoridad competente>` | MDR Art. 87 |
+| Amenaza grave para la salud pública | **≤ 2 días** desde que el fabricante la conoce | `<autoridad competente>` | MDR Art. 87(4) |
+| **Muerte o deterioro grave imprevisto** del estado de salud | **≤ 10 días** (y de inmediato al establecer o sospechar la relación causal) | `<autoridad competente>` | MDR Art. 87(5) |
+| Cualquier otro incidente grave | **≤ 15 días** | `<autoridad competente>` | MDR Art. 87(3) |
+| EE. UU. — muerte, lesión grave o malfunción reportable | **≤ 30 días corridos** | FDA (eMDR) | 21 CFR 803.10(c)(1) |
+| EE. UU. — evento que exige acción correctiva para evitar un riesgo irrazonable, o pedido por FDA | **≤ 5 días hábiles** | FDA (eMDR) | 21 CFR 803.10(c)(2) |
 | Acción correctiva de seguridad de campo (FSCA) | `<inmediato>` | `<autoridad competente>` | MDR Art. 87 |
 | Tendencia de incidentes no graves | `<según procedimiento>` | `<autoridad competente>` | MDR Art. 88 |
 

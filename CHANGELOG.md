@@ -11,6 +11,23 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 - **README:** sección «What you get on day one» / «Qué tenés el primer día».
 
 ### Fixed
+- **Plantillas regulatorias corregidas contra la fuente oficial (auditoría del 2026-11-24).** El plan de vigilancia omitía el plazo de **10 días** por muerte o deterioro grave imprevisto (MDR Art. 87(5)) y los de FDA (21 CFR 803.10). El SDP eximía a la Clase A de las pruebas de sistema (§5.7 le aplica desde la Amd 1:2015). El *Documentation Level* de FDA no se deduce de la clase IEC 62304. Las citas a 21 CFR 820.20–.100 apuntaban a secciones *Reserved* desde la QMSR. El Cyber Resilience Act excluye los productos bajo MDR. Además: GSPR §1, §2, §9 y §22, aviso del encargado y del *business associate*, FTC, retención de PHI, ISO 14971:2019, ISO 27001:2022 y las cláusulas 9.x de IEC 62304.
+- **El análisis de impacto de un cambio se cita como IEC 62304 §7.4** (antes §5.6, que es integración) en `CLAUDE.md`, reglas, agentes, skills y docs. Lo histórico no se reescribe.
+- **`init_kit.sh` termina y se puede re-correr:** moría por SIGPIPE sin los «Próximos pasos», y al repetirlo, sin aplicar lo que faltaba. Rechaza valores que rompen YAML, JSON, Python o shell.
+- **El gate de marcadores llega a verde:** lista cerrada en vez de cualquier `{{MAYÚSCULAS}}`.
+- **Borrar el ejemplo ya no tumba los guardianes:** `tests/conftest.py` tolera que `app/` no exista (si existe y está roto, rojea) y `tests/README.md` dice qué reanclar.
+- **IDs de nota duplicados bajo concurrencia:** los endpoints pasan a `async`, con guardián.
+- **SBOM regenerado con el árbol de hoy** (el versionado era de agosto: React 18 y una `cryptography` que los requisitos ya no permiten). Solo lista el producto: la herramienta que lo genera va en un venv aparte (antes, 57 componentes; ahora, 26).
+- **RFC-001 v1.2:** el kit no implementa rotación de clave y ahora lo dice.
+- **Trazabilidad:** REQ-SEC-03/04, MOD-07/08 y estados de riesgo que se contradecían.
+- **Espejos del Boy Scout obligatorio**, descartado en `CLAUDE.md`, y números viejos en las guías.
+
+### Added
+- **CI: la imagen del `Dockerfile` se construye, arranca y se niega a arrancar sin secretos.**
+- **`check_translations.py` compara marcadores y plurales** por idioma; **`audit_hallucinations.py` mira `Dockerfile`, `.env*`, `Makefile`, `.sql`, `.conf`**.
+- **El candado de suite cubre los envoltorios corrientes** (`uv run`, `bash -c`, `npm --prefix`…), deja pasar lo que no ejecuta tests y su enchufe está anclado. `deploy.yml` se dispara con dependencias e imagen; `npm run typecheck` revisa `vite.config.ts`; el CI local corre los auditores.
+
+### Fixed
 - **Verdes que mentían (auditoría del 2026-11-24; SaMD §5.7).** Cada uno aprobaba sin haber mirado y ahora tiene una prueba que rojea con la versión anterior:
   - **Cobertura:** el piso de la capa de datos/SQL de `check_coverage.sh` no podía fallar (la sonda heredaba `fail_under` y leía «sin archivos»), y `app/schemas.py` no contaba. El `\.\.\.` de `.coveragerc` escondía cualquier rama con puntos suspensivos en un comentario; ahora solo excluye cuerpos de stub. **Tu porcentaje puede bajar: antes no se medía.**
   - **CI:** cambiar un gate por `true` dejaba la suite verde. `tests/test_ci_backend_gates.py` exige cada paso de `ci.yml` y `kit-quality.yml`, sin taparlo.

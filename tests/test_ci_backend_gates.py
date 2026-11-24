@@ -33,6 +33,10 @@ EXIGIDOS = {
         "python scripts/audit_smells.py",
         "bash scripts/check_coverage.sh",
     ],
+    ("ci.yml", "imagen"): [
+        "docker build -t kit-ci .",
+        "docker run -d --name kit -e TESTING=True -p 8000:8000 kit-ci",
+    ],
     ("ci.yml", "contract-sync"): [
         "python scripts/export_openapi.py --out /tmp/openapi.json",
         "git diff --no-index --exit-code frontend/src/api/openapi.json /tmp/openapi.json \\",

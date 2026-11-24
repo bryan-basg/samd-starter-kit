@@ -16,10 +16,11 @@ comunicar** el SBOM del producto. El SBOM es evidencia regulatoria obligatoria:
   de terceros individualmente.
 - **IEC 81001-5-1 §4.1.5** exige inventario completo de componentes y
   trazabilidad de cambios para todo software médico.
-- **FDA Cybersecurity in Medical Devices Guidance (Sep 2023) §V.B** requiere el
+- **FDA Cybersecurity in Medical Devices Guidance (feb-2026) §V.A.4 y §VII.C.3** requiere el
   SBOM en submissions premarket (510(k), De Novo, PMA).
-- **EU Cyber Resilience Act (CRA)** lo impone como entregable de cadena de
-  suministro de software con productos digitales en el mercado europeo.
+- **EU MDR Anexo I §17.2 y §17.4** (ciclo de vida y seguridad del software). El
+  *Cyber Resilience Act* **no aplica** a un producto bajo MDR (Reg. (UE) 2024/2847
+  Art. 2(2)(a)); solo si tu software **no** es dispositivo médico.
 - **US Executive Order 14028** y **NTIA Minimum Elements for an SBOM (2021)**
   fijan el contenido mínimo (suppliers, componentes, versiones, relaciones).
 

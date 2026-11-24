@@ -70,7 +70,7 @@ Este documento consolida el modelo de amenazas, los controles de seguridad por c
 - **En tránsito:** TLS 1.2+ obligatorio; HSTS habilitado.
 - **En reposo:** columnas con PII/PHI cifradas con **AES-256-GCM**. La clave de cifrado (`ENCRYPTION_KEY`) reside en el gestor de secretos y es **distinta de la clave de firma de tokens** (`SECRET_KEY`).
 - Rotación de claves documentada en `ruta/archivo.py::símbolo`.
-- Cumple ISO 27001 A.10 (criptografía), HIPAA §164.312(a)(2)(iv) y §164.312(e)(2)(ii).
+- Cumple ISO 27001:2022 A.8.24 (criptografía), HIPAA §164.312(a)(2)(iv) y §164.312(e)(2)(ii).
 
 ### 5.3 Auditoría (audit middleware)
 
@@ -114,15 +114,15 @@ Este documento consolida el modelo de amenazas, los controles de seguridad por c
 
 ## 7. Mapeo a marcos regulatorios
 
-| Control interno | OWASP Top 10 | GDPR | HIPAA | ISO 27001 |
+| Control interno | OWASP Top 10 | GDPR | HIPAA | ISO 27001:2022 (Anexo A) |
 |---|---|---|---|---|
-| Identidad JWT-only / anti-IDOR | A01 Broken Access Control | Art. 32 | §164.312(a) | A.9 |
-| Cifrado en reposo AES-256-GCM | A02 Cryptographic Failures | Art. 32(1)(a) | §164.312(a)(2)(iv) | A.10 |
-| Cifrado en tránsito TLS | A02 Cryptographic Failures | Art. 32 | §164.312(e) | A.13 |
-| Errores sin traceback | A05 Security Misconfiguration | Art. 32 | §164.312 | A.14 |
-| Audit middleware sin PII | A09 Logging Failures | Art. 30 | §164.312(b) | A.12 |
-| Gestión de secretos | A05 Security Misconfiguration | Art. 32 | §164.312 | A.9 / A.10 |
-| SAST + fuzz | A06 Vulnerable Components | Art. 32(1)(d) | §164.308(a)(8) | A.12 / A.14 |
+| Identidad JWT-only / anti-IDOR | A01 Broken Access Control | Art. 32 | §164.312(a) | A.5.15, A.8.3 |
+| Cifrado en reposo AES-256-GCM | A02 Cryptographic Failures | Art. 32(1)(a) | §164.312(a)(2)(iv) | A.8.24 |
+| Cifrado en tránsito TLS | A02 Cryptographic Failures | Art. 32 | §164.312(e) | A.8.20, A.8.24 |
+| Errores sin traceback | A05 Security Misconfiguration | Art. 32 | §164.312 | A.8.28 |
+| Audit middleware sin PII | A09 Logging Failures | Art. 30 | §164.312(b) | A.8.15 |
+| Gestión de secretos | A05 Security Misconfiguration | Art. 32 | §164.312 | A.5.17, A.8.24 |
+| SAST + fuzz | A06 Vulnerable Components | Art. 32(1)(d) | §164.308(a)(8) | A.8.8, A.8.29 |
 
 ---
 

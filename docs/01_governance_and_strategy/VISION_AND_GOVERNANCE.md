@@ -19,7 +19,7 @@ Consecuencias prácticas (no son reglas opcionales):
 3. **No eliminar documentación** de arquitectura o algoritmos clínicos sin reporte de trazabilidad.
 4. **Verificación demostrable** (IEC 62304 §5.7): ninguna tarea se declara "lista" sin correr los tests vinculados y reportar números.
 5. **Fail-safe explícito** (ISO 14971): ante fallo de un módulo clínico (red, BD, IA), el sistema degrada de forma segura, predecible y visible — nunca en silencio, nunca exponiendo tracebacks al usuario.
-6. **Análisis de impacto antes de fixear** (IEC 62304 §5.6): un bug se considera arreglado solo tras revisar TODOS los consumidores del símbolo modificado.
+6. **Análisis de impacto antes de fixear** (IEC 62304 §7.4): un bug se considera arreglado solo tras revisar TODOS los consumidores del símbolo modificado.
 
 ---
 

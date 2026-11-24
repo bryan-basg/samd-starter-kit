@@ -104,7 +104,7 @@ The core rule is **Rule 0**: *every technical decision is subordinate to SaMD co
 1. **Mandatory traceability** (§5.1/§5.7): every clinical/schema/security change is recorded in the DHF in the same PR.
 2. **Demonstrable verification** (§5.7): nothing is declared "green" without running the linked tests and reporting numbers.
 3. **Explicit fail-safe** (ISO 14971): when something fails, it degrades safely and predictably — never silently.
-4. **Impact analysis before fixing** (§5.6): a bug is fixed after reviewing ALL consumers of the symbol, not just the file where it was reported.
+4. **Impact analysis before fixing** (§7.4): a bug is fixed after reviewing ALL consumers of the symbol, not just the file where it was reported.
 
 And a handful of **hard rules** that a better model does not override:
 

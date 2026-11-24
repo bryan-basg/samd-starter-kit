@@ -20,6 +20,12 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 _DEV_ENCRYPTION_KEY = base64.b64encode(b"samd-starter-kit-dev-key-32bytes").decode()
 # Mínimo 32 bytes: HS256 lo exige (RFC 7518 §3.2) y PyJWT avisa por debajo.
 _DEV_SECRET_KEY = "dev-only-insecure-public-secret-key"
+# Todo texto que ESTE repo publicó y que algún despliegue pudo tomar como SECRET_KEY. El
+# segundo era el comentario en línea del `.env.example` viejo: python-dotenv < 1.2.4 lo
+# leía como valor y pasaba el piso de longitud. Quien copió ese archivo lo sigue teniendo.
+_SECRET_KEYS_PUBLICAS = frozenset(
+    {_DEV_SECRET_KEY, "# firma de sesión. Distinta de ENCRYPTION_KEY."}
+)
 
 # Pisos de longitud. SECRET_KEY: ≥32 bytes (HS256, RFC 7518 §3.2) — una clave
 # HMAC corta se rompe por fuerza bruta offline a partir de cualquier token.
@@ -68,7 +74,7 @@ class Settings(BaseSettings):
         """
         insecure: list[str] = []
         if (
-            self.secret_key == _DEV_SECRET_KEY
+            self.secret_key.strip() in _SECRET_KEYS_PUBLICAS
             or len(self.secret_key.encode("utf-8")) < MIN_SECRET_KEY_BYTES
         ):
             insecure.append("SECRET_KEY")

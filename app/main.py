@@ -13,11 +13,12 @@ from collections.abc import AsyncIterator, Iterable, Mapping
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request, status
-from fastapi.exceptions import RequestValidationError, ResponseValidationError
+from fastapi.exceptions import RequestValidationError, ValidationException
 from fastapi.responses import JSONResponse
 from pydantic import ValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.routing import Match
+from starlette.types import Receive, Scope, Send
 
 from app.core.config import settings
 from app.routers import notes
@@ -53,14 +54,6 @@ async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
     yield
 
 
-app = FastAPI(
-    title="SaMD Starter Kit — esqueleto de ejemplo",
-    summary="Slice mínimo que demuestra identidad-por-token, cifrado en reposo y fail-safe.",
-    version="0.1.0",
-    lifespan=lifespan,
-)
-
-
 def _resumen_de_errores(errores: Iterable[Mapping[str, object]]) -> list[dict[str, object]]:
     """Qué campo falló y por qué (`loc` + `type`), NUNCA con el valor que mandó el usuario.
 
@@ -84,24 +77,82 @@ def _resumen_de_errores(errores: Iterable[Mapping[str, object]]) -> list[dict[st
     return resumen
 
 
+def _diagnostico(exc: BaseException, vistas: set[int] | None = None) -> str:
+    """Qué falló y dónde: tipos de TODA la cadena + pila. NUNCA los mensajes.
+
+    El mensaje de una excepción puede traer PHI sea del tipo que sea (`int("texto")`,
+    los `parameters` de un error de base de datos, una nota con `add_note`), y también
+    la excepción que la causó. Por eso no se elige qué tipos limpiar: no sale ninguno.
+    """
+    vistas = set() if vistas is None else vistas
+    vistas.add(id(exc))
+    partes: list[str] = []
+    previa = exc.__cause__ or (None if exc.__suppress_context__ else exc.__context__)
+    if previa is not None and id(previa) not in vistas:
+        partes += [_diagnostico(previa, vistas), "--- y al manejarla ---\n"]
+    partes += traceback.format_tb(exc.__traceback__)
+    partes.append(f"{type(exc).__module__}.{type(exc).__qualname__}")
+    if isinstance(exc, (ValidationError, ValidationException)):
+        partes.append(f" {_resumen_de_errores(exc.errors())}")
+    partes.append("\n")
+    if isinstance(exc, BaseExceptionGroup):
+        for sub in exc.exceptions:
+            if id(sub) not in vistas:
+                partes += ["--- dentro del grupo ---\n", _diagnostico(sub, vistas)]
+    return "".join(partes)
+
+
+class ErrorInterno(Exception):
+    """Lo único que sale de la app hacia el servidor: el tipo del fallo, sin datos."""
+
+
+class AppSinDatosEnElLog(FastAPI):
+    """Puerta ÚNICA de salida de errores no manejados (GDPR Art. 32, HIPAA §164.312).
+
+    Starlette responde el 500 y RELANZA la excepción original; uvicorn, hypercorn y
+    gunicorn la loguean con `str(exc)`. `__call__` es el último punto nuestro antes
+    del servidor: por fuera de cualquier middleware, también para WebSocket, streaming
+    y tareas de fondo. Se relanza (no se traga) para que el servidor corte una
+    respuesta a medias en vez de darla por completa.
+
+    Fuera de su alcance: `asyncio.create_task` sin `await`, un `logger.exception()`
+    propio y los exportadores (Sentry, OpenTelemetry) que observan desde adentro.
+    """
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        try:
+            await super().__call__(scope, receive, send)
+            return
+        except Exception as exc:
+            if scope["type"] == "lifespan":
+                # El arranque no lleva datos de pacientes, y el mensaje del guard de
+                # secretos tiene que llegar entero a quien despliega.
+                raise
+            fallo = exc
+        # Fuera del `except` a propósito: adentro, Python le colgaría la excepción
+        # original como `__context__` a lo que se lance acá.
+        logger.error("Error no manejado\n%s", _diagnostico(fallo))
+        tipo = type(fallo).__qualname__
+        del fallo
+        raise ErrorInterno(f"{tipo} (detalle en el logger 'app')")
+
+
+app = AppSinDatosEnElLog(
+    title="SaMD Starter Kit — esqueleto de ejemplo",
+    summary="Slice mínimo que demuestra identidad-por-token, cifrado en reposo y fail-safe.",
+    version="0.1.0",
+    lifespan=lifespan,
+)
+
+
 @app.exception_handler(Exception)
-async def unhandled_exception_handler(_request: Request, exc: Exception) -> JSONResponse:
+async def unhandled_exception_handler(_request: Request, _exc: Exception) -> JSONResponse:
     """Fail-safe global (ISO 14971 + SaMD §5.4): el usuario nunca ve un traceback.
 
-    El detalle técnico se registra para diagnóstico; al cliente solo le llega un
-    mensaje empático + el código HTTP correcto.
+    Solo arma la respuesta empática. El diagnóstico lo registra la salida de la app
+    (`AppSinDatosEnElLog`): después de este handler el framework RELANZA la excepción
+    y el servidor la escribe entera, así que limpiar el log acá no alcanzaba.
     """
-    if isinstance(exc, (ValidationError, ResponseValidationError)):
-        # `str(exc)` de una validación repite el valor inválido, y la última línea del
-        # traceback también: se registra el resumen + la pila SIN esa línea.
-        logger.error(
-            "Error no manejado: %s %s\n%s",
-            type(exc).__name__,
-            _resumen_de_errores(exc.errors()),
-            "".join(traceback.format_tb(exc.__traceback__)),
-        )
-    else:
-        logger.exception("Error no manejado", exc_info=exc)
     return JSONResponse(
         status_code=500,
         content={

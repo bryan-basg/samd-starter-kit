@@ -26,7 +26,7 @@ git clone <repo> && cd {{PROJECT_NAME}}
 <comando-instalar-deps-backend>       # ej. pip install -r requirements.txt
 
 # 2. Variables de entorno (NUNCA commitear secretos reales)
-cp .env.example .env                  # completar valores locales
+cp .env.example .env                  # descomentar y completar los valores locales
 
 # 3. Servicios locales (BD, emuladores, etc.)
 <comando-levantar-servicios-locales>

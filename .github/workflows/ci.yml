@@ -80,6 +80,8 @@ jobs:
               # Los guardianes también LEEN el `Dockerfile` (pineo por digest) y EJECUTAN
               # `scripts/*.sh` (gates silenciosos, `check_coverage.sh`): un PR que toca solo
               # uno de ellos tiene que correr el backend, no saltárselo en verde.
+              # `tests/test_hard_rules.py` lee la plantilla de entorno.
+              - '.env.example'
               - 'Dockerfile*'
               - 'scripts/**/*.sh'
               - 'pyproject.toml'

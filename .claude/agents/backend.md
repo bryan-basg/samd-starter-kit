@@ -65,7 +65,7 @@ npm run backend:test                          # suite completa
 
 ### `.env.example` cubre TODO el código vivo
 
-Si añadís una var nueva en config o leés por entorno en services/middleware, **DEBES** añadirla a `.env.example` con comentario SaMD-aware. El onboarding de devs no se rompe en silencio.
+Si añadís una var nueva en config o leés por entorno en services/middleware, **DEBES** añadirla a `.env.example` con comentario SaMD-aware **en su propia línea** (detrás del `=` hay lectores que lo toman como valor). El onboarding de devs no se rompe en silencio.
 
 ### Lecciones de producción
 

@@ -298,15 +298,75 @@ def test_token_without_exp_is_rejected(client):
     assert "iniciá sesión de nuevo" in resp.json()["detail"].lower()
 
 
+_CLAVE_AES = "eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHg="  # 32 bytes
+
+
+def _secretos(monkeypatch, secret_key: str, encryption_key: str = _CLAVE_AES) -> None:
+    """Modo real con ESTOS secretos: no depende del `.env` de quien corre la suite."""
+    from app.core.config import settings
+
+    monkeypatch.setattr(settings, "testing", False)
+    monkeypatch.setattr(settings, "secret_key", secret_key)
+    monkeypatch.setattr(settings, "encryption_key", encryption_key)
+
+
 @pytest.mark.security
 def test_secret_guard_aborts_on_dev_defaults(monkeypatch):
-    from app.core.config import settings
-    from app.main import _assert_secure_secrets
+    from app.core.config import _DEV_ENCRYPTION_KEY, _DEV_SECRET_KEY, settings
 
-    # Simular producción (TESTING off) con los defaults de dev todavía puestos.
-    monkeypatch.setattr(settings, "testing", False)
-    with pytest.raises(RuntimeError, match="fail-safe SaMD"):
-        _assert_secure_secrets()
+    # Cada default público se prueba SOLO: juntos, uno tapaba que el otro no se detectara.
+    _secretos(monkeypatch, _DEV_SECRET_KEY)
+    assert settings.insecure_secrets() == ["SECRET_KEY"]
+    _secretos(monkeypatch, "a-real-injected-production-secret", _DEV_ENCRYPTION_KEY)
+    assert settings.insecure_secrets() == ["ENCRYPTION_KEY"]
+
+
+@pytest.mark.security
+def test_app_startup_aborts_with_insecure_secrets(monkeypatch):
+    """Flujo real: el `lifespan` (no la función suelta) se niega a arrancar."""
+    from fastapi.testclient import TestClient
+
+    from app.core.config import _DEV_SECRET_KEY
+    from app.main import app
+
+    _secretos(monkeypatch, _DEV_SECRET_KEY)
+    with pytest.raises(RuntimeError, match="fail-safe SaMD.*SECRET_KEY"):
+        with TestClient(app):
+            pytest.fail("la app arrancó con un secreto público")
+
+
+@pytest.mark.security
+@pytest.mark.parametrize("margen", ["", " " * 15], ids=["sin-margen", "con-margen"])
+def test_secret_guard_rejects_the_text_the_old_env_example_published(monkeypatch, margen):
+    from app.core.config import settings
+
+    _secretos(monkeypatch, margen + "# firma de sesión. Distinta de ENCRYPTION_KEY.")
+    assert settings.insecure_secrets() == ["SECRET_KEY"]
+
+
+@pytest.mark.security
+def test_env_example_never_yields_a_usable_secret():
+    """Copiar `.env.example` no puede dejar un valor en un secreto, lo lea quien lo lea.
+
+    Se parsea a mano, como el lector más simple (todo lo que sigue al `=`): python-dotenv
+    < 1.2.4 toma `VAR=   # texto` como VALOR, y el test no depende de qué versión haya.
+    """
+    import re
+    from pathlib import Path
+
+    from app.core.config import Settings
+
+    texto = (Path(__file__).resolve().parents[1] / ".env.example").read_text(encoding="utf-8")
+    activas = dict(
+        linea.split("=", 1)
+        for linea in texto.splitlines()
+        if linea.strip() and not linea.lstrip().startswith("#")
+    )
+    assert [n for n, valor in activas.items() if "#" in valor] == []
+    assert {"SECRET_KEY", "ENCRYPTION_KEY"}.isdisjoint(activas)
+    # Comentadas, pero presentes: toda variable que lee `Settings` está documentada.
+    documentadas = set(re.findall(r"^(?:# )?([A-Z][A-Z0-9_]*)=", texto, flags=re.M))
+    assert {campo.upper() for campo in Settings.model_fields} <= documentadas
 
 
 @pytest.mark.security
@@ -336,13 +396,14 @@ def test_secret_guard_passes_with_real_secrets(monkeypatch):
         ("a-real-injected-production-secret", "", "ENCRYPTION_KEY"),
         ("a-real-injected-production-secret", "no-es-base64!!", "ENCRYPTION_KEY"),
         ("a-real-injected-production-secret", "eHh4eHh4eHh4eHh4eHh4eA==", "ENCRYPTION_KEY"),
+        ("a-real-injected-production-secret", "eHh4" * 11, "ENCRYPTION_KEY"),
         # La MISMA clave válida en ambos roles rompe los dominios de confianza (RFC-001 §Clave).
         ("eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHg=", "eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHg=", "SECRET_KEY"),
         ("eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHg=", "eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHg=", "ENCRYPTION_KEY"),
     ],
     ids=[
         "secret-vacio", "secret-1-byte", "secret-31-bytes", "enc-vacia", "enc-no-base64",
-        "enc-16-bytes", "misma-clave-secret", "misma-clave-enc",
+        "enc-16-bytes", "enc-33-bytes", "misma-clave-secret", "misma-clave-enc",
     ],
 )
 def test_secret_guard_aborts_on_empty_short_or_malformed(
@@ -351,8 +412,7 @@ def test_secret_guard_aborts_on_empty_short_or_malformed(
     from app.core.config import settings
     from app.main import _assert_secure_secrets
 
-    # `cp .env.example .env` deja los secretos VACÍOS: el guard debe abortar
-    # el arranque, no dejar que la app falle tarde, request por request.
+    # El guard aborta el arranque; no deja que la app falle tarde, request por request.
     monkeypatch.setattr(settings, "testing", False)
     monkeypatch.setattr(settings, "secret_key", secret_key)
     monkeypatch.setattr(settings, "encryption_key", encryption_key)
@@ -396,27 +456,174 @@ def test_validation_failure_does_not_log_the_submitted_text(client, caplog):
     assert "text" in caplog.text
 
 
-@pytest.mark.security
-def test_unhandled_validation_error_does_not_log_the_value(caplog):
-    """Un `ValidationError` que salta DENTRO de una ruta cae en el handler global."""
-    import asyncio
-    import logging
-
-    from pydantic import BaseModel, Field, ValidationError
-    from starlette.requests import Request
-
-    from app.main import unhandled_exception_handler
+def _validacion_fallida() -> None:
+    from pydantic import BaseModel, Field
 
     class _Modelo(BaseModel):
         texto: str = Field(max_length=5)
 
-    with pytest.raises(ValidationError) as excinfo:
-        _Modelo(texto=_PHI)
+    _Modelo(texto=_PHI)
 
+
+def _fallo_directo(_token: str) -> str:
+    _validacion_fallida()
+    return ""
+
+
+def _fallo_encadenado(_token: str) -> str:
+    try:
+        _validacion_fallida()
+    except ValueError as exc:
+        raise RuntimeError("no pude leer la nota") from exc
+    return ""
+
+
+def _fallo_con_contexto(_token: str) -> str:
+    try:
+        _validacion_fallida()
+    except ValueError:
+        raise RuntimeError("no pude leer la nota")
+    return ""
+
+
+def _fallo_agrupado(_token: str) -> str:
+    try:
+        _validacion_fallida()
+    except ValueError as exc:
+        raise ExceptionGroup("lote", [exc]) from None
+    return ""
+
+
+def _fallo_con_nota(_token: str) -> str:
+    exc = RuntimeError("no pude leer la nota")
+    exc.add_note(_PHI)
+    raise exc
+
+
+def _fallo_de_otro_tipo(_token: str) -> str:
+    return str(int(_PHI))  # no es una validación, y su mensaje copia el valor igual
+
+
+_FALLOS = [
+    _fallo_directo, _fallo_encadenado, _fallo_con_contexto,
+    _fallo_agrupado, _fallo_con_nota, _fallo_de_otro_tipo,
+]
+
+
+@pytest.mark.security
+@pytest.mark.parametrize("fallo", _FALLOS)
+def test_unhandled_validation_error_does_not_log_the_value(monkeypatch, caplog, fallo):
+    """Ruta real (`GET /notes`): ni nuestro log ni lo que ESCAPA hacia el servidor llevan PHI.
+
+    Lo que sale de la app es lo que cualquier servidor ASGI loguea, así que se formatea
+    igual que lo haría él (con causa, contexto, grupo y notas).
+    """
+    import logging
+    import traceback
+
+    from fastapi.testclient import TestClient
+
+    from app.main import ErrorInterno, app
+
+    _STORE["alice"] = [{"id": 1, "ciphertext": "x"}]
+    monkeypatch.setattr(encryption, "decrypt", fallo)
     caplog.set_level(logging.INFO, logger="app")
     caplog.clear()
-    resp = asyncio.run(unhandled_exception_handler(Request({"type": "http"}), excinfo.value))
+    with pytest.raises(ErrorInterno) as escapa:
+        TestClient(app).get("/notes", headers=auth("alice"))
+    assert _PHI not in "".join(traceback.format_exception(escapa.value))
+    assert escapa.value.__context__ is None and escapa.value.__cause__ is None
+    assert _PHI not in caplog.text
+    # El diagnóstico sigue sirviendo: dónde falló y de qué tipo, en TODA la cadena.
+    assert fallo.__name__ in caplog.text
+    if fallo not in (_fallo_con_nota, _fallo_de_otro_tipo):
+        assert "ValidationError" in caplog.text
+        assert "string_too_long" in caplog.text
+
+
+@pytest.mark.security
+def test_real_server_log_never_carries_the_value(monkeypatch, caplog):
+    """Uvicorn de verdad: responde el 500 empático y su logger `uvicorn.error` no lleva PHI."""
+    import logging
+    import socket
+    import threading
+    import time
+
+    import httpx
+    import uvicorn
+
+    from app.main import app
+
+    _STORE["alice"] = [{"id": 1, "ciphertext": "x"}]
+    monkeypatch.setattr(encryption, "decrypt", _fallo_encadenado)
+    caplog.set_level(logging.INFO)
+    sock = socket.create_server(("127.0.0.1", 0))  # puerto libre: aislado entre corridas
+    servidor = uvicorn.Server(uvicorn.Config(app, log_config=None, lifespan="off", ws="none"))
+    hilo = threading.Thread(target=servidor.run, kwargs={"sockets": [sock]}, daemon=True)
+    hilo.start()
+    try:
+        limite = time.monotonic() + 10
+        while not servidor.started and hilo.is_alive() and time.monotonic() < limite:
+            time.sleep(0.01)
+        resp = httpx.get(
+            f"http://127.0.0.1:{sock.getsockname()[1]}/notes", headers=auth("alice")
+        )
+    finally:
+        servidor.should_exit = True
+        hilo.join(10)
+        sock.close()
     assert resp.status_code == 500
+    assert "salió mal" in resp.json()["detail"].lower()
+    del_servidor = [r for r in caplog.records if r.name == "uvicorn.error" and r.exc_info]
+    assert del_servidor, "uvicorn no logueó el fallo: este test no está mirando nada"
+    assert _PHI not in caplog.text
+
+
+@pytest.mark.security
+@pytest.mark.parametrize("donde", ["middleware", "websocket"])
+def test_exit_gate_covers_outer_middleware_and_websockets(caplog, donde):
+    import asyncio
+    import traceback
+
+    from fastapi import WebSocket
+    from fastapi.testclient import TestClient
+
+    from app.main import AppSinDatosEnElLog, ErrorInterno
+
+    local = AppSinDatosEnElLog()
+
+    class _MiddlewareDeAfuera:
+        def __init__(self, app):
+            self.app = app
+
+        async def __call__(self, scope, receive, send):
+            if scope["type"] == "http":
+                _validacion_fallida()
+            await self.app(scope, receive, send)
+
+    @local.websocket("/ws")
+    async def _ws(ws: WebSocket) -> None:
+        await ws.accept()
+        _validacion_fallida()
+
+    async def _conectar() -> None:
+        scope = {"type": "websocket", "path": "/ws", "headers": [], "query_string": b""}
+
+        async def _recibir():
+            return {"type": "websocket.connect"}
+
+        async def _enviar(_mensaje):
+            return None
+
+        await local(scope, _recibir, _enviar)
+
+    local.add_middleware(_MiddlewareDeAfuera)
+    with pytest.raises(ErrorInterno) as escapa:
+        if donde == "middleware":
+            TestClient(local).get("/")
+        else:
+            asyncio.run(_conectar())
+    assert _PHI not in "".join(traceback.format_exception(escapa.value))
     assert _PHI not in caplog.text
     assert "string_too_long" in caplog.text
 

@@ -27,6 +27,8 @@ ZONAS = {
     "Dockerfile*": "Dockerfile*",
     # scripts/*.sh: los tests copian y EJECUTAN los gates (`_sh`, `check_coverage.sh`...).
     ".sh": "scripts/**/*.sh",
+    # `test_hard_rules` comprueba el formato de la plantilla de entorno.
+    ".env.example": ".env.example",
 }
 
 # Piso del detector: si el grep deja de encontrar lectores, el test no aprueba por vacío.

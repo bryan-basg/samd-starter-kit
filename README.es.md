@@ -2,7 +2,7 @@
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset=".github/social-preview-dark.png">
-  <img src=".github/social-preview.png" alt="SaMD Starter Kit — construí un dispositivo software médico con un equipo de agentes de IA" width="820">
+  <img src=".github/social-preview.png" alt="SaMD Starter Kit — Software as a Medical Device. Logo: una cruz de salud armada con módulos de software alrededor de una terminal, con un módulo vacío para tu app" width="820">
 </picture>
 
 ### Kit de arranque para construir un dispositivo software médico (SaMD) con un equipo de agentes de IA.
@@ -46,6 +46,13 @@ bash scripts/init_kit.sh          # interactivo y re-ejecutable: rellena los mar
 > [!NOTE]
 > **Idioma.** El reglamento de los agentes (`CLAUDE.md`, `.claude/`), las plantillas del DHF y las field notes están escritas en **español**, el idioma del proyecto del que se extrajeron; el README y `GETTING_STARTED.md` tienen versión en inglés. El idioma en que te habla el agente lo fija el marcador `{{CHAT_LANG}}` de `init_kit.sh`. Traducir el reglamento y las plantillas es una contribución bienvenida.
 
+## Qué tenés el primer día
+
+- **Un esqueleto que se niega a correr inseguro.** No arranca con secretos públicos o débiles, y ningún error no manejado escribe datos del usuario en el log del servidor.
+- **Gates que fallan si no miraron.** Cobertura, enlaces, citas al código, marcadores, traducciones y SBOM rojean con un escaneo vacío; hay tests que anclan cada paso del CI para que ninguno se apague en silencio.
+- **Trazabilidad que resuelve.** Cada requisito cita código y un test por nombre, y el CI comprueba que los dos existen hoy.
+- **Guardianes de UX clínica.** Contraste de texto, bordes de controles, diseño plano y movimiento reducido se prueban, no solo se documentan.
+
 ## ¿Para quién es?
 
 - **Una persona o startup** que arranca un software de salud y no quiere descubrir el cumplimiento regulatorio a los golpes.
@@ -59,7 +66,7 @@ bash scripts/init_kit.sh          # interactivo y re-ejecutable: rellena los mar
 | **Reglamento del agente** | `CLAUDE.md` | El **core**: la "Regla 0" (SaMD es prioridad absoluta) + cómo trabaja el agente, empatía, boy scout, análisis de impacto y cierre de bloque. |
 | **Reglas por capa** | `.claude/rules/` | El resto del reglamento: cinco reglas **path-scoped** (backend, UX clínica, testing, CI, docs) que cargan solas al tocar esa capa, más dos transversales (reglas duras de ejecución, comandos). Lo que solo necesita la sesión principal vive en el estilo de salida `.claude/output-styles/orquestador.md`. |
 | **Equipo de 12 agentes** | `.claude/agents/` | Especialistas por capa — ver [el equipo](#el-equipo-de-12-agentes). |
-| **Skills y comandos** | `.claude/skills/`, `.claude/commands/` | 22 procedimientos reutilizables, p. ej. `/samd-trace` (análisis de impacto antes de declarar algo "arreglado"), `/anti-drift`, `/ola-mutation`, `/cierre-bloque`, `/ci-rojo`, `/tandas-agentes`. |
+| **Skills y comandos** | `.claude/skills/`, `.claude/commands/` | 22 procedimientos reutilizables, p. ej. `/samd-trace` (análisis de impacto antes de declarar algo "arreglado"), `/anti-drift`, `/ola-mutation`, `/cierre-bloque`, `/ci-rojo`, `/tandas-agentes`, `/revision-visual`. |
 | **Workflow multi-agente** | `.claude/workflows/` | `samd-review`: revisión del diff por dimensiones de riesgo con verificación adversarial. |
 | **Protocolo de desarrollo** | `.agents/workflows/` | Espejo agnóstico al agente del proceso estable. |
 | **Memoria** | `memory/MEMORY.md` | Estructura de memoria persistente del agente. |
@@ -85,7 +92,7 @@ flowchart TB
     WF -->|revisión adversarial| CODE
     CODE --> CI
     DHF --> CI
-    style RULES fill:#0d9488,color:#fff
+    style RULES fill:#1F6FC6,color:#fff
 ```
 
 El reglamento configura a los agentes; los agentes construyen tu código **y** mantienen el DHF sincronizado; el workflow de revisión y el CI son los controles. ¿Recién llegás? Empezá por **[`GETTING_STARTED.md`](GETTING_STARTED.md)**.

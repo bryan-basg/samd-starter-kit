@@ -1,0 +1,9 @@
+/* Colores de marca en el sitio (los mismos del degradado de logo.svg). */
+:root, [data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #1f6fc6;
+  --md-primary-fg-color--light: #1f6fc6;
+  --md-primary-fg-color--dark: #174f8f;
+}
+:root { --md-accent-fg-color: #8a4fe0; }
+[data-md-color-scheme="default"] { --md-typeset-a-color: #1f6fc6; }
+[data-md-color-scheme="slate"] { --md-typeset-a-color: #5fb8e8; --md-accent-fg-color: #b794f6; }

@@ -2,7 +2,7 @@
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset=".github/social-preview-dark.png">
-  <img src=".github/social-preview.png" alt="SaMD Starter Kit — build Software as a Medical Device with a team of AI agents" width="820">
+  <img src=".github/social-preview.png" alt="SaMD Starter Kit — Software as a Medical Device. Logo: a health cross assembled from software modules around a terminal, with one empty module for your app" width="820">
 </picture>
 
 ### A starter kit to build Software as a Medical Device (SaMD) with a team of AI agents.
@@ -46,6 +46,13 @@ bash scripts/init_kit.sh          # interactive & re-runnable: fills the {{...}}
 > [!NOTE]
 > **Language.** This README and `GETTING_STARTED.md` are in English, but the agent ruleset (`CLAUDE.md`, `.claude/`), the DHF templates and the field notes are written in **Spanish**, the language of the project they were extracted from. The language the agent uses when talking to you is set by the `{{CHAT_LANG}}` placeholder in `init_kit.sh`. Translations of the rules and templates are a welcome contribution.
 
+## What you get on day one
+
+- **A skeleton that refuses to run unsafely.** It won't start with public or weak secrets, and no unhandled error writes user data to the server log.
+- **Gates that fail when they didn't look.** Coverage, doc links, code citations, placeholders, translations and the SBOM go red on an empty scan; tests pin every CI step so none can be switched off silently.
+- **Traceability that resolves.** Every requirement cites code and a test by name, and CI checks that both exist today.
+- **Clinical UX guardians.** Text contrast, control borders, flat design and reduced motion are tested, not just documented.
+
 ## Who is this for?
 
 - **A solo founder or startup** building health software who doesn't want to discover regulatory compliance the hard way.
@@ -59,7 +66,7 @@ bash scripts/init_kit.sh          # interactive & re-runnable: fills the {{...}}
 | **Agent ruleset** | `CLAUDE.md` | The **core**: "Rule 0" (SaMD is the absolute priority) + how the agent works, empathy, boy scout, impact analysis and block closure. |
 | **Per-layer rules** | `.claude/rules/` | The rest of the ruleset: five **path-scoped** rules (backend, clinical UX, testing, CI, docs) that load only when that layer is touched, plus two cross-cutting ones (hard execution rules, commands). What only the main session needs lives in the output style `.claude/output-styles/orquestador.md`. |
 | **Team of 12 agents** | `.claude/agents/` | Per-layer specialists — see [the team](#the-12-agent-team). |
-| **Skills & commands** | `.claude/skills/`, `.claude/commands/` | 22 reusable procedures, e.g. `/samd-trace` (impact analysis before declaring anything "fixed"), `/anti-drift`, `/ola-mutation`, `/cierre-bloque`, `/ci-rojo`, `/tandas-agentes`. |
+| **Skills & commands** | `.claude/skills/`, `.claude/commands/` | 22 reusable procedures, e.g. `/samd-trace` (impact analysis before declaring anything "fixed"), `/anti-drift`, `/ola-mutation`, `/cierre-bloque`, `/ci-rojo`, `/tandas-agentes`, `/revision-visual`. |
 | **Multi-agent workflow** | `.claude/workflows/` | `samd-review`: diff review across risk dimensions with adversarial verification. |
 | **Development protocol** | `.agents/workflows/` | Agent-agnostic mirror of the stable process. |
 | **Memory** | `memory/MEMORY.md` | The agent's persistent memory structure. |
@@ -85,7 +92,7 @@ flowchart TB
     WF -->|adversarial review| CODE
     CODE --> CI
     DHF --> CI
-    style RULES fill:#0d9488,color:#fff
+    style RULES fill:#1F6FC6,color:#fff
 ```
 
 The ruleset configures the agents; the agents build your code **and** keep the DHF in sync; the review workflow and CI are the gates. New here? Start with **[`GETTING_STARTED.md`](GETTING_STARTED.md)**.

@@ -6,6 +6,10 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Unreleased]
 
+### Added
+- **Logo del kit** (`docs/assets/logo.svg`, más una versión blanca): una cruz de salud armada con módulos de software, una terminal al centro y el hueco de la pieza que falta, tu app, en el degradado de la marca. La portada del README queda en símbolo y nombre, sin cifras que envejecen; el sitio de docs lo usa de logo y favicon.
+- **README:** sección «What you get on day one» / «Qué tenés el primer día».
+
 ### Fixed
 - **Verdes que mentían (auditoría del 2026-11-24; SaMD §5.7).** Cada uno aprobaba sin haber mirado y ahora tiene una prueba que rojea con la versión anterior:
   - **Cobertura:** el piso de la capa de datos/SQL de `check_coverage.sh` no podía fallar (la sonda heredaba `fail_under` y leía «sin archivos»), y `app/schemas.py` no contaba. El `\.\.\.` de `.coveragerc` escondía cualquier rama con puntos suspensivos en un comentario; ahora solo excluye cuerpos de stub. **Tu porcentaje puede bajar: antes no se medía.**

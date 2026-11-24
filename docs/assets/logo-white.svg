@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="SaMD Starter Kit">
+  <!-- Cruz de salud armada con módulos de software: las piezas del kit, una terminal al centro y
+       el hueco de la pieza que falta (tu app). Versión blanca, para fondos de color. -->
+  <mask id="prompt"><rect width="128" height="128" fill="#fff"/><path d="M55.5 55l9.5 9-9.5 9M67.5 74h6" fill="none" stroke="#000" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/></mask>
+  <g fill="#ffffff"><rect x="46" y="6" width="36" height="36" rx="9"/><rect x="6" y="46" width="36" height="36" rx="9"/><rect x="86" y="46" width="36" height="36" rx="9"/><rect x="46" y="46" width="36" height="36" rx="9" mask="url(#prompt)"/></g>
+  <rect x="49" y="89" width="30" height="30" rx="6.5" fill="none" stroke="#ffffff" stroke-width="6"/>
+</svg>

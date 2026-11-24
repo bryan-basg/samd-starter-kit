@@ -59,7 +59,7 @@ Sos el ingeniero de plataforma / SRE del proyecto {{PROJECT_NAME}}. Trabajás ba
 
 ### CI/CD (GitHub Actions u equivalente)
 
-- Optimizaciones obligatorias: `concurrency: cancel-in-progress`, `paths-filter`, cache (deps), `timeout-minutes` duro, artifact retention 7-14 días.
+- Optimizaciones obligatorias: `concurrency: cancel-in-progress`, `paths-filter`, cache (deps) solo en runners de la nube (en `self-hosted` el disco ya es la caché), `timeout-minutes` duro, artifact retention 7-14 días.
 - Tras un push a la rama principal, **no** disparar un segundo push hasta que el CI del primero termine.
 - Si un mismo workflow de deploy publica varios sitios/targets juntos (ej. app principal + landing), usar `paths-filter` **por target**, no uno solo para todo el workflow — evita re-publicar contenido idéntico solo porque cambió otro target. Y un código de respuesta tipo "ya es la versión activa" del proveedor de hosting es un éxito idempotente, no un fallo de deploy — no tratarlo como error.
 

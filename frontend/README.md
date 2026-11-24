@@ -23,7 +23,7 @@ Esta carpeta incluye un **cliente mínimo** (Vite + React + TS) que demuestra la
 cd frontend
 npm install
 npm run dev      # cliente en http://localhost:5173
-npm test         # verificación: 5/5 verde
+npm test         # verificación: todo verde
 npm run build    # tsc estricto + build de producción
 ```
 

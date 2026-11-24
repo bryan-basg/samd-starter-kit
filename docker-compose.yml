@@ -20,11 +20,12 @@ services:
     volumes:
       - ./app:/app/app
     env_file:
-      # Opcional: copiá .env.example -> .env. Si no existe, el esqueleto corre con
-      # los defaults de app/core/config.py (no rompe el arranque).
+      # Copiá .env.example -> .env y completá SECRET_KEY y ENCRYPTION_KEY (el archivo dice
+      # cómo generarlas). Sin ellas el backend se niega a arrancar, a propósito: TESTING=False
+      # exige secretos reales (app/main.py::_assert_secure_secrets).
       - path: .env
         required: false
-    # El esqueleto corre sin BD (defaults en app/core/config.py). Si activás el
+    # El esqueleto corre sin BD. Si activás el
     # profile `full`, apuntá DATABASE_URL al servicio `db` en tu .env.
     environment:
       TESTING: "False"

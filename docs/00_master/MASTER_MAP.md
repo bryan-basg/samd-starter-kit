@@ -1,6 +1,6 @@
 # Master Map — {{PROJECT_NAME}}
 
-> Mapa maestro del proyecto. **No asumir rutas; verificarlas.** Toda doc nueva, renombre o reorg se refleja acá (lo mantiene `docs-dhf`). Versión: v1.12.
+> Mapa maestro del proyecto. **No asumir rutas; verificarlas.** Toda doc nueva, renombre o reorg se refleja acá (lo mantiene `docs-dhf`). Versión: v1.13.
 
 ## Identidad del dispositivo
 
@@ -83,7 +83,7 @@ El reglamento que gobierna a los agentes vive junto al código, no en el DHF:
 
 | Doc | Versión | Última actualización |
 |---|---|---|
-| MASTER_MAP | v1.12 | 2026-11-24 |
-| SOFTWARE_CONFIGURATION_MANAGEMENT_PLAN | v1.15 | 2026-11-24 |
+| MASTER_MAP | v1.13 | 2026-11-24 |
+| SOFTWARE_CONFIGURATION_MANAGEMENT_PLAN | v1.16 | 2026-11-24 |
 | ISO_14971_RISK_MATRIX | vX.Y (plantilla; la versión la fija el proyecto derivado) | 2026-11-16 |
 | TRACEABILITY_MATRIX_SAMD | vX.Y (plantilla; la versión la fija el proyecto derivado) | 2026-11-16 |

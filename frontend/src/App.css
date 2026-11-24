@@ -7,7 +7,8 @@
   --primary: #0d9488; /* teal-600 — UI/large */
   --primary-700: #0f766e; /* teal-700 — AA sobre blanco para texto */
   --primary-800: #115e59; /* teal-800 — hover del botón: AA sobre blanco (el hover OSCURECE, no aclara) */
-  --border: #cbd5e1;
+  --border: #cbd5e1; /* decorativo: solo separa */
+  --border-ui: #64748b; /* borde de controles: ≥ 3:1 sobre --bg (WCAG 1.4.11) */
 }
 
 * {
@@ -49,7 +50,7 @@ label {
 
 textarea {
   padding: 0.625rem;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-ui);
   border-radius: 8px;
   font: inherit;
   resize: vertical;

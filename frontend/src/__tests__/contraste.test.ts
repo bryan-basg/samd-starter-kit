@@ -3,7 +3,7 @@ import { resolve } from "node:path";
 import { describe, it, expect } from "vitest";
 
 /**
- * Guardián de contraste WCAG 2.1 AA (1.4.3). `vite.config.ts` corre con `css: false`, así que
+ * Guardián de contraste WCAG 2.1 AA (1.4.3 texto, 1.4.11 no textual). `vite.config.ts` corre con `css: false`, así que
  * ningún test de componente ve el CSS: este lee `App.css` directo. Existe por un defecto
  * real: el hover del botón ACLARABA el fondo (#0d9488 con texto blanco = 3,74:1 < 4,5:1).
  * Los scripts de npm corren desde `frontend/`, de ahí la ruta relativa al cwd.
@@ -53,5 +53,58 @@ describe("contraste del botón (WCAG 2.1 AA, texto normal ≥ 4,5:1)", () => {
     const hover = fondoDe("button:hover:not(:disabled)");
     expect(contraste(texto, hover)).toBeGreaterThanOrEqual(4.5);
     expect(luminancia(hover)).toBeLessThanOrEqual(luminancia(fondoDe("button")));
+  });
+});
+
+/** Todo color que se usa para texto, con cada fondo sobre el que aparece en pantalla. */
+const PARES_DE_TEXTO = [
+  ["--text", "--bg"],
+  ["--text", "--surface"],
+  ["--muted", "--bg"],
+  ["--muted", "--border"], // botón deshabilitado: exento en 1.4.3, se exige igual
+] as const;
+/** Bordes y anillos que identifican un control o su foco: ≥ 3:1. */
+const NO_TEXTUALES = [
+  ["--border-ui", "--bg"],
+  ["--primary-700", "--bg"],
+] as const;
+/** Bordes que solo separan: no identifican ningún control. */
+const DECORATIVOS = ["--border"];
+
+describe("contraste de texto (WCAG 1.4.3, ≥ 4,5:1)", () => {
+  it.each(PARES_DE_TEXTO)("%s sobre %s", (texto, fondo) => {
+    expect(contraste(variable(texto), variable(fondo))).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it("no hay un color de texto sin su par", () => {
+    const usados = [...css.matchAll(/(?<![\w-])color:\s*(?:var\((--[\w-]+)\)|([^;]+));/g)].map(
+      (m) => m[1] ?? m[2],
+    );
+    expect(usados.length).toBeGreaterThan(0);
+    const medidos = new Set<string | undefined>([...PARES_DE_TEXTO.map(([t]) => t), "#ffffff"]);
+    expect(usados.filter((color) => !medidos.has(color))).toEqual([]);
+  });
+});
+
+describe("contraste no textual (WCAG 1.4.11, ≥ 3:1)", () => {
+  it.each(NO_TEXTUALES)("%s sobre %s", (trazo, fondo) => {
+    expect(contraste(variable(trazo), variable(fondo))).toBeGreaterThanOrEqual(3);
+  });
+
+  it("el borde del campo de texto usa un trazo que se exige", () => {
+    const borde = css.match(/textarea\s*\{[^}]*border:[^;]*var\((--[\w-]+)\)/)?.[1];
+    expect(NO_TEXTUALES.map(([trazo]) => trazo as string)).toContain(borde);
+  });
+
+  it("no hay un borde ni un anillo de foco sin clasificar", () => {
+    const usados = [...css.matchAll(/(?:border|outline):[^;]*solid\s+(?:var\((--[\w-]+)\)|([^;]+));/g)].map(
+      (m) => m[1] ?? m[2],
+    );
+    expect(usados.length).toBeGreaterThan(0);
+    const clasificados = new Set<string | undefined>([
+      ...NO_TEXTUALES.map(([trazo]) => trazo),
+      ...DECORATIVOS,
+    ]);
+    expect(usados.filter((trazo) => !clasificados.has(trazo))).toEqual([]);
   });
 });

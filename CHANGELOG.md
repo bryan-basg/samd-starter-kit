@@ -6,6 +6,19 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Unreleased]
 
+### Added
+- **Skill `/revision-visual`: mirada de diseñador dentro de las reglas de UX clínica** (portada del proyecto de referencia, generalizada). Foto real, 6 lentes —la sexta es la carga sensorial— y un menú para elegir; no aplica nada sola. El manual de marca (`reference.md`) es una plantilla a llenar. Son 22 skills.
+- **Guardianes de diseño plano y de movimiento reducido** (`frontend/src/__tests__/disenoPlano.test.ts`): la regla `frontend-ux.md` los exigía y solo los sostenía un comentario. La lista de archivos se deriva de `src/`.
+- **El guardián de contraste mide todos los pares** (antes, solo el botón): texto ≥ 4,5:1, bordes de control y foco ≥ 3:1, y un color usado sin su par rojea. 12 sabotajes rojean; 3 variantes sanas no.
+
+### Fixed
+- **El borde del campo de texto cumple WCAG 1.4.11 (FE-3):** `#cbd5e1` daba 1,48:1 sobre blanco; `--border-ui` (`#64748b`) supera 3:1. `--border` queda solo para separadores.
+- **El arranque documentado ya arranca.** `GETTING_STARTED`, `app/README` y `make dev-backend` daban un comando que el guard de secretos aborta, y `docker-compose.yml` prometía que sin `.env` no se rompía (fija `TESTING=False`: aborta). Los textos dicen `TESTING=True` solo para la demo local; el guard no cambia. Los README dejan de citar números de tests que envejecen («5/5», «16/16»).
+- **Los README enlazan las Discussions del repo.**
+
+### Changed
+- **Caché de GitHub solo en runners de la nube** (`.claude/rules/github-actions.md`) y **RFC-003 v1.2 prefiere OIDC** a un secreto compartido para el cron.
+
 ### Security
 - **El log del servidor ya no lleva datos del usuario (R-SEC-01, GDPR Art. 5(1)(c)/32, HIPAA §164.312; SEC-1 de la auditoría del 2026-11-24). Corrige la entrada A-1 de abajo, que lo daba por cerrado.** El handler global limpiaba nuestro log, pero Starlette RELANZA la excepción después de responder y uvicorn la escribía entera, con el valor; las excepciones encadenadas, agrupadas o de otro tipo (`int(texto)`, los `parameters` de una base de datos) salían además por nuestro propio `logger.exception`. El test llamaba al handler a mano, así que pasaba verde. Arreglo: `app/main.py::AppSinDatosEnElLog` sanea en el último punto antes del servidor (tipos y pila, nunca mensajes). Un refutador descartó dos alternativas: handlers por tipo (empeoraba el streaming) y un middleware (no cubría los agregados después). **Límites declarados:** `create_task` sin `await`, un `logger.exception()` propio y los exportadores (Sentry, OpenTelemetry). **Cambio visible:** `TestClient(app)` recibe `ErrorInterno` en vez del tipo original. Tests con uvicorn real.
 - **`cp .env.example .env` podía dejar una `SECRET_KEY` PÚBLICA que pasaba el guard (SEC-2; HIPAA §164.312(d)).** El comentario iba detrás del `=` y python-dotenv < 1.2.4 lo toma como valor: más de 32 bytes, distinto del default. Con una `ENCRYPTION_KEY` real la app arrancaba y un JWT firmado con ese texto daba 200 (reproducido). Los comentarios van en su propia línea, los secretos vienen comentados y `app/core/config.py::Settings.insecure_secrets` rechaza también ese texto, para quien ya copió el archivo. **Si tu proyecto nació de este kit, revisá que `SECRET_KEY` no empiece con `#` y, si empieza, rotala.** La entrada del 2026-11-07 («ya no deja arrancar con claves vacías») era cierta solo con dotenv ≥ 1.2.4. De paso, copiar el archivo ya no rompe los tests.

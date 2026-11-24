@@ -1,6 +1,6 @@
 # RFC-003 — Scheduling de jobs periódicos vía cron externo gestionado
 
-**Proyecto:** {{PROJECT_NAME}} · **Clase SaMD:** {{SAMD_CLASS}} · **Versión:** v1.1 · **Fecha:** 2026-11-07
+**Proyecto:** {{PROJECT_NAME}} · **Clase SaMD:** {{SAMD_CLASS}} · **Versión:** v1.2 · **Fecha:** 2026-11-24
 
 > RFC del SaMD Starter Kit. Ejemplo didáctico de una decisión de diseño de la capa cloud/API. Documenta cómo se disparan los trabajos periódicos (recordatorios, avisos clínicos, mantenimiento de colas).
 >
@@ -48,7 +48,7 @@ Se adopta la **Alternativa B**: en producción los jobs periódicos los dispara 
 
 Detalles de construcción:
 - **Flag de control** (plantilla del derivado; no existe en `app/core/config.py`): variable de entorno `ENABLE_INTERNAL_SCHEDULER` con default `false`. En prod permanece `false`; en dev local sin cron externo se pone `true` para no depender de infraestructura.
-- **Endpoint disparador**: idempotente y acotado en trabajo por invocación; protegido (secreto compartido / OIDC) para que solo el cron pueda invocarlo.
+- **Endpoint disparador**: idempotente y acotado en trabajo por invocación; protegido para que solo el cron pueda invocarlo. **Preferí OIDC** (token de vida corta firmado por la plataforma; el endpoint verifica firma, audiencia y la identidad exacta del invocador) a un secreto compartido: el secreto suele quedar en texto plano en la configuración del cron y hay que rotarlo a mano. Si tu plataforma no ofrece OIDC, secreto compartido con rotación programada.
 - **Cobertura**: el cron externo cubre los tres jobs (eventos próximos, despacho de cola, reprocesado de pospuestos) con un único tick periódico.
 - **Alineación de pool** (§5.6): el cálculo del techo de conexiones (`max-instances × pool_por_instancia + baseline`) se reevalúa sin sumar trabajo de scheduler por instancia, porque ya no existe en prod.
 
@@ -58,7 +58,7 @@ Detalles de construcción:
 - **Negativas / costo**: depende de un componente externo (si el cron del {{CLOUD_STACK}} falla o se desconfigura, no hay ticks → se necesita alerta de "cron no disparó en X minutos"); el endpoint disparador es superficie de ataque y debe protegerse.
 - **Impacto en consumidores** (§5.6): cualquier código que asumiera "el scheduler corre dentro del proceso" debe migrar a "el trabajo se hace cuando llega el tick HTTP"; el arranque de la app ya no inicia jobs en prod.
 - **Fail-safe**: si el endpoint falla en un tick, el cron reintenta; el trabajo es idempotente, por lo que un reintento no duplica avisos. Falta prolongada de ticks → alerta de monitoreo (no falla silenciosa).
-- **Deuda técnica generada** (a abrir en el proyecto derivado si adopta la decisión; el kit no la lleva en su índice): `D-CLOUD-CRON-MISSED-TICK-ALERT-01` — alerta que dispare si el endpoint no recibe un tick dentro de la ventana esperada; `D-CLOUD-CRON-SECRET-ROTATION-01` — endurecer el secreto del disparador (rotación / OIDC).
+- **Deuda técnica generada** (a abrir en el proyecto derivado si adopta la decisión; el kit no la lleva en su índice): `D-CLOUD-CRON-MISSED-TICK-ALERT-01` — alerta que dispare si el endpoint no recibe un tick dentro de la ventana esperada; `D-CLOUD-CRON-SECRET-ROTATION-01` — solo si se usó secreto compartido: rotarlo y migrar a OIDC.
 
 ## 6. Trazabilidad
 
@@ -79,6 +79,7 @@ Detalles de construcción:
 | v0.1 | 2026-01-23 | Equipo de Plataforma / Cloud | Propuesta inicial |
 | v1.0 | 2026-01-29 | Equipo de Plataforma / Cloud | Aceptada; scheduler interno deshabilitado por default, cron externo en prod |
 | v1.1 | 2026-11-07 | Equipo de Plataforma | Se corrige el estado: el kit no implementa scheduler; las citas a `ENABLE_INTERNAL_SCHEDULER`, `app/api/notifications.py` y `tests/test_external_scheduler.py` apuntaban a archivos que el kit no tiene y quedan marcadas como plantilla del derivado. La decisión (cron externo) no cambia |
+| v1.2 | 2026-11-24 | Equipo de Plataforma | El disparador prefiere OIDC a un secreto compartido (antes los daba por equivalentes). El kit sigue sin implementar scheduler |
 
 ---
 **Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

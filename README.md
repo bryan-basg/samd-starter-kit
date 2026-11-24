@@ -7,7 +7,7 @@
 
 ### A starter kit to build Software as a Medical Device (SaMD) with a team of AI agents.
 
-**12 agents · 21 skills · 50+ DHF documents · 16 CI workflows**
+**12 agents · 22 skills · 50+ DHF documents · 16 CI workflows**
 
 [![Version](https://img.shields.io/badge/version-1.0.0-informational.svg)](CHANGELOG.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -19,7 +19,7 @@
 
 **English · [Español](README.es.md)**
 
-[Quickstart](#60-second-quickstart) · [Getting started](GETTING_STARTED.md) · [Docs site](https://bryan-basg.github.io/samd-starter-kit/) · [The 12 agents](#the-12-agent-team) · [Worked example](examples/auralog/) · [Contributing](CONTRIBUTING.md)
+[Quickstart](#60-second-quickstart) · [Getting started](GETTING_STARTED.md) · [Docs site](https://bryan-basg.github.io/samd-starter-kit/) · [The 12 agents](#the-12-agent-team) · [Worked example](examples/auralog/) · [Discussions](https://github.com/bryan-basg/samd-starter-kit/discussions) · [Contributing](CONTRIBUTING.md)
 
 </div>
 
@@ -59,7 +59,7 @@ bash scripts/init_kit.sh          # interactive & re-runnable: fills the {{...}}
 | **Agent ruleset** | `CLAUDE.md` | The **core**: "Rule 0" (SaMD is the absolute priority) + how the agent works, empathy, boy scout, impact analysis and block closure. |
 | **Per-layer rules** | `.claude/rules/` | The rest of the ruleset: five **path-scoped** rules (backend, clinical UX, testing, CI, docs) that load only when that layer is touched, plus two cross-cutting ones (hard execution rules, commands). What only the main session needs lives in the output style `.claude/output-styles/orquestador.md`. |
 | **Team of 12 agents** | `.claude/agents/` | Per-layer specialists — see [the team](#the-12-agent-team). |
-| **Skills & commands** | `.claude/skills/`, `.claude/commands/` | 21 reusable procedures, e.g. `/samd-trace` (impact analysis before declaring anything "fixed"), `/anti-drift`, `/ola-mutation`, `/cierre-bloque`, `/ci-rojo`, `/tandas-agentes`. |
+| **Skills & commands** | `.claude/skills/`, `.claude/commands/` | 22 reusable procedures, e.g. `/samd-trace` (impact analysis before declaring anything "fixed"), `/anti-drift`, `/ola-mutation`, `/cierre-bloque`, `/ci-rojo`, `/tandas-agentes`. |
 | **Multi-agent workflow** | `.claude/workflows/` | `samd-review`: diff review across risk dimensions with adversarial verification. |
 | **Development protocol** | `.agents/workflows/` | Agent-agnostic mirror of the stable process. |
 | **Memory** | `memory/MEMORY.md` | The agent's persistent memory structure. |
@@ -159,6 +159,8 @@ This kit didn't start as a template. It was **extracted from a real, in-producti
 Maintained by [@bryan-basg](https://github.com/bryan-basg). If it saves you from learning these lessons the hard way, it did its job.
 
 ## Contributing
+
+**Using this kit — in a clinic, a radiology department, a startup or a course?** Tell us in [Discussions → Show and tell](https://github.com/bryan-basg/samd-starter-kit/discussions/categories/show-and-tell). Questions go to [Q&A](https://github.com/bryan-basg/samd-starter-kit/discussions/categories/q-a). Real-world feedback is what shapes the next version.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). Security reports: privately, see [SECURITY.md](.github/SECURITY.md). Be kind: [Code of Conduct](CODE_OF_CONDUCT.md).
 

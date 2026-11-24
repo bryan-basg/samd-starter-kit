@@ -131,11 +131,13 @@ The `app/`, `frontend/` and `tests/` folders ship with a **minimal runnable refe
 python -m venv venv && source venv/bin/activate
 pip install -r requirements-dev.txt
 pytest                          # all green (no infra needed)
-uvicorn app.main:app --reload   # http://localhost:8000/docs
+# TESTING=True = local demo with the public dev keys. Without it the app refuses to start
+# until you set real SECRET_KEY / ENCRYPTION_KEY (see .env.example). Never use it in production.
+TESTING=True uvicorn app.main:app --reload   # http://localhost:8000/docs
 
 # Frontend
 cd frontend && npm install
-npm test                        # 5/5 green
+npm test                        # all green
 npm run dev                     # http://localhost:5173
 ```
 

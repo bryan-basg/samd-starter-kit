@@ -25,8 +25,8 @@ setup: ## Instala deps de backend (runtime+dev) y frontend (npm ci)
 dev: ## Levanta backend + frontend con hot-reload (docker compose up)
 	docker compose up
 
-dev-backend: ## Solo backend: uvicorn app.main:app --reload (puerto 8000)
-	uvicorn app.main:app --reload --port 8000
+dev-backend: ## Solo backend, demo local con claves públicas de dev (puerto 8000)
+	TESTING=True uvicorn app.main:app --reload --port 8000
 
 dev-frontend: ## Solo frontend: Vite dev server (puerto 5173)
 	cd frontend && npm run dev

@@ -24,8 +24,10 @@ Esta carpeta incluye un **slice mínimo** que demuestra las reglas duras en cód
 ```bash
 python -m venv venv && source venv/bin/activate
 pip install -r requirements-dev.txt   # (en la raíz del repo)
-uvicorn app.main:app --reload         # API en http://localhost:8000/docs
-pytest                                # verificación: 16/16 verde
+# TESTING=True = demo local con las claves públicas de dev. Sin eso, la app se niega a arrancar
+# hasta que pongas SECRET_KEY y ENCRYPTION_KEY reales (ver .env.example). Nunca en producción.
+TESTING=True uvicorn app.main:app --reload   # API en http://localhost:8000/docs
+pytest                                # verificación: todo verde
 ```
 
 Cuando traigas tu backend real, reemplazá este ejemplo por tu estructura (la de arriba) — los tests en `tests/` te muestran qué reglas mantener verificadas.

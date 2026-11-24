@@ -15,7 +15,7 @@ import binascii
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-# Defaults de DEV — PÚBLICOS a propósito (para que el ejemplo corra sin setup).
+# Defaults de DEV — PÚBLICOS a propósito (para que tests y demo local corran sin setup).
 # NUNCA usar en producción: cualquiera que lea el repo los conoce.
 _DEV_ENCRYPTION_KEY = base64.b64encode(b"samd-starter-kit-dev-key-32bytes").decode()
 # Mínimo 32 bytes: HS256 lo exige (RFC 7518 §3.2) y PyJWT avisa por debajo.

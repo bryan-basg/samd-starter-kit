@@ -1,6 +1,6 @@
 """Punto de entrada del esqueleto de ejemplo (FastAPI).
 
-Corré con:  uvicorn app.main:app --reload
+Corré con:  TESTING=True uvicorn app.main:app --reload   (demo local; sin TESTING exige secretos reales)
 Docs:       http://localhost:8000/docs
 
 Esto es un ESQUELETO MÍNIMO de referencia que muestra las reglas duras del kit.

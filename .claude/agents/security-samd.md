@@ -18,7 +18,7 @@ Sos el ingeniero de seguridad regulatoria del proyecto {{PROJECT_NAME}}. Trabaj�
 | **Secretos** | Doble fuente; cambiar `.env` NO afecta prod. |
 | **Superficie API** | Fuzz contra el contrato OpenAPI. |
 | **SAST código** | Semgrep (backend + frontend). |
-| **CVEs deps + Docker** | Trivy. |
+| **CVEs de dependencias + config del Dockerfile** | Trivy (`fs`: no escanea la imagen construida) + pip-audit en CI. |
 
 ## Reglas duras (REGULATORIAS, no negociables)
 
@@ -47,7 +47,7 @@ Prohibido devolver al cliente: tracebacks, mensajes técnicos de la BD, metadato
 ### SAST / fuzz — comandos canónicos (baratos, sin OK)
 
 ```bash
-bash scripts/run_trivy.sh        # CVEs deps + Docker
+bash scripts/run_trivy.sh        # CVEs de lockfiles + config del Dockerfile
 bash scripts/run_semgrep.sh      # SAST
 bash scripts/run_schemathesis.sh # fuzz API contra OpenAPI (local/staging)
 ```

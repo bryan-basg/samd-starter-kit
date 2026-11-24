@@ -1,6 +1,6 @@
 # Master Map — {{PROJECT_NAME}}
 
-> Mapa maestro del proyecto. **No asumir rutas; verificarlas.** Toda doc nueva, renombre o reorg se refleja acá (lo mantiene `docs-dhf`). Versión: v1.13.
+> Mapa maestro del proyecto. **No asumir rutas; verificarlas.** Toda doc nueva, renombre o reorg se refleja acá (lo mantiene `docs-dhf`). Versión: v1.14.
 
 ## Identidad del dispositivo
 
@@ -64,7 +64,7 @@ El reglamento que gobierna a los agentes vive junto al código, no en el DHF:
 
 | Pieza | Path | Contenido |
 |---|---|---|
-| Vigilancia | `.github/dependabot.yml` | `npm` (`frontend/`), `pip` (raíz) y `github-actions`; `cooldown` de 14 días; excepciones con motivo y grupo `react`. |
+| Vigilancia | `.github/dependabot.yml` | `npm` (`frontend/`), `pip` (raíz), `docker`, `devcontainers` y `github-actions`; `cooldown` de 14 días; excepciones con motivo y grupo `react`. |
 | Versiones fijadas | `frontend/package-lock.json`, `requirements*.txt` | Lockfile del frontend (npm 11), pisos/techos del backend y `mutmut==2.5.1` (anclado por `tests/test_mutmut_gate.py`). |
 | Runtime | `.github/workflows/`, `docker-compose.yml`, `.devcontainer/` | Un solo major de Node (24) en todos los sitios. |
 | Guardián de la cadena de suministro del CI | `tests/test_workflows_pineados_a_sha.py` | Toda acción de `.github/workflows/` pineada a SHA de 40 caracteres, una sola versión por acción. |
@@ -83,7 +83,7 @@ El reglamento que gobierna a los agentes vive junto al código, no en el DHF:
 
 | Doc | Versión | Última actualización |
 |---|---|---|
-| MASTER_MAP | v1.13 | 2026-11-24 |
-| SOFTWARE_CONFIGURATION_MANAGEMENT_PLAN | v1.16 | 2026-11-24 |
+| MASTER_MAP | v1.14 | 2026-11-24 |
+| SOFTWARE_CONFIGURATION_MANAGEMENT_PLAN | v1.17 | 2026-11-24 |
 | ISO_14971_RISK_MATRIX | vX.Y (plantilla; la versión la fija el proyecto derivado) | 2026-11-16 |
 | TRACEABILITY_MATRIX_SAMD | vX.Y (plantilla; la versión la fija el proyecto derivado) | 2026-11-16 |

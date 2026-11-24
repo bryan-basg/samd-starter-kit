@@ -29,6 +29,11 @@ ZONAS = {
     ".sh": "scripts/**/*.sh",
     # `test_hard_rules` comprueba el formato de la plantilla de entorno.
     ".env.example": ".env.example",
+    # `test_versiones_coherentes` y el test del piso de cobertura.
+    "docker-compose.yml": "docker-compose.yml",
+    ".devcontainer": ".devcontainer/**",
+    "package.json": "frontend/package.json",
+    ".coveragerc": ".coveragerc",
 }
 
 # Piso del detector: si el grep deja de encontrar lectores, el test no aprueba por vacío.

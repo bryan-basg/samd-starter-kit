@@ -11,7 +11,8 @@
 # Los marcadores son los 9 de init_kit.sh: PROJECT_NAME, SAMD_CLASS, INTENDED_USE,
 # OWNER, FRONTEND_STACK, BACKEND_STACK, DB_STACK, CLOUD_STACK, CHAT_LANG (y afines).
 set -uo pipefail
-cd "$(git rev-parse --show-toplevel 2>/dev/null || echo .)"
+# Relativo al script, no al directorio actual: desde otro lado escaneaba 0 archivos y daba OK.
+cd "$(dirname "${BASH_SOURCE[0]}")/.." || exit 2
 
 # Patrón de marcador del kit: {{ALGO_EN_MAYUS}}.
 PATTERN='\{\{[A-Z_]+\}\}'
@@ -28,7 +29,9 @@ is_allowlisted() {
 }
 
 found=0
+escaneados=0
 while IFS= read -r f; do
+  escaneados=$((escaneados + 1))
   is_allowlisted "$f" && continue
   # -I salta binarios; -q solo testea si hay match.
   if grep -IqE "$PATTERN" "$f" 2>/dev/null; then
@@ -39,6 +42,10 @@ while IFS= read -r f; do
 done < <(git ls-files)
 
 echo
+if [ "$escaneados" -eq 0 ]; then
+  echo "FALLO: 0 archivos escaneados (¿copia sin git, p. ej. un ZIP?). No se miró nada." >&2
+  exit 2
+fi
 if [ "$found" -gt 0 ]; then
   echo "FALLO: $found archivo(s) con marcadores {{...}} sin reemplazar."
   echo "  -> Corré 'bash scripts/init_kit.sh' para completarlos,"

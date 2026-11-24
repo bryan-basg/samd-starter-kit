@@ -6,7 +6,15 @@
 # y SIN prefijo (`X.md`, `docs/X.md`). Se ignoran http(s)/mailto/otros esquemas, anclas puras
 # (`#seccion`) y rutas absolutas (`/x.md`, que dependen del hosting, no del árbol).
 set -uo pipefail
-cd "$(git rev-parse --show-toplevel 2>/dev/null || echo .)"
+# Relativo al script, no al directorio actual: desde otro lado miraba 0 archivos y daba OK.
+cd "$(dirname "${BASH_SOURCE[0]}")/.." || exit 2
+
+mirados=$(find docs examples . -maxdepth 1 -name '*.md' 2>/dev/null | wc -l)
+mirados=$((mirados + $(find docs examples -mindepth 2 -name '*.md' 2>/dev/null | wc -l)))
+if [ "$mirados" -eq 0 ]; then
+  echo "FALLO: 0 documentos .md que mirar en docs/, examples/ y la raíz." >&2
+  exit 2
+fi
 
 broken=0
 while IFS= read -r line; do

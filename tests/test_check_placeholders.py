@@ -14,6 +14,8 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parent.parent
+# Armado en tiempo de ejecución: escrito literal, `init_kit.sh` lo reemplaza y el test se rompe.
+MARCADOR = "{" + "{PROJECT_NAME}" + "}"
 BASH = shutil.which("bash")
 
 pytestmark = pytest.mark.skipif(BASH is None, reason="requiere bash")
@@ -35,7 +37,7 @@ def _gate(repo: Path) -> subprocess.CompletedProcess:
 
 
 def test_marcador_sin_reemplazar_en_claude_md_rojea(tmp_path):
-    repo = _repo(tmp_path, "# ONBOARDING — {{PROJECT_NAME}}\nClase {{SAMD_CLASS}}\n")
+    repo = _repo(tmp_path, f"# ONBOARDING — {MARCADOR}\n")
     res = _gate(repo)
     assert res.returncode == 1, res.stdout
     assert "CLAUDE.md" in res.stdout

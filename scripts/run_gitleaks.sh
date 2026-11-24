@@ -22,6 +22,7 @@
 #   0  sin secretos
 #   1  secretos detectados (revisar el reporte)
 #   2  gitleaks no esta instalado
+#   3  clon superficial o sin git: no hay historial que auditar
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -43,6 +44,14 @@ if ! command -v gitleaks >/dev/null 2>&1; then
 
 EOF
     exit 2
+fi
+
+# Un clon superficial (`git clone --depth`, el checkout por defecto de Actions) no trae el
+# historial: el escaneo salía limpio sin haber visto los commits donde estaba el secreto.
+if [ "$(git rev-parse --is-shallow-repository)" != "false" ]; then
+    echo "[gitleaks][ERR] Clon superficial o sin git: no hay historial que auditar." >&2
+    echo "[gitleaks] Corré 'git fetch --unshallow' (en Actions: fetch-depth: 0)." >&2
+    exit 3
 fi
 
 mkdir -p "$(dirname "$REPORT")"

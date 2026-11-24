@@ -32,8 +32,8 @@ Cubre todo software que se ejecuta dentro del producto final:
 - **Frontend** ({{FRONTEND_STACK}}): dependencias de runtime en
   `frontend/package-lock.json` (se omite `dev` por defecto).
 - **Infraestructura de despliegue** ({{CLOUD_STACK}}): imágenes base de
-  contenedor y dependencias de sistema se inventarían vía el escaneo SCA
-  (Trivy) y se referencian, no se duplican, en este SBOM de aplicación.
+  contenedor y dependencias de sistema **no están cubiertas por el kit**: agregá
+  `trivy image` sobre tu imagen construida y referencialas desde acá.
 
 Fuera de alcance: tooling de desarrollo no embarcado (linters, mutation
 testing) salvo que se solicite un SBOM `-with-dev`.
@@ -76,9 +76,10 @@ además un resumen Markdown legible por humanos.
    El workflow de CI ya lo hace bien (crea un virtualenv desde cero); la trampa
    es exclusiva del camino local. `cyclonedx-bom` está en `requirements-dev.txt`
    para que el procedimiento funcione en un clone nuevo.
-2. **CI**: el workflow `.github/workflows/sbom.yml` regenera el SBOM ante
-   cualquier cambio de lockfiles (paths-filter) + cron semanal de detección de
-   drift. Falla si el SBOM sale vacío (guard de 0 componentes).
+2. **CI**: el workflow `.github/workflows/sbom.yml` regenera el SBOM. **Viene
+   dormido** (solo disparo manual): descomentá sus `push` y `schedule` para que
+   corra ante cada cambio de lockfiles y cada semana. Hasta entonces, los
+   `sbom-latest-*` versionados son una foto de su fecha, no del árbol actual. Falla si el SBOM sale vacío (guard de 0 componentes).
 3. **Reproducibilidad**: `npm ci` (no `npm install`) y `--output-reproducible`
    garantizan que el mismo lockfile produzca el mismo SBOM.
 
@@ -92,7 +93,7 @@ además un resumen Markdown legible por humanos.
 
 ## 6. Revisión y respuesta a vulnerabilidades
 
-1. Cada SBOM nuevo se cruza con feeds de CVE: **Trivy** (imágenes + deps),
+1. Cada SBOM nuevo se cruza con feeds de CVE: **Trivy** (lockfiles),
    `pip-audit`, `npm audit` y **Dependabot**.
 2. Todo hallazgo **HIGH/CRITICAL** se registra en
    [`ISO_14971_RISK_MATRIX.md`](./ISO_14971_RISK_MATRIX.md) con plazo de
@@ -104,7 +105,7 @@ además un resumen Markdown legible por humanos.
 
 | Actividad | Responsable | Cadencia |
 |-----------|-------------|----------|
-| Generación automática | CI (`sbom.yml`) | Por cambio de deps + semanal |
+| Generación | CI (`sbom.yml`, dormido de fábrica: ver §4) | Manual; por cambio de deps + semanal al activarlo |
 | Revisión de CVEs | {{OWNER}} / security | Semanal + ante cada release |
 | Archivado por release | {{OWNER}} | Cada release |
 | Auditoría del plan | {{OWNER}} / QA regulatorio | Anual o ante cambio normativo |

@@ -91,6 +91,13 @@ updates:
       default-days: 14
     open-pull-requests-limit: 5
     labels: ["dependencies"]
+    # La versión X.Y de Python se sube a mano y en TODOS los sitios a la vez (CI, Dockerfile,
+    # devcontainer, mypy, ruff; guardián: tests/test_versiones_coherentes.py). Un PR que solo
+    # cambia el Dockerfile salía verde sin haber probado nada: el CI corre con otra versión.
+    # El digest de la misma versión (parches de seguridad) se sigue proponiendo.
+    ignore:
+      - dependency-name: "python"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
   # Features del devcontainer (`.devcontainer/devcontainer-lock.json`, con digest resuelto).
   - package-ecosystem: "devcontainers"
     directory: "/"

@@ -15,6 +15,7 @@ from tests.conftest import auth
 def test_unauthenticated_request_is_rejected(client):
     resp = client.post("/notes", json={"text": "hola"})
     assert resp.status_code == 401
+    assert resp.headers["WWW-Authenticate"] == "Bearer"
     # Mensaje empático, no técnico.
     assert "iniciar sesión" in resp.json()["detail"].lower()
 
@@ -264,6 +265,7 @@ def test_token_missing_sub_claim(client):
     bad_token = jwt.encode({}, settings.secret_key, algorithm="HS256")
     resp = client.get("/notes", headers={"Authorization": f"Bearer {bad_token}"})
     assert resp.status_code == 401
+    assert resp.headers["WWW-Authenticate"] == "Bearer"
     assert "iniciá sesión de nuevo" in resp.json()["detail"].lower()
 
 
@@ -271,6 +273,7 @@ def test_token_missing_sub_claim(client):
 def test_token_invalid_format(client):
     resp = client.get("/notes", headers={"Authorization": "Bearer invalidtokenhere"})
     assert resp.status_code == 401
+    assert resp.headers["WWW-Authenticate"] == "Bearer"
     assert "iniciá sesión de nuevo" in resp.json()["detail"].lower()
 
 
@@ -282,6 +285,7 @@ def test_expired_token_is_rejected(client):
     expired = create_access_token("alice", expires_minutes=-1)
     resp = client.get("/notes", headers={"Authorization": f"Bearer {expired}"})
     assert resp.status_code == 401
+    assert resp.headers["WWW-Authenticate"] == "Bearer"
     assert "iniciá sesión de nuevo" in resp.json()["detail"].lower()
 
 
@@ -295,6 +299,7 @@ def test_token_without_exp_is_rejected(client):
     sin_exp = jwt.encode({"sub": "alice"}, settings.secret_key, algorithm="HS256")
     resp = client.get("/notes", headers={"Authorization": f"Bearer {sin_exp}"})
     assert resp.status_code == 401
+    assert resp.headers["WWW-Authenticate"] == "Bearer"
     assert "iniciá sesión de nuevo" in resp.json()["detail"].lower()
 
 
@@ -655,3 +660,11 @@ def test_every_endpoint_is_async():
     handlers += [r.endpoint for r in app.routes if getattr(r, "path", "") == "/health"]
     assert len(handlers) >= 5
     assert [h.__name__ for h in handlers if not inspect.iscoroutinefunction(h)] == []
+
+
+@pytest.mark.security
+def test_empty_sub_is_rejected(client):
+    """Un token bien firmado con `sub` vacío no es nadie: `require` solo exige que exista."""
+    resp = client.get("/notes", headers=auth(""))
+    assert resp.status_code == 401
+    assert resp.headers["WWW-Authenticate"] == "Bearer"

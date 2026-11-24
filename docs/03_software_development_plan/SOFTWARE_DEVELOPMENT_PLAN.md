@@ -61,6 +61,7 @@ Leyenda: ● obligatorio · ○ no exigido por la norma (puede adoptarse volunta
 | Plan de desarrollo de software | §5.1 | ● | ● | ● |
 | Requisitos de software | §5.2 | ● | ● | ● |
 | Diseño arquitectónico | §5.3 | ○ | ● | ● |
+| Segregación necesaria para control de riesgo | §5.3.5 | ○ | ○ | ● |
 | Subdividir en unidades de software | §5.4.1 | ○ | ● | ● |
 | Diseño detallado de unidades e interfaces, y su verificación | §5.4.2–§5.4.4 | ○ | ○ | ● |
 | Implementación y verificación de unidades | §5.5 | ● | ● | ● |

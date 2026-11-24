@@ -5,6 +5,7 @@ REAL (un detector que no encuentra nada está ciego), que el hook está ENCHUFAD
 `.claude/settings.json`, y que el recordatorio apunta a documentos que existen.
 """
 
+import importlib.util
 import json
 import re
 import subprocess
@@ -23,9 +24,12 @@ def _correr(entrada: str, cwd: Path) -> subprocess.CompletedProcess[str]:
 
 
 def _patrones() -> list[str]:
-    texto = SCRIPT.read_text(encoding="utf-8")
-    bloque = texto[texto.index("CLINICAL_PATTERNS = ["):texto.index("]", texto.index("CLINICAL_PATTERNS = ["))]
-    return re.findall(r'r"([^"]+)"', bloque)
+    # Se carga el módulo: leer el texto hasta el primer `]` dejaba ciegos los patrones de atrás.
+    spec = importlib.util.spec_from_file_location("audit_clinical_log", SCRIPT)
+    assert spec is not None and spec.loader is not None
+    modulo = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(modulo)
+    return list(modulo.CLINICAL_PATTERNS)
 
 
 def _archivos_del_repo() -> list[str]:
@@ -86,3 +90,13 @@ def test_el_hook_esta_enchufado_en_settings() -> None:
 def test_la_bitacora_no_se_versiona() -> None:
     r = subprocess.run(["git", "check-ignore", "-q", ".claude/audit_clinical_changes.log"], cwd=ROOT, check=False)
     assert r.returncode == 0, "la bitácora es local: tiene que estar en .gitignore"
+
+
+def test_si_la_bitacora_no_se_puede_escribir_avisa_igual(tmp_path: Path) -> None:
+    """Callar es lo peor: la edición sigue, pero quien edita se entera de que no quedó anotada."""
+    (tmp_path / ".claude").write_text("no es una carpeta")
+    entrada = json.dumps({"tool_name": "Edit", "tool_input": {"file_path": str(tmp_path / "app/core/encryption.py")}})
+    r = _correr(entrada, tmp_path)
+    assert r.returncode == 0
+    aviso = json.loads(r.stdout)["hookSpecificOutput"]["additionalContext"]
+    assert "NO SE PUDO ESCRIBIR" in aviso and " registrado" not in aviso

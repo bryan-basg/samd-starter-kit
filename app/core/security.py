@@ -22,6 +22,10 @@ _UNAUTHENTICATED = "Necesitás iniciar sesión para continuar."
 _INVALID = "Tu sesión expiró o no es válida. Iniciá sesión de nuevo."
 
 
+# Todo 401 dice cómo autenticarse (RFC 9110 §15.5.2). Igual en los tres casos: no revela el motivo.
+_DESAFIO = {"WWW-Authenticate": "Bearer"}
+
+
 def create_access_token(user_id: str, expires_minutes: int | None = None) -> str:
     """Helper de DEV/test para emitir un token. En prod lo emite tu proveedor de auth.
 
@@ -43,7 +47,7 @@ def get_current_user_id(
     credentials: HTTPAuthorizationCredentials | None = Depends(_bearer),
 ) -> str:
     if credentials is None:
-        raise HTTPException(status.HTTP_401_UNAUTHORIZED, _UNAUTHENTICATED)
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, _UNAUTHENTICATED, headers=_DESAFIO)
     try:
         # `require`: un token sin `exp` vale para siempre si se filtra, así que
         # se rechaza aunque la firma sea válida (lo emita quien lo emita).
@@ -54,8 +58,8 @@ def get_current_user_id(
             options={"require": ["exp", "sub"]},
         )
     except jwt.InvalidTokenError:
-        raise HTTPException(status.HTTP_401_UNAUTHORIZED, _INVALID) from None
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, _INVALID, headers=_DESAFIO) from None
     user_id = payload.get("sub")
     if not user_id:  # `require` solo exige que exista: un `sub` vacío se rechaza acá
-        raise HTTPException(status.HTTP_401_UNAUTHORIZED, _INVALID)
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, _INVALID, headers=_DESAFIO)
     return str(user_id)

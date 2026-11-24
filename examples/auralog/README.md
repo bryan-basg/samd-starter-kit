@@ -4,9 +4,9 @@
 
 ## ¿Qué es AuraLog?
 
-AuraLog es una app de **registro y seguimiento de síntomas** para pacientes con una condición crónica. El paciente anota sus síntomas diarios y recibe recordatorios. Cuando los patrones registrados cruzan umbrales configurados, AuraLog genera una **alerta informativa de tipo "consultá a tu profesional"**.
+AuraLog es una app de **registro y seguimiento de síntomas** para pacientes con una condición crónica **estable, ya valorada por un profesional, en la que retrasar una consulta no causa daño grave** (p. ej. rinitis alérgica); NO para condiciones en las que sí puede causarlo (p. ej. epilepsia, insuficiencia cardíaca, riesgo suicida). El paciente anota sus síntomas diarios y recibe recordatorios. Cuando los patrones registrados cruzan umbrales configurados, AuraLog genera una **alerta informativa de tipo "consultá a tu profesional"**.
 
-AuraLog **NO diagnostica** y **NO recomienda tratamiento**: solo **registra** lo que el paciente ingresa y **alerta** de forma informativa. Esa frontera (registrar + alertar, nunca diagnosticar) es la que sostiene la clasificación **Clase B**: una alerta perdida puede **retrasar** la consulta con el profesional (daño no serio, reversible), pero el software no toma decisiones clínicas por sí mismo.
+AuraLog **NO diagnostica** y **NO recomienda tratamiento**: solo **registra** lo que el paciente ingresa y **alerta** de forma informativa. La **Clase B** la sostiene el **daño posible**, no lo que el software dice hacer: con ese uso previsto acotado, una alerta perdida **retrasa** la consulta con el profesional (daño no grave, reversible). Si la condición admitiera daño grave por retraso, la clase sería otra.
 
 ## Stack de ejemplo
 

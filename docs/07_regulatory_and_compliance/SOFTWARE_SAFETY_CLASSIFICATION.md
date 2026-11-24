@@ -21,13 +21,13 @@
 
 ## 2. Criterios de clasificación IEC 62304 §4.3
 
-| Clase | Definición normativa |
+| Clase | Definición (paráfrasis; contrastar con la norma) |
 |---|---|
 | **A** | El fallo o comportamiento inesperado del software **no puede contribuir** a una situación peligrosa, o la contribución no resulta en un riesgo inaceptable tras considerar las medidas de control de riesgo externas. |
-| **B** | El fallo puede contribuir a una situación peligrosa que resulte en **daño no grave**. |
-| **C** | El fallo puede contribuir a una situación peligrosa que resulte en **muerte o daño grave**. |
+| **B** | Tras las medidas externas el riesgo es inaceptable y el daño posible es **no grave**. |
+| **C** | Tras las medidas externas el riesgo es inaceptable y el daño posible es **muerte o daño grave**. |
 
-La clasificación se realiza **después** de considerar las medidas de control de riesgo externas al software (hardware, procedimientos, supervisión humana), conforme a §4.3.
+La clasificación se realiza **después** de considerar las medidas de control de riesgo externas al software (hardware, procedimientos, supervisión humana), conforme a §4.3, y **suponiendo que el software falla** (probabilidad 1). Los controles internos del software **no cuentan** para clasificar.
 
 ---
 
@@ -55,9 +55,9 @@ La clasificación se realiza **después** de considerar las medidas de control d
 
 ---
 
-## 5. Segregación de ítems de software por clase (IEC 62304 §4.3 c) / §5.3)
+## 5. Segregación de ítems de software por clase (IEC 62304 §4.3 d) / §5.3)
 
-La segregación permite asignar clases distintas a ítems de software dentro del mismo sistema, siempre que se justifique la **independencia** entre ítems (sin acoplamiento que propague el fallo de un ítem de clase superior a uno inferior).
+La segregación permite asignar clases distintas a ítems de software dentro del mismo sistema, siempre que se justifique la **independencia** entre ítems (sin acoplamiento que permita que el fallo de un ítem de clase **inferior** afecte a uno de clase **superior**).
 
 | Ítem de software | Función | Clase asignada | Justificación de segregación / independencia |
 |---|---|---|---|

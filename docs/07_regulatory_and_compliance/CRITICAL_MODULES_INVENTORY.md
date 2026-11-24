@@ -2,7 +2,7 @@
 
 **Proyecto:** {{PROJECT_NAME}} · **Clase SaMD:** {{SAMD_CLASS}} · **Versión:** vX.Y · **Fecha:** YYYY-MM-DD
 
-> Inventario que clasifica cada módulo de software por **clase de seguridad (A/B/C)** según **IEC 62304 §4.3** y fija el **rigor de testing y mutation** exigible a cada clase (§5.3). La clasificación se justifica por la peor consecuencia posible de un fallo del módulo, **antes** de medidas externas de control de riesgo. Un módulo sin clase asignada se trata como **Clase C** hasta demostrar lo contrario.
+> Inventario que clasifica cada módulo de software por **clase de seguridad (A/B/C)** según **IEC 62304 §4.3** y fija el **rigor de testing y mutation** exigible a cada clase (§5.3). La clasificación se justifica por la peor consecuencia posible de un fallo del módulo, **después** de considerar solo las medidas de control **externas** al software (nunca las internas). Un módulo sin clase asignada se trata como **Clase C** hasta demostrar lo contrario.
 
 ---
 
@@ -10,9 +10,9 @@
 
 | Clase | Definición (consecuencia de un fallo del software) |
 |---|---|
-| A | No puede contribuir a una situación peligrosa, o la contribución no resulta en daño. |
-| B | Puede contribuir a una situación peligrosa que resulta en daño **no serio**. |
-| C | Puede contribuir a una situación peligrosa que resulta en daño **serio o muerte**. |
+| A | No puede contribuir a una situación peligrosa, o no resulta en un riesgo inaceptable tras las medidas externas. |
+| B | Tras esas medidas el riesgo es inaceptable y el daño posible es **no grave**. |
+| C | Tras esas medidas el riesgo es inaceptable y el daño posible es **grave o muerte**. |
 
 **Regla de segregación:** si un módulo de clase inferior puede afectar a uno de clase superior sin una barrera demostrada (segregación de software), hereda la clase superior.
 
@@ -42,6 +42,7 @@
 | MOD-06 | <ej. middleware de auditoría> | `app/middleware/<...>.py` | <qué hace> | B | Un fallo impide reconstruir un evento; sin daño directo. | R-SEC-02 | Cov ≥ <COV_B>% / Mut ≥ <MUT_B>% | Implementado |
 | MOD-07 | Cifrado en reposo de PII/PHI (lo trae el kit) | `app/core/encryption.py` | Cifra y descifra cada campo sensible | C | Un fallo expone o pierde PHI. | R-SEC-03 | Cov ≥ <COV_C>% / Mut ≥ <MUT_C>% | Verificado |
 | MOD-08 | Salida de errores (lo trae el kit) | `app/main.py` | Respuesta empática y log sin datos del usuario | B | Un fallo filtra PHI al log o un detalle técnico al usuario. | R-SEC-01 | Cov ≥ <COV_B>% / Mut ≥ <MUT_B>% | Verificado |
+| MOD-09 | Configuración y guard de secretos (lo trae el kit) | `app/core/config.py` | Se niega a servir con secretos no aptos | C | Un fallo deja firmar identidades falsas o descifrar PHI. | R002, R-SEC-03 | Cov ≥ <COV_C>% / Mut ≥ <MUT_C>% | Verificado |
 
 > Las filas `R-NOTIF-01`, `R-SYNC-01` y `R-SEC-02` son ejemplos: registrá esos riesgos en `ISO_14971_RISK_MATRIX.md` antes de usarlos.
 

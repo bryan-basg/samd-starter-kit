@@ -29,6 +29,8 @@ from datetime import datetime, timezone
 CLINICAL_PATTERNS = [
     r"app/core/encryption",  # cifrado de PHI en reposo
     r"app/core/security",  # JWT / identidad
+    r"app/core/config\.py",  # secretos y guard de claves de dev
+    r"app/main\.py",  # fail-safe global y log sin PHI
     r"app/routers/notes",  # endpoint que guarda contenido del usuario (PHI)
     r"app/schemas",  # frontera de validación de los datos de entrada
 ]
@@ -36,7 +38,7 @@ CLINICAL_PATTERNS = [
 TOOLS = frozenset({"Edit", "Write", "MultiEdit", "NotebookEdit"})
 
 RECORDATORIO = (
-    "[SaMD bitácora] Cambio en módulo clínico/crítico registrado: {ruta}.\n"
+    "[SaMD bitácora] Cambio en módulo clínico/crítico{estado}: {ruta}.\n"
     "Antes de declarar cerrado: docs/08_verification_and_audits/TECHNICAL_DEBT_SUMMARY.md, "
     "docs/07_regulatory_and_compliance/ISO_14971_RISK_MATRIX.md (si toca seguridad) y "
     "docs/00_master/MASTER_MAP.md; y análisis de impacto (/samd-trace)."
@@ -66,17 +68,18 @@ def main() -> None:
     if patron is None:
         return
 
+    estado = " registrado"
     try:
         bitacora = os.path.join(cwd, ".claude", "audit_clinical_changes.log")
         os.makedirs(os.path.dirname(bitacora), exist_ok=True)
         with open(bitacora, "a", encoding="utf-8") as fh:
             fh.write(f"{datetime.now(timezone.utc).isoformat()}\t{herramienta}\t{relativa}\t{patron}\n")
-    except OSError:
-        return  # falla abierto: sin bitácora, pero la edición sigue
+    except OSError as exc:  # falla abierto: la edición sigue, pero sin fingir que quedó anotada
+        estado = f" — LA BITÁCORA NO SE PUDO ESCRIBIR ({type(exc).__name__}), anotalo a mano"
 
     print(json.dumps({"hookSpecificOutput": {
         "hookEventName": "PostToolUse",
-        "additionalContext": RECORDATORIO.format(ruta=relativa),
+        "additionalContext": RECORDATORIO.format(ruta=relativa, estado=estado),
     }}, ensure_ascii=False))
 
 

@@ -1,6 +1,6 @@
 # Master Map — AuraLog
 
-> Mapa maestro del proyecto. **No asumir rutas; verificarlas.** Toda doc nueva, renombre o reorg se refleja acá (lo mantiene `docs-dhf`). Versión: v1.0.
+> Mapa maestro del proyecto. **No asumir rutas; verificarlas.** Toda doc nueva, renombre o reorg se refleja acá (lo mantiene `docs-dhf`). Versión: v1.1.
 >
 > **Documento de EJEMPLO.** AuraLog es un dispositivo ficticio con fines didácticos. Paths y tests son ilustrativos.
 
@@ -9,7 +9,7 @@
 | Campo | Valor |
 |---|---|
 | Producto | AuraLog |
-| Uso previsto (Intended Use) | Aplicación para que pacientes con una condición crónica **registren y hagan seguimiento de sus síntomas** y reciban recordatorios. Genera **alertas informativas** ("consultá a tu profesional") cuando los patrones registrados cruzan umbrales configurados. NO diagnostica, NO recomienda tratamiento; las alertas son informativas y no sustituyen la valoración de un profesional de salud. |
+| Uso previsto (Intended Use) | Aplicación para que pacientes con una condición crónica **estable, ya valorada por un profesional, en la que retrasar una consulta no causa daño grave** (p. ej. rinitis alérgica); NO para condiciones en las que sí puede causarlo (p. ej. epilepsia, insuficiencia cardíaca, riesgo suicida) **registren y hagan seguimiento de sus síntomas** y reciban recordatorios. Genera **alertas informativas** ("consultá a tu profesional") cuando los patrones registrados cruzan umbrales configurados. NO diagnostica, NO recomienda tratamiento; las alertas son informativas y no sustituyen la valoración de un profesional de salud. |
 | Clasificación SaMD | Clase B (IEC 62304 §4.3) |
 | Marco regulatorio | IEC 62304 + ISO 14971 + ISO 13485 + GDPR + HIPAA + WCAG 2.1 AA |
 | Stack frontend | React + TypeScript (offline-first, IndexedDB + outbox/sync) |
@@ -24,6 +24,8 @@
         |  (HTTP + token JWT)
         v
 [ Backend Python + FastAPI ]  -->  [ PostgreSQL transaccional + auditoría ]
+        |                              ^ vistas propias, solo lectura
+        |                              [ badges: Cloud Run aparte (insignias, Clase A) ]
         |
         v
 [ GCP: Cloud Run (cómputo), Secret Manager (claves), Cloud Scheduler (evaluación de umbrales), Cloud Logging (monitoring) ]
@@ -63,7 +65,7 @@ Flujo clínico nuclear: el paciente registra un síntoma → se persiste en Inde
 
 | Doc | Versión | Última actualización |
 |---|---|---|
-| MASTER_MAP | v1.0 | 2026-06-28 |
-| SOFTWARE_SAFETY_CLASSIFICATION | v1.0 | 2026-06-28 |
-| ISO_14971_RISK_MATRIX | v1.0 | 2026-06-28 |
-| TRACEABILITY_MATRIX_SAMD | v1.0 | 2026-06-28 |
+| MASTER_MAP | v1.1 | 2026-11-24 |
+| SOFTWARE_SAFETY_CLASSIFICATION | v1.1 | 2026-11-24 |
+| ISO_14971_RISK_MATRIX | v1.1 | 2026-11-24 |
+| TRACEABILITY_MATRIX_SAMD | v1.1 | 2026-11-24 |

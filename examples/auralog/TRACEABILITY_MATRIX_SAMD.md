@@ -1,6 +1,6 @@
 # Matriz de Trazabilidad SaMD
 
-**Proyecto:** AuraLog · **Clase SaMD:** B · **Versión:** v1.0 · **Fecha:** 2026-06-28
+**Proyecto:** AuraLog · **Clase SaMD:** B · **Versión:** v1.1 · **Fecha:** 2026-11-24
 
 > **Regla más estricta del DHF.** Cada `REQ-XXX` apunta a (1) código citado por NOMBRE (`ruta/archivo.py::símbolo`) verificable HOY y (2) un test que existe HOY, citado igual (`ruta/test_archivo.py::test_nombre`). El número de línea no se usa: caduca con el siguiente commit. Frases vagas ("validado por X", "cubierto por la suite") sin path concreto NO son trazabilidad aceptable — el auditor externo las levanta primero. Mantenida por `docs-dhf`, que verifica path + test antes de escribir cada fila.
 >
@@ -16,11 +16,11 @@ Necesidad clínica  →  REQ (requisito)  →  Diseño (ruta/archivo.py::símbol
 
 | REQ | Descripción | Origen (necesidad/riesgo) | Implementación (`ruta/archivo.py::símbolo`) | Verificación (`ruta/test_archivo.py::test_nombre`) | Estado |
 |---|---|---|---|---|---|
-| REQ-CLN-01 | El motor de alertas evalúa cada registro contra los umbrales configurados y genera la alerta informativa cuando se cruza un umbral; si la evaluación falla, no descarta el registro (fail-safe) | Necesidad clínica nuclear / R001 | `app/services/alert_engine.py::evaluate_record` | `tests/test_alert_engine.py::test_alert_engine_failsafe_reevaluates` | ✓ |
-| REQ-CLN-02 | Los umbrales se validan contra un rango clínico plausible; un valor inválido conserva el último umbral seguro y avisa al paciente | R002 | `app/services/threshold_config.py::validate_threshold` | `tests/test_threshold_config.py::test_threshold_rejects_out_of_range` | ✓ |
+| REQ-CLN-01 | El motor de alertas evalúa cada registro contra los umbrales configurados y genera la alerta informativa cuando se cruza un umbral; si la evaluación falla, no descarta el registro (fail-safe) | Necesidad clínica nuclear / R001 | `app/services/alert_engine.py::evaluate_record` | `tests/test_alert_engine.py::test_alert_is_generated_when_threshold_is_crossed`, `tests/test_alert_engine.py::test_boundaries_threshold[justo_debajo,igual,justo_encima]`, `tests/test_alert_engine.py::test_alert_engine_failsafe_reevaluates` | ✓ |
+| REQ-CLN-02 | Los umbrales se validan contra un rango clínico plausible; un valor inválido conserva el último umbral seguro y avisa al paciente | R002 | `app/services/threshold_config.py::validate_threshold` | `tests/test_threshold_config.py::test_threshold_rejects_out_of_range`, `tests/test_threshold_config.py::test_invalid_threshold_keeps_previous_and_warns` | ✓ |
 | REQ-CLN-03 | Una alerta generada que no se entrega se reencola con backoff y nunca se descarta | R003 | `app/services/alert_dispatcher.py::dispatch_alert` | `tests/test_alert_dispatcher.py::test_dispatcher_requeues_undelivered` | ✓ |
 | REQ-SYNC-01 | Todo registro de síntoma pasa por outbox idempotente; no se borra del cliente hasta confirmar persistencia en el servidor | Offline-first / R004 | `app/services/sync_service.py::flush_outbox` | `tests/test_sync_service.py::test_sync_outbox_retains_until_confirmed` | ✓ |
-| REQ-SEC-01 | Cifrado en reposo de PII/PHI (AES-256-GCM) y redacción de PHI en logs | GDPR Art.32 / HIPAA / R005 | `app/models/types.py::EncryptedString` | `tests/test_encryption_at_rest.py::test_encrypted_string_roundtrip` | ✓ |
+| REQ-SEC-01 | Cifrado en reposo de PII/PHI (AES-256-GCM) y redacción de PHI en logs | GDPR Art.32 / HIPAA / R005 | `app/models/types.py::EncryptedString` | `tests/test_encryption_at_rest.py::test_stored_value_is_not_plaintext`, `tests/test_encryption_at_rest.py::test_tampered_ciphertext_is_rejected`, `tests/test_log_redaction.py::test_phi_never_reaches_log` | ✓ |
 | REQ-SEC-02 | Identidad solo del token (JWT-only); nunca `user_id` desde body/query; verificación de propiedad por registro | R-SEC / escalada / R006 | `app/dependencies.py::get_current_user` | `tests/test_identity_jwt_only.py::test_idor_cannot_read_other_patient_logs` | ✓ |
 | REQ-UX-01 | Fail-safe empático: ningún fallo del backend expone tracebacks al paciente; mensaje claro y sin jerga técnica | IEC 62304 §5.4 / R007 | `app/middleware/error_handler.py::handle_unexpected_error` | `tests/test_error_handler.py::test_error_handler_no_traceback_to_client` | ✓ |
 

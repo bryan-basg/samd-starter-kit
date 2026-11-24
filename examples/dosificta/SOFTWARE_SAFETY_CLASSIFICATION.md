@@ -1,6 +1,6 @@
 # Clasificación de Seguridad del Software
 
-**Proyecto:** DosiFicta · **Clase SaMD:** C · **Versión:** v1.0 · **Fecha:** 2026-11-16
+**Proyecto:** DosiFicta · **Clase SaMD:** C · **Versión:** v1.1 · **Fecha:** 2026-11-24
 
 > **Documento de EJEMPLO.** DosiFicta es un dispositivo ficticio; no calcula dosis reales. Componentes, rangos y tests son ilustrativos. La clasificación real de un producto la decide el fabricante con criterio regulatorio y, según el mercado, la revisa el organismo notificado.
 
@@ -24,8 +24,8 @@
 | Clase | Definición (paráfrasis; contrastar con la norma) |
 |---|---|
 | **A** | El fallo no puede contribuir a una situación peligrosa, o no resulta en un riesgo inaceptable tras las medidas externas. |
-| **B** | El fallo puede contribuir a una situación peligrosa que resulte en **daño no grave**. |
-| **C** | El fallo puede contribuir a una situación peligrosa que resulte en **muerte o daño grave**. |
+| **B** | Tras las medidas externas el riesgo es inaceptable y el daño posible es **no grave**. |
+| **C** | Tras las medidas externas el riesgo es inaceptable y el daño posible es **muerte o daño grave**. |
 
 La clase se asigna mirando la severidad del daño **después** de considerar las medidas de control **externas** al software (no las internas).
 
@@ -50,12 +50,12 @@ La clase se asigna mirando la severidad del daño **después** de considerar las
 | ID | Unidad | Modo de fallo | Consecuencia potencial | Severidad | Control de riesgo (interno) | Riesgo |
 |---|---|---|---|---|---|---|
 | F-01 | UNIT-04 `bolus_calculator` | Error en la fórmula (signo, orden de operaciones, factor invertido) | Dosis sobrestimada → hipoglucemia grave | Catastrófica | Función pura + tests de propiedades + tabla de casos firmada por el responsable clínico | R001 |
-| F-02 | UNIT-01 `input_validator` | Glucosa en mmol/L tomada como mg/dL (o al revés) | Corrección 18 veces menor/mayor → hipo o hiperglucemia grave | Catastrófica | Unidad obligatoria y explícita; sin unidad → rechazo | R002 |
-| F-03 | UNIT-03 `insulin_on_board` | No descuenta la insulina activa de una dosis reciente | Dosis "apilada" → hipoglucemia grave | Catastrófica | Sin historial confiable → no sugiere dosis | R003 |
-| F-04 | UNIT-02 `parameter_validator` | Acepta un parámetro absurdo (ej. sensibilidad 5 en vez de 50) | Correcciones muy grandes en cada uso | Catastrófica | Rango plausible + doble confirmación del profesional | R004 |
+| F-02 | UNIT-01 `input_validator` | Glucosa en mmol/L tomada como mg/dL (o al revés) | Glucosa 18 veces menor/mayor → corrección absurda o de signo contrario → hipo o hiperglucemia grave | Catastrófica | Unidad obligatoria y explícita; además, glucosa fuera del rango del medidor → no sugiere (UNIT-05) | R002 |
+| F-03 | UNIT-03 `insulin_on_board` | No descuenta la insulina activa de una dosis reciente | Dosis "apilada" → hipoglucemia grave | Catastrófica | Sin historial confiable → no sugiere dosis; además, máximo de insulina reciente (UNIT-05) | R003 |
+| F-04 | UNIT-02 `parameter_validator` | Acepta un parámetro absurdo (ej. sensibilidad 5 en vez de 50) | Correcciones muy grandes en cada uso | Catastrófica | Rango plausible; además, UNIT-04 no calcula sin la vista previa confirmada | R004 |
 | F-05 | UNIT-05/06 | Supera el tope o redondea hacia arriba | Dosis mayor a la calculada | Crítica | Tope duro + redondeo siempre hacia abajo | R001, R005 |
 | F-06 | UNIT-01 | Usa una lectura de glucosa vieja | Corrección sobre un valor que ya cambió | Crítica | Lectura con más de 15 min → se pide una nueva | R006 |
-| F-07 | UNIT-07 `dose_log` | Registra dos veces la misma dosis o ninguna | Insulina activa mal estimada en el próximo cálculo | Catastrófica | Clave de idempotencia; registro fallido → aviso visible | R009 |
+| F-07 | UNIT-07 `dose_log` | Registra dos veces la misma dosis o ninguna | Insulina activa mal estimada en el próximo cálculo | Catastrófica | Clave de idempotencia; además, una sugerencia sin cerrar bloquea la siguiente (UNIT-03) | R009 |
 
 ---
 
@@ -93,6 +93,7 @@ DosiFicta se clasifica **Clase C**: su fallo puede contribuir a muerte o daño g
 | Versión | Fecha | Autor | Cambio |
 |---|---|---|---|
 | v1.0 | 2026-11-16 | Responsable de Gestión de Riesgo (ejemplo) | Clasificación inicial |
+| v1.1 | 2026-11-24 | Responsable de Gestión de Riesgo (ejemplo) | F-02, F-03, F-04 y F-07 con segunda barrera en otra unidad; definición de clases según Amd 1:2015. La clase no cambia |
 
 ---
 **Navegación:** [Índice del ejemplo](./README.md) · [Master Map de DosiFicta](./MASTER_MAP.md)

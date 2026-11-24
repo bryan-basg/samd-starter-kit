@@ -1,6 +1,6 @@
 # Matriz de Gestión de Riesgo — ISO 14971
 
-**Proyecto:** AuraLog · **Clase SaMD:** B · **Versión:** v1.0 · **Fecha:** 2026-06-28
+**Proyecto:** AuraLog · **Clase SaMD:** B · **Versión:** v1.1 · **Fecha:** 2026-11-24
 
 > Mantenida por `docs-dhf`. Cada control de riesgo se vincula a evidencia verificable (`ruta/test_archivo.py::test_nombre`). Un riesgo sin control implementado y verificado NO se considera mitigado.
 >
@@ -14,6 +14,8 @@
 | Crítica | Daño serio reversible / intervención clínica requerida. |
 | Seria | Daño moderado / retraso en cuidado. |
 | Menor | Molestia / inconveniente sin daño. |
+
+> A efectos de IEC 62304, *daño grave* (SERIOUS INJURY) = Crítica o Catastrófica; "Seria" y "Menor" son no graves.
 
 | Probabilidad | Definición |
 |---|---|
@@ -35,15 +37,15 @@ Todo riesgo **INACEPTABLE** requiere control antes de release. Los riesgos **ALA
 
 ## 2. Registro de riesgos
 
-| ID | Peligro / situación peligrosa | Daño potencial | Sev. | Prob. | Riesgo inicial | Control de riesgo | Evidencia (`ruta/test_archivo.py::test_nombre`) | Riesgo residual | Estado |
-|---|---|---|---|---|---|---|---|---|---|
-| R001 | El motor de alertas falla o no evalúa un registro y la alerta "consultá a tu profesional" no se genera | Retraso de la consulta clínica | Seria | Ocasional | ALARP | Fail-safe en `alert_engine`: error registrado + reintento; red de respaldo `scheduled_evaluation` reevalúa registros pendientes por Cloud Scheduler | `tests/test_alert_engine.py::test_alert_engine_failsafe_reevaluates` | ALARP | Abierto |
-| R002 | Un umbral se configura fuera de rango clínico plausible → la alerta nunca dispara (o dispara siempre y el paciente la ignora) | Alerta perdida o ruido que enmascara una real | Seria | Remota | ALARP | `threshold_config` valida rango y rechaza valores inválidos; conserva el último umbral seguro y avisa al paciente que reconfigure con su profesional | `tests/test_threshold_config.py::test_threshold_rejects_out_of_range` | Aceptable | Abierto |
-| R003 | La alerta se genera pero el dispatcher no la entrega al dispositivo | El paciente no ve la alerta a tiempo → retraso | Seria | Remota | ALARP | `alert_dispatcher` con cola persistente + reintentos con backoff; alerta no entregada se reencola, no se descarta | `tests/test_alert_dispatcher.py::test_dispatcher_requeues_undelivered` | Aceptable | Abierto |
-| R004 | Un registro hecho sin conexión se pierde al fallar la sincronización → el síntoma nunca se evalúa | Síntoma no evaluado → posible alerta no generada | Seria | Remota | ALARP | `sync_service` con outbox idempotente; el registro no se borra del cliente hasta confirmar persistencia en el servidor | `tests/test_sync_service.py::test_sync_outbox_retains_until_confirmed` | Aceptable | Abierto |
-| R005 | Datos de salud (síntomas, notas) almacenados o registrados en claro | Exposición de PHI del paciente | Seria | Remota | ALARP | Cifrado en reposo AES-256-GCM vía `EncryptedString`; clave en Secret Manager; redacción de PHI en logs | `tests/test_encryption_at_rest.py::test_encrypted_string_roundtrip` | Aceptable | Abierto |
-| R006 | Escalada de identidad: un usuario lee registros de otro paciente (IDOR) | Exposición de PHI de un tercero | Seria | Remota | ALARP | Identidad resuelta solo desde el token JWT; nunca se acepta `user_id` desde body/query; verificación de propiedad en cada acceso a registros | `tests/test_identity_jwt_only.py::test_idor_cannot_read_other_patient_logs` | Aceptable | Abierto |
-| R007 | Un fallo del backend expone un traceback / error técnico crudo al paciente | Confusión y ansiedad del paciente (posiblemente en crisis); pérdida de confianza; el paciente no entiende qué hacer | Menor | Ocasional | Aceptable | Handler global de errores: ningún traceback al cliente; mensaje empático en el idioma del usuario, sin jerga técnica, + código HTTP correcto | `tests/test_error_handler.py::test_error_handler_no_traceback_to_client` | Aceptable | Abierto |
+| ID | Peligro / situación peligrosa | Daño potencial | Sev. | Prob. | Riesgo inicial | Control de riesgo | Evidencia (`ruta/test_archivo.py::test_nombre`) | Prob. residual | Riesgo residual | Estado |
+|---|---|---|---|---|---|---|---|---|---|---|
+| R001 | El motor de alertas falla o no evalúa un registro y la alerta "consultá a tu profesional" no se genera | Retraso de la consulta clínica | Seria | Ocasional | ALARP | Fail-safe en `alert_engine`: error registrado + reintento; red de respaldo `scheduled_evaluation` reevalúa registros pendientes por Cloud Scheduler | `tests/test_alert_engine.py::test_alert_is_generated_when_threshold_is_crossed`, `tests/test_alert_engine.py::test_alert_engine_failsafe_reevaluates` | Remota | ALARP | Verificado |
+| R002 | Un umbral se configura fuera de rango clínico plausible → la alerta nunca dispara (o dispara siempre y el paciente la ignora) | Alerta perdida o ruido que enmascara una real | Seria | Remota | ALARP | `threshold_config` valida rango y rechaza valores inválidos; conserva el último umbral seguro y avisa al paciente que reconfigure con su profesional | `tests/test_threshold_config.py::test_threshold_rejects_out_of_range` | Improbable | Aceptable | Verificado |
+| R003 | La alerta se genera pero el dispatcher no la entrega al dispositivo | El paciente no ve la alerta a tiempo → retraso | Seria | Remota | ALARP | `alert_dispatcher` con cola persistente + reintentos con backoff; alerta no entregada se reencola, no se descarta | `tests/test_alert_dispatcher.py::test_dispatcher_requeues_undelivered` | Improbable | Aceptable | Verificado |
+| R004 | Un registro hecho sin conexión se pierde al fallar la sincronización → el síntoma nunca se evalúa | Síntoma no evaluado → posible alerta no generada | Seria | Remota | ALARP | `sync_service` con outbox idempotente; el registro no se borra del cliente hasta confirmar persistencia en el servidor | `tests/test_sync_service.py::test_sync_outbox_retains_until_confirmed` | Improbable | Aceptable | Verificado |
+| R005 | Datos de salud (síntomas, notas) almacenados o registrados en claro | Exposición de PHI del paciente | Seria | Remota | ALARP | Cifrado en reposo AES-256-GCM vía `EncryptedString`; clave en Secret Manager; redacción de PHI en logs | `tests/test_encryption_at_rest.py::test_stored_value_is_not_plaintext`, `tests/test_encryption_at_rest.py::test_tampered_ciphertext_is_rejected`, `tests/test_log_redaction.py::test_phi_never_reaches_log` | Improbable | Aceptable | Verificado |
+| R006 | Escalada de identidad: un usuario lee registros de otro paciente (IDOR) | Exposición de PHI de un tercero | Seria | Remota | ALARP | Identidad resuelta solo desde el token JWT; nunca se acepta `user_id` desde body/query; verificación de propiedad en cada acceso a registros | `tests/test_identity_jwt_only.py::test_idor_cannot_read_other_patient_logs` | Improbable | Aceptable | Verificado |
+| R007 | Un fallo del backend expone un traceback / error técnico crudo al paciente | Confusión y ansiedad del paciente (posiblemente en crisis); pérdida de confianza; el paciente no entiende qué hacer | Menor | Ocasional | Aceptable | Handler global de errores: ningún traceback al cliente; mensaje empático en el idioma del usuario, sin jerga técnica, + código HTTP correcto | `tests/test_error_handler.py::test_error_handler_no_traceback_to_client` | Remota | Aceptable | Verificado |
 
 ## 3. Riesgos de seguridad como riesgos clínicos
 
@@ -56,7 +58,7 @@ Cuando un vector de seguridad también es un riesgo clínico (auth roto → expo
 
 Tras aplicar los controles internos (fail-safe del motor de alertas, red de respaldo por scheduler, validación de umbrales, outbox idempotente, cifrado en reposo, JWT-only) y las medidas externas (etiquetado del carácter informativo, canales clínicos independientes del paciente), el **riesgo residual global de AuraLog se considera ACEPTABLE** para un dispositivo Clase B: ningún riesgo residual supera severidad "Seria" con probabilidad mayor a "Remota", y ninguno alcanza daño irreversible. Se revisa en cada release y ante cada reporte de post-market surveillance.
 
-Firmado por: Responsable de Gestión de Riesgo, AuraLog (ejemplo) — 2026-06-28.
+Firmado por: Responsable de Gestión de Riesgo, AuraLog (ejemplo) — 2026-06-28; revisado 2026-11-24 (v1.1).
 
 ---
 **Navegación:** [Índice del ejemplo](./README.md) · [Master Map de AuraLog](./MASTER_MAP.md)

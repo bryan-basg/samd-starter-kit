@@ -6,6 +6,13 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 
 ## [Unreleased]
 
+### Fixed
+- **Ejemplo DosiFicta (Clase C) v1.1.** El diseño de UNIT-05 pedía a la vez «glucosa baja primero» y «negativo → error», y la fórmula da negativo justo con glucosa baja: según cómo se programara, una persona en hipoglucemia veía un error genérico. Ahora `LOW_GLUCOSE` gana siempre, una dosis negativa avisa que la glucosa puede bajar y nunca se muestra «0 U». Además, las «dos barreras independientes» de 4 riesgos catastróficos vivían en la misma unidad: ahora están en unidades distintas, con sus límites declarados. Todo sigue siendo ficticio: no es una recomendación clínica.
+- **Ejemplo AuraLog (Clase B) v1.1.** Bajaba la clase contando controles internos del software (IEC 62304 §4.3 solo admite los externos, con probabilidad de fallo 1), con un uso previsto sin acotar y con dos módulos en Clase A sin segregar. Firmaba un riesgo residual aceptable con los 7 riesgos «Abiertos».
+- **Plantillas de clasificación:** la regla de segregación estaba al revés y el inventario clasificaba «antes» de las medidas externas. Matriz ISO 14971 con probabilidad residual; *Crítica × Improbable* es ALARP. SDP con §5.3.5.
+- **La bitácora clínica avisa cuando no puede escribir** (callaba) y vigila `app/main.py` y `app/core/config.py`; su test carga la lista en vez de leer el texto.
+- **Los 401 llevan `WWW-Authenticate: Bearer`** (RFC 9110) y un `sub` vacío queda probado: quitar ese control no rojeaba nada.
+
 ### Added
 - **Logo del kit** (`docs/assets/logo.svg`, más una versión blanca): una cruz de salud armada con módulos de software, una terminal al centro y el hueco de la pieza que falta, tu app, en el degradado de la marca. La portada del README queda en símbolo y nombre, sin cifras que envejecen; el sitio de docs lo usa de logo y favicon.
 - **README:** sección «What you get on day one» / «Qué tenés el primer día».

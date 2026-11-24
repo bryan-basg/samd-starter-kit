@@ -83,8 +83,12 @@ jobs:
           # requirements.txt necesario para que `cyclonedx-py environment` vea
           # el grafo transitivo real.
           pip install -r requirements.txt
-          # Herramienta SBOM (tooling regulatorio, no runtime → fuera de requirements.txt).
-          pip install cyclonedx-bom
+          # Herramienta SBOM en su PROPIO venv: instalada en el del producto, el inventario la
+          # listaba (con sus ~30 dependencias) como si fuera parte del dispositivo.
+          deactivate
+          python3 -m venv /tmp/cyclonedx
+          /tmp/cyclonedx/bin/pip install cyclonedx-bom
+          echo /tmp/cyclonedx/bin >> "$GITHUB_PATH"
 
       # ----------------------------------------------------------- frontend deps
       - name: Install frontend deps (lockfile only)

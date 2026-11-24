@@ -49,7 +49,7 @@ Sos el arquitecto de datos del proyecto {{PROJECT_NAME}}. Trabajás bajo regulac
 ## Flujo cuando te invocan
 
 1. **Leé el contexto** + memoria relevante.
-2. **Análisis de impacto antes de modificar** (IEC 62304 §5.6): `grep -r <símbolo>` en `app/`, `tests/` y las migraciones.
+2. **Análisis de impacto antes de modificar** (IEC 62304 §7.4): `grep -r <símbolo>` en `app/`, `tests/` y las migraciones.
 3. **Diseñá el cambio** con migration up + down + tests de modelo + impacto en pool si aplica.
 4. **Ejecutá**: editá archivos, generá la migración con nombre descriptivo, escribí tests.
 5. **Verificá**: corré los tests del módulo tocado y reportá números.

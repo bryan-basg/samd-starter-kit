@@ -8,7 +8,7 @@
 
 ## 1. Propósito
 
-Definir cuánto tiempo se conserva cada categoría de datos de **{{PROJECT_NAME}}**, cuándo y cómo se borran o anonimizan, y la base legal de cada plazo. Cumple el principio de **limitación del plazo de conservación** (GDPR Art. 5(1)(e)) y HIPAA §164.316(b)(2).
+Definir cuánto tiempo se conserva cada categoría de datos de **{{PROJECT_NAME}}**, cuándo y cómo se borran o anonimizan, y la base legal de cada plazo. Cumple el principio de **limitación del plazo de conservación** (GDPR Art. 5(1)(e)) y, para la documentación de cumplimiento, HIPAA §164.316(b)(2) (6 años).
 
 ---
 
@@ -25,7 +25,7 @@ Definir cuánto tiempo se conserva cada categoría de datos de **{{PROJECT_NAME}
 | Categoría | Plazo de retención | Acción al vencer | Base legal |
 |---|---|---|---|
 | Datos de cuenta / identificación | <completar> | Borrado | GDPR Art. 5(1)(e); contrato |
-| Datos de salud (PHI) | <completar> | Borrado / anonimización | GDPR Art. 9; HIPAA §164.316 |
+| Datos de salud (PHI) | <completar según la ley estatal o nacional de historias clínicas> | Borrado / anonimización | GDPR Art. 5(1)(e) y 9; ley local. HIPAA **no** fija plazo para la historia clínica (§164.316 es para políticas y registros de cumplimiento) |
 | Registros de auditoría (mutaciones) | <p. ej. 6 años> | Borrado | HIPAA §164.316(b)(2); IEC 62304 §5.7 |
 | Logs técnicos (sin PII) | <p. ej. 14–90 días> | Borrado | Interés legítimo; seguridad |
 | Backups | <completar> | Rotación / expiración | GDPR Art. 32; continuidad |

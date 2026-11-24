@@ -35,7 +35,7 @@ Metelas **textuales** en cada agente; cada una ataca una de las trampas de arrib
 3. **«Toda ficha que abras declara su CUBO»** — 🔴 (daña a un paciente · expone o pierde datos · impide usar la app) · 🟡 (WCAG · GDPR · ISO 14971 · trazabilidad) · 🧊 (calidad interna · producto sin decidir, **NO es deuda**). ⭐ **La prioridad nominal (P1/P2/P3) NO dice el cubo.** Test de bolsillo: *«si esto sigue roto un año, ¿alguien sale perjudicado, o solo el código es más feo?»*.
 4. **«Traé EVIDENCIA ejecutable, no prosa.»** `archivo::símbolo` (la línea, solo como ayuda para encontrarlo hoy: lo que se escriba en `docs/` va por símbolo) + el comando que lo demuestra + qué verías si estuviera sano. Un hallazgo sin forma de reproducirlo **no se ficha**.
 
-## Hallazgo clínico o de seguridad ⇒ REFUTADOR independiente (§5.6, obligatorio)
+## Hallazgo clínico o de seguridad ⇒ REFUTADOR independiente (§7.4, obligatorio)
 
 Un hallazgo que dispare cambio en algoritmo clínico, schema, regla de negocio o flujo de seguridad **lo refuta otro agente antes de tocar código**. No es opcional y no es el mismo agente. **Lentes distintos, no revisores repetidos** (correctitud · seguridad · «¿reproduce?»).
 

@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
-"""Auditor de cobertura i18n — frontend + backend ({{PROJECT_NAME}}, SaMD {{SAMD_CLASS}} §5.4).
+"""Auditor de cobertura i18n — frontend + backend (SaMD §5.4).
 
 Detecta DINÁMICAMENTE los idiomas y los namespaces (NO hardcodea listas: una lista
 hardcodeada se queda ciega cuando agregás un idioma o movés una carpeta, y el
 problema se acumula en silencio). Hace DOS chequeos contra el idioma base:
 
 1. PARIDAD DE CLAVES — claves que faltan o sobran, valores vacíos o de otro tipo,
-   listas de distinto largo y archivos de namespace huérfanos. Gate duro (rompe CI).
+   listas de distinto largo, marcadores (`{{name}}`, `%s`) perdidos y archivos de
+   namespace huérfanos. Gate duro (rompe CI). Los plurales (`_one`, `_few`, `_many`…)
+   se comparan por grupo: cada idioma tiene sus propias formas.
 
 2. SIN TRADUCIR — valores IDÉNTICOS a la base (texto "copiado" como placeholder y
    nunca traducido). Históricamente invisible: la clave existe, así que la paridad
@@ -117,6 +119,36 @@ def _key_ignored(key: str) -> bool:
     return any(p.search(key) for p in IGNORE_KEY_PATTERNS)
 
 
+_MARCADOR_RE = re.compile(r"\{\{\s*[-\w.]+.*?\}\}|\{\w+\}|%\(\w+\)[sd]|%[sd]")
+_PLURAL_RE = re.compile(r"_(zero|one|two|few|many|other)$")
+
+
+def marcadores(val: Any) -> set[str]:
+    return {re.sub(r"\s", "", m) for m in _MARCADOR_RE.findall(val)} if isinstance(val, str) else set()
+
+
+def diferencia_de_claves(base: set[str], keys: set[str]) -> tuple[set[str], set[str]]:
+    """(faltan, sobran). Un grupo plural está completo si trae `_other`; las demás formas las
+    decide cada idioma (ruso: one/few/many/other; chino: solo other)."""
+    grupos = {_PLURAL_RE.sub("", k) for k in base if k.endswith("_other")}
+
+    def es_forma(k: str) -> bool:
+        return bool(_PLURAL_RE.search(k)) and _PLURAL_RE.sub("", k) in grupos
+
+    faltan = {k for k in base - keys if not es_forma(k) or k.endswith("_other")}
+    return faltan, {k for k in keys - base if not es_forma(k)}
+
+
+def marcadores_rotos(key: str, base_items: dict[str, Any], val: Any) -> bool:
+    """True si la traducción pierde o inventa marcadores respecto de la base."""
+    plural = _PLURAL_RE.search(key)
+    ref = base_items.get(_PLURAL_RE.sub("_other", key)) if plural else None
+    esperados = marcadores(ref if isinstance(ref, str) else base_items.get(key))
+    if plural and plural.group(1) != "other":  # «una nota» puede no decir {{count}}
+        return not marcadores(val) <= esperados
+    return marcadores(val) != esperados
+
+
 def _solo_alfabeto_latino(text: str) -> bool:
     return all(unicodedata.name(c, "").startswith("LATIN") for c in text if c.isalpha())
 
@@ -158,8 +190,12 @@ def _report(label: str, base_items: dict[str, Any], path: str) -> bool:
         return False
     items = load_items(path)
     base_keys, keys = set(base_items), set(items)
-    missing = base_keys - keys
-    extra = keys - base_keys
+    missing, extra = diferencia_de_claves(base_keys, keys)
+    rotos = {
+        k for k in keys
+        if (k in base_keys or _PLURAL_RE.search(k)) and k not in extra
+        and isinstance(items[k], str) and marcadores_rotos(k, base_items, items[k])
+    }
     empty = {k for k in base_keys & keys if is_empty(base_items[k], items[k])}
     strict = es_estricto(label)
 
@@ -172,7 +208,7 @@ def _report(label: str, base_items: dict[str, Any], path: str) -> bool:
 
     # El gate sólo lo rompen: claves faltantes/sobrantes/vacías, o sin-traducir en
     # idiomas no latinos (donde no hay falsos positivos).
-    gate_ok = not missing and not extra and not empty and not (strict and untranslated)
+    gate_ok = not missing and not extra and not empty and not rotos and not (strict and untranslated)
 
     if gate_ok and not untranslated:
         print(f"    ✅ {label}: completo")
@@ -186,6 +222,8 @@ def _report(label: str, base_items: dict[str, Any], path: str) -> bool:
         bits.append(f"{len(extra)} sobran")
     if empty:
         bits.append(f"{len(empty)} vacías o de otro tipo")
+    if rotos:
+        bits.append(f"{len(rotos)} con marcadores perdidos o inventados")
     if untranslated:
         tag = "SIN TRADUCIR" if strict else "posibles sin traducir (revisar)"
         bits.append(f"{len(untranslated)} {tag}")
@@ -199,6 +237,8 @@ def _report(label: str, base_items: dict[str, Any], path: str) -> bool:
             print(f"         · sobra:        {key}")
         for key in sorted(empty):
             print(f"         · vacía:        {key} = {items[key]!r}")
+        for key in sorted(rotos):
+            print(f"         · marcadores:   {key} = {items[key]!r}")
         for key in sorted(untranslated):
             print(f"         · sin traducir: {key} = {base_items[key]!r}")
     return gate_ok

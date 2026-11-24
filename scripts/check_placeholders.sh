@@ -14,8 +14,10 @@ set -uo pipefail
 # Relativo al script, no al directorio actual: desde otro lado escaneaba 0 archivos y daba OK.
 cd "$(dirname "${BASH_SOURCE[0]}")/.." || exit 2
 
-# Patrón de marcador del kit: {{ALGO_EN_MAYUS}}.
-PATTERN='\{\{[A-Z_]+\}\}'
+# Los marcadores del kit: los 9 de init_kit.sh más los que se completan a mano. Es una lista
+# cerrada a propósito: cualquier `{{MAYÚSCULAS}}` marcaba también ejemplos de código, tests y
+# FUNDING.yml, que init no puede completar, y el gate no llegaba nunca a verde.
+PATTERN='\{\{(PROJECT_NAME|SAMD_CLASS|INTENDED_USE|OWNER|FRONTEND_STACK|BACKEND_STACK|DB_STACK|CLOUD_STACK|CHAT_LANG|TODO[A-Z_]*|VERIFICAR[A-Z_]*)\}\}'
 
 # Allowlist: archivos que LEGÍTIMAMENTE conservan marcadores como plantilla.
 # (case glob: '*' matchea también las barras, así que matchea rutas completas.)

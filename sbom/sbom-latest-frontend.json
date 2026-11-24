@@ -15,7 +15,7 @@
           "type": "library",
           "name": "cyclonedx-library",
           "group": "@cyclonedx",
-          "version": "10.0.0",
+          "version": "10.5.1",
           "author": "Jan Kowalleck",
           "description": "Core functionality of CycloneDX for JavaScript (Node.js or WebBrowser).",
           "licenses": [
@@ -41,13 +41,19 @@
               "type": "website",
               "comment": "as detected from PackageJson property \"homepage\""
             }
+          ],
+          "properties": [
+            {
+              "name": "cdx:npm:package:constraint:engine:node",
+              "value": ">=20.18.0"
+            }
           ]
         },
         {
           "type": "application",
           "name": "cyclonedx-npm",
           "group": "@cyclonedx",
-          "version": "6.0.0",
+          "version": "7.0.1",
           "author": "Jan Kowalleck",
           "description": "Create CycloneDX Software Bill of Materials (SBOM) from NPM projects.",
           "licenses": [
@@ -73,6 +79,16 @@
               "type": "website",
               "comment": "as detected from PackageJson property \"homepage\""
             }
+          ],
+          "properties": [
+            {
+              "name": "cdx:npm:package:constraint:engine:node",
+              "value": ">=20.18.0"
+            },
+            {
+              "name": "cdx:npm:package:constraint:engine:npm",
+              "value": ">=9"
+            }
           ]
         }
       ]
@@ -85,6 +101,10 @@
       "description": "Esqueleto de ejemplo del cliente. Reemplazá por tu app real.",
       "purl": "pkg:npm/samd-starter-kit-frontend@0.1.0",
       "properties": [
+        {
+          "name": "cdx:npm:package:constraint:engine:node",
+          "value": ">=24"
+        },
         {
           "name": "cdx:npm:package:path",
           "value": ""
@@ -105,97 +125,9 @@
   "components": [
     {
       "type": "library",
-      "name": "js-tokens",
-      "version": "4.0.0",
-      "bom-ref": "samd-starter-kit-frontend@0.1.0|js-tokens@4.0.0",
-      "author": "Simon Lydell",
-      "description": "A regex that tokenizes JavaScript.",
-      "licenses": [
-        {
-          "license": {
-            "id": "MIT"
-          }
-        }
-      ],
-      "purl": "pkg:npm/js-tokens@4.0.0",
-      "externalReferences": [
-        {
-          "url": "https://registry.npmjs.org/js-tokens/-/js-tokens-4.0.0.tgz",
-          "type": "distribution",
-          "comment": "as detected from npm-ls property \"resolved\""
-        },
-        {
-          "url": "https://github.com/lydell/js-tokens/issues",
-          "type": "issue-tracker",
-          "comment": "as detected from PackageJson property \"bugs.url\""
-        },
-        {
-          "url": "git+https://github.com/lydell/js-tokens.git",
-          "type": "vcs",
-          "comment": "as detected from PackageJson property \"repository.url\""
-        },
-        {
-          "url": "https://github.com/lydell/js-tokens#readme",
-          "type": "website",
-          "comment": "as detected from PackageJson property \"homepage\""
-        }
-      ],
-      "properties": [
-        {
-          "name": "cdx:npm:package:path",
-          "value": "node_modules/js-tokens"
-        }
-      ]
-    },
-    {
-      "type": "library",
-      "name": "loose-envify",
-      "version": "1.4.0",
-      "bom-ref": "samd-starter-kit-frontend@0.1.0|loose-envify@1.4.0",
-      "author": "Andres Suarez",
-      "description": "Fast (and loose) selective `process.env` replacer using js-tokens instead of an AST",
-      "licenses": [
-        {
-          "license": {
-            "id": "MIT"
-          }
-        }
-      ],
-      "purl": "pkg:npm/loose-envify@1.4.0",
-      "externalReferences": [
-        {
-          "url": "https://registry.npmjs.org/loose-envify/-/loose-envify-1.4.0.tgz",
-          "type": "distribution",
-          "comment": "as detected from npm-ls property \"resolved\""
-        },
-        {
-          "url": "https://github.com/zertosh/loose-envify/issues",
-          "type": "issue-tracker",
-          "comment": "as detected from PackageJson property \"bugs.url\""
-        },
-        {
-          "url": "git://github.com/zertosh/loose-envify.git",
-          "type": "vcs",
-          "comment": "as detected from PackageJson property \"repository.url\""
-        },
-        {
-          "url": "https://github.com/zertosh/loose-envify",
-          "type": "website",
-          "comment": "as detected from PackageJson property \"homepage\""
-        }
-      ],
-      "properties": [
-        {
-          "name": "cdx:npm:package:path",
-          "value": "node_modules/loose-envify"
-        }
-      ]
-    },
-    {
-      "type": "library",
       "name": "react-dom",
-      "version": "18.3.1",
-      "bom-ref": "samd-starter-kit-frontend@0.1.0|react-dom@18.3.1",
+      "version": "19.3.1",
+      "bom-ref": "samd-starter-kit-frontend@0.1.0|react-dom@19.3.1",
       "description": "React package for working with the DOM.",
       "licenses": [
         {
@@ -204,25 +136,25 @@
           }
         }
       ],
-      "purl": "pkg:npm/react-dom@18.3.1",
+      "purl": "pkg:npm/react-dom@19.3.1",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/react-dom/-/react-dom-18.3.1.tgz",
+          "url": "https://registry.npmjs.org/react-dom/-/react-dom-19.3.1.tgz",
           "type": "distribution",
           "comment": "as detected from npm-ls property \"resolved\""
         },
         {
-          "url": "https://github.com/facebook/react/issues",
+          "url": "https://github.com/react/react/issues",
           "type": "issue-tracker",
           "comment": "as detected from PackageJson property \"bugs.url\""
         },
         {
-          "url": "git+https://github.com/facebook/react.git#packages/react-dom",
+          "url": "git+https://github.com/react/react.git#packages/react-dom",
           "type": "vcs",
           "comment": "as detected from PackageJson property \"repository.url\" and \"repository.directory\""
         },
         {
-          "url": "https://reactjs.org/",
+          "url": "https://react.dev/",
           "type": "website",
           "comment": "as detected from PackageJson property \"homepage\""
         }
@@ -237,8 +169,8 @@
     {
       "type": "library",
       "name": "react",
-      "version": "18.3.1",
-      "bom-ref": "samd-starter-kit-frontend@0.1.0|react@18.3.1",
+      "version": "19.3.1",
+      "bom-ref": "samd-starter-kit-frontend@0.1.0|react@19.3.1",
       "description": "React is a JavaScript library for building user interfaces.",
       "licenses": [
         {
@@ -247,30 +179,34 @@
           }
         }
       ],
-      "purl": "pkg:npm/react@18.3.1",
+      "purl": "pkg:npm/react@19.3.1",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/react/-/react-18.3.1.tgz",
+          "url": "https://registry.npmjs.org/react/-/react-19.3.1.tgz",
           "type": "distribution",
           "comment": "as detected from npm-ls property \"resolved\""
         },
         {
-          "url": "https://github.com/facebook/react/issues",
+          "url": "https://github.com/react/react/issues",
           "type": "issue-tracker",
           "comment": "as detected from PackageJson property \"bugs.url\""
         },
         {
-          "url": "git+https://github.com/facebook/react.git#packages/react",
+          "url": "git+https://github.com/react/react.git#packages/react",
           "type": "vcs",
           "comment": "as detected from PackageJson property \"repository.url\" and \"repository.directory\""
         },
         {
-          "url": "https://reactjs.org/",
+          "url": "https://react.dev/",
           "type": "website",
           "comment": "as detected from PackageJson property \"homepage\""
         }
       ],
       "properties": [
+        {
+          "name": "cdx:npm:package:constraint:engine:node",
+          "value": ">=0.10.0"
+        },
         {
           "name": "cdx:npm:package:path",
           "value": "node_modules/react"
@@ -280,8 +216,8 @@
     {
       "type": "library",
       "name": "scheduler",
-      "version": "0.23.2",
-      "bom-ref": "samd-starter-kit-frontend@0.1.0|scheduler@0.23.2",
+      "version": "0.28.0",
+      "bom-ref": "samd-starter-kit-frontend@0.1.0|scheduler@0.28.0",
       "description": "Cooperative scheduler for the browser environment.",
       "licenses": [
         {
@@ -290,25 +226,25 @@
           }
         }
       ],
-      "purl": "pkg:npm/scheduler@0.23.2",
+      "purl": "pkg:npm/scheduler@0.28.0",
       "externalReferences": [
         {
-          "url": "https://registry.npmjs.org/scheduler/-/scheduler-0.23.2.tgz",
+          "url": "https://registry.npmjs.org/scheduler/-/scheduler-0.28.0.tgz",
           "type": "distribution",
           "comment": "as detected from npm-ls property \"resolved\""
         },
         {
-          "url": "https://github.com/facebook/react/issues",
+          "url": "https://github.com/react/react/issues",
           "type": "issue-tracker",
           "comment": "as detected from PackageJson property \"bugs.url\""
         },
         {
-          "url": "git+https://github.com/facebook/react.git#packages/scheduler",
+          "url": "git+https://github.com/react/react.git#packages/scheduler",
           "type": "vcs",
           "comment": "as detected from PackageJson property \"repository.url\" and \"repository.directory\""
         },
         {
-          "url": "https://reactjs.org/",
+          "url": "https://react.dev/",
           "type": "website",
           "comment": "as detected from PackageJson property \"homepage\""
         }
@@ -325,38 +261,22 @@
     {
       "ref": "samd-starter-kit-frontend@0.1.0",
       "dependsOn": [
-        "samd-starter-kit-frontend@0.1.0|react-dom@18.3.1",
-        "samd-starter-kit-frontend@0.1.0|react@18.3.1"
+        "samd-starter-kit-frontend@0.1.0|react-dom@19.3.1",
+        "samd-starter-kit-frontend@0.1.0|react@19.3.1"
       ]
     },
     {
-      "ref": "samd-starter-kit-frontend@0.1.0|js-tokens@4.0.0"
-    },
-    {
-      "ref": "samd-starter-kit-frontend@0.1.0|loose-envify@1.4.0",
+      "ref": "samd-starter-kit-frontend@0.1.0|react-dom@19.3.1",
       "dependsOn": [
-        "samd-starter-kit-frontend@0.1.0|js-tokens@4.0.0"
+        "samd-starter-kit-frontend@0.1.0|react@19.3.1",
+        "samd-starter-kit-frontend@0.1.0|scheduler@0.28.0"
       ]
     },
     {
-      "ref": "samd-starter-kit-frontend@0.1.0|react-dom@18.3.1",
-      "dependsOn": [
-        "samd-starter-kit-frontend@0.1.0|loose-envify@1.4.0",
-        "samd-starter-kit-frontend@0.1.0|react@18.3.1",
-        "samd-starter-kit-frontend@0.1.0|scheduler@0.23.2"
-      ]
+      "ref": "samd-starter-kit-frontend@0.1.0|react@19.3.1"
     },
     {
-      "ref": "samd-starter-kit-frontend@0.1.0|react@18.3.1",
-      "dependsOn": [
-        "samd-starter-kit-frontend@0.1.0|loose-envify@1.4.0"
-      ]
-    },
-    {
-      "ref": "samd-starter-kit-frontend@0.1.0|scheduler@0.23.2",
-      "dependsOn": [
-        "samd-starter-kit-frontend@0.1.0|loose-envify@1.4.0"
-      ]
+      "ref": "samd-starter-kit-frontend@0.1.0|scheduler@0.28.0"
     }
   ]
 }

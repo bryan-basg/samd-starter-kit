@@ -45,7 +45,7 @@
 
 - **Positivas**: _(qué mejora)_
 - **Negativas / costo**: _(qué se paga)_
-- **Impacto en consumidores** (§5.6): _(símbolos/archivos afectados; migración necesaria)_
+- **Impacto en consumidores** (§7.4): _(símbolos/archivos afectados; migración necesaria)_
 - **Fail-safe**: _(cómo degrada seguro el nuevo comportamiento)_
 - **Deuda técnica generada**: _(D-code si aplica)_
 

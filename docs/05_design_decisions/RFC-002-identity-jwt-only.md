@@ -54,7 +54,7 @@ Detalles de construcción:
 
 - **Positivas**: la superficie de IDOR por suplantación de identidad queda cerrada por construcción; los logs de auditoría reflejan al sujeto real; la propiedad es verificable globalmente con un test de contrato.
 - **Negativas / costo**: cada endpoint que necesite operar sobre "otro" sujeto legítimamente (p. ej. un profesional sobre su paciente vinculado) debe pasar por una verificación de vínculo explícita server-side, no por un `user_id` de entrada.
-- **Impacto en consumidores** (§5.6): cualquier handler que hoy lea `user_id` del request debe migrar al claim del token; búsqueda global de `user_id` en routers y schemas obligatoria.
+- **Impacto en consumidores** (§7.4): cualquier handler que hoy lea `user_id` del request debe migrar al claim del token; búsqueda global de `user_id` en routers y schemas obligatoria.
 - **Fail-safe**: token ausente/inválido/expirado → 401 con mensaje empático; recurso de otro sujeto → 404/403 sin traceback ni metadatos internos.
 - **Deuda técnica generada** (a abrir en el proyecto derivado; el kit no la lleva en su índice de deuda): `D-SEC-IDOR-CONTRACT-TEST-01` — test de contrato que falle si cualquier endpoint reintroduce `user_id` de entrada; y la validación de `aud`/`iss` descrita en §4.
 

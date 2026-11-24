@@ -95,7 +95,7 @@ Una tarea está "lista" solo si cumple TODO:
 - [ ] Accesibilidad verificada (si tocó UI).
 - [ ] Trazabilidad: REQ/Risk + `ruta/archivo.py::símbolo` + nombre de test.
 - [ ] Documentación actualizada junto con el cambio (Master Map / deuda / RFC según aplique).
-- [ ] Boy Scout: al menos un pedazo de deuda del archivo tocado quedó más limpio.
+- [ ] Boy Scout oportunista: la deuda chica y evidente del archivo tocado quedó limpia o anotada.
 
 ---
 

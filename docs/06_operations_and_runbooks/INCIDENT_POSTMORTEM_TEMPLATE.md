@@ -2,7 +2,7 @@
 
 **Proyecto:** {{PROJECT_NAME}} · **Clase SaMD:** {{SAMD_CLASS}} · **Versión:** vX.Y · **Fecha:** YYYY-MM-DD
 
-> Plantilla de análisis post-incidente **sin culpa (blameless)**. El objetivo es entender **qué** falló en el sistema y los procesos, no **quién** se equivocó. Todo incidente con impacto en usuarios, datos o disponibilidad genera un post-mortem. Si el incidente implicó datos personales/de salud, se cruza con `../07_regulatory_and_compliance/BREACH_NOTIFICATION_TEMPLATE.md`. Alimenta CAPA (ISO 13485 §8.5) y el análisis de impacto (IEC 62304 §5.6).
+> Plantilla de análisis post-incidente **sin culpa (blameless)**. El objetivo es entender **qué** falló en el sistema y los procesos, no **quién** se equivocó. Todo incidente con impacto en usuarios, datos o disponibilidad genera un post-mortem. Si el incidente implicó datos personales/de salud, se cruza con `../07_regulatory_and_compliance/BREACH_NOTIFICATION_TEMPLATE.md`. Alimenta CAPA (ISO 13485 §8.5) y el análisis de impacto (IEC 62304 §7.4).
 
 ---
 

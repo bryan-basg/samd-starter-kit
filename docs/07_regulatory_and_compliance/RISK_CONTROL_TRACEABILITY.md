@@ -11,12 +11,12 @@
 Este documento es el **artefacto de cierre del lazo de control de riesgo**. Cruza, en una sola tabla auditable:
 
 - **Riesgo (R-XXX):** entrada del registro de `ISO_14971_RISK_MATRIX.md`.
-- **Control (`ruta/archivo.py::símbolo`):** medida de control de riesgo implementada en el código (ISO 14971 §6.2).
+- **Control (`ruta/archivo.py::símbolo`):** medida de control de riesgo implementada en el código (ISO 14971:2019 §7.1–§7.2).
 - **REQ:** requisito de software/sistema que materializa el control (`TRACEABILITY_MATRIX_SAMD.md`).
 - **Test:** evidencia de verificación que demuestra que el control funciona (IEC 62304 §5.7).
-- **Riesgo residual:** evaluación tras el control (ISO 14971 §6.4 / §7).
+- **Riesgo residual:** evaluación tras el control (ISO 14971:2019 §7.3 / §8).
 
-Toda modificación de un control clínico o de seguridad obliga a revisar la fila correspondiente en la **misma pasada** (análisis de impacto, IEC 62304 §5.6).
+Toda modificación de un control clínico o de seguridad obliga a revisar la fila correspondiente en la **misma pasada** (análisis de impacto, IEC 62304 §7.4).
 
 ---
 
@@ -29,7 +29,7 @@ Toda modificación de un control clínico o de seguridad obliga a revisar la fil
 | REQ | `REQ-XXX` existente en la matriz de trazabilidad. |
 | Test | Nombre de test que existe HOY (`test_...`) + ruta. |
 | Riesgo residual | ACEPTABLE / ALARP / INACEPTABLE (criterio de la política de aceptabilidad). |
-| Estado del control | Implementado / En curso / Pendiente / Verificado. |
+| Estado del control | Implementado / En curso / Pendiente / Verificado. `Verificado` exige un test que existe HOY: un marcador `<...>` es `Pendiente`. En `ISO_14971_RISK_MATRIX` el RIESGO queda `Abierto` hasta que su control esté `Verificado`. |
 
 ---
 
@@ -37,12 +37,12 @@ Toda modificación de un control clínico o de seguridad obliga a revisar la fil
 
 | Riesgo (R-XXX) | Peligro / situación peligrosa | Control de riesgo (`ruta/archivo.py::símbolo`) | REQ | Test de verificación (`ruta/test_archivo.py::test_nombre`) | Riesgo inicial | Riesgo residual | Estado |
 |---|---|---|---|---|---|---|---|
-| R001 | <ej. el motor clínico falla y no degrada de forma segura> | <fail-safe a fallback> `app/services/<...>.py::<símbolo>` | REQ-CLN-01 | `tests/<...>.py::test_<...>_failsafe` | INACEPTABLE | ALARP | Verificado |
+| R001 | <ej. el motor clínico falla y no degrada de forma segura> | <fail-safe a fallback> `app/services/<...>.py::<símbolo>` | REQ-CLN-01 | `tests/<...>.py::test_<...>_failsafe` | INACEPTABLE | ALARP | Pendiente |
 | R002 | <ej. escalada de identidad expone datos de otro titular (IDOR)> | identidad solo del token `app/core/security.py::get_current_user_id` | REQ-SEC-02 | `tests/test_hard_rules.py::test_identity_comes_from_token_not_from_body` | INACEPTABLE | Aceptable | Verificado |
-| R005 | <ej. la IA responde sin validación de seguridad> | validador + disclaimer + fallback `app/services/<...>.py::<símbolo>` | REQ-AI-01 | `tests/<...>.py::test_<...>_validator` | INACEPTABLE | ALARP | Implementado |
+| R005 | <ej. la IA responde sin validación de seguridad> | validador + disclaimer + fallback `app/services/<...>.py::<símbolo>` | REQ-AI-01 | `tests/<...>.py::test_<...>_validator` | INACEPTABLE | ALARP | Pendiente |
 | R-SEC-01 | <ej. fuga de PII en logs / tracebacks al cliente> | redacción de errores `app/main.py::unhandled_exception_handler` y `app/main.py::_resumen_de_errores` (los logs de validación llevan campo y motivo, no el valor); salida única hacia el servidor `app/main.py::AppSinDatosEnElLog` con `app/main.py::_diagnostico` (tipos y pila, nunca mensajes) | REQ-UX-01 | `tests/test_hard_rules.py::test_internal_error_never_leaks_a_traceback`, `tests/test_hard_rules.py::test_validation_failure_does_not_log_the_submitted_text`, `tests/test_hard_rules.py::test_unhandled_validation_error_does_not_log_the_value`, `tests/test_hard_rules.py::test_real_server_log_never_carries_the_value`, `tests/test_hard_rules.py::test_exit_gate_covers_outer_middleware_and_websockets` | INACEPTABLE | Aceptable | Verificado |
 | R-SEC-03 | <ej. exfiltración de PHI por copia o volcado del almacenamiento> | cifrado en reposo `app/core/encryption.py::encrypt` | REQ-SEC-01 | `tests/test_hard_rules.py::test_encryption_roundtrip_and_nonce_uniqueness`, `tests/test_hard_rules.py::test_tampered_ciphertext_is_rejected` | INACEPTABLE | Aceptable | Verificado |
-| R-IA-01 | <ej. el algoritmo entrega datos fantasma sin dato real> | guard "sin dato" `app/services/<...>.py::<símbolo>` | REQ-AI-02 | `tests/<...>.py::test_<...>_no_data` | INACEPTABLE | ALARP | En curso |
+| R-IA-01 | <ej. el algoritmo entrega datos fantasma sin dato real> | guard "sin dato" `app/services/<...>.py::<símbolo>` | REQ-AI-02 | `tests/<...>.py::test_<...>_no_data` | INACEPTABLE | ALARP | Pendiente |
 
 ---
 

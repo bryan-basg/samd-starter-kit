@@ -82,7 +82,7 @@ cd frontend && npm run typecheck
 ## Flujo cuando te invocan
 
 1. **Leé el contexto** + memoria relevante.
-2. **Análisis de impacto** (IEC 62304 §5.6): `grep -r <componente|hook|prop>` en `frontend/src/`.
+2. **Análisis de impacto** (IEC 62304 §7.4): `grep -r <componente|hook|prop>` en `frontend/src/`.
 3. **Validá NO tocar componentes compartidos** si la tarea no lo pide. Si dudás, preguntá.
 4. **Diseñá** respetando neuro-UX: contraste WCAG AA, motion-reduce, sin emoji en aria-labels críticos.
 5. **Implementá** + tests rigurosos. Si tocás módulo con mutation existente, actualizá el killer correspondiente.

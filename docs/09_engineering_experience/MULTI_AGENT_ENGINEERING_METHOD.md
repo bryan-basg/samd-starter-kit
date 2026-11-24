@@ -28,7 +28,7 @@ Esta es la columna vertebral del método. Siete pasos:
 
 Cuando un agente afirma un hallazgo que dispararía un cambio en **algoritmo clínico, schema, regla de negocio o flujo de seguridad**, otro agente independiente tiene que **intentar refutarlo** antes de actuar.
 
-Un hallazgo no verificado **no es** "un bug encontrado" — es una hipótesis. Bajo regulación (IEC 62304 §5.6), actuar sobre una hipótesis no refutada es exactamente lo que produce los falsos arreglos. El kit trae esto codificado en el workflow `samd-review`: cada hallazgo se refuta con un agente escéptico antes de reportarse.
+Un hallazgo no verificado **no es** "un bug encontrado" — es una hipótesis. Bajo regulación (IEC 62304 §7.4), actuar sobre una hipótesis no refutada es exactamente lo que produce los falsos arreglos. El kit trae esto codificado en el workflow `samd-review`: cada hallazgo se refuta con un agente escéptico antes de reportarse.
 
 ## Cuándo paralelizar y cuándo serializar
 
@@ -74,7 +74,7 @@ Estas no son limitaciones de inteligencia — son **mecánica, factura y contrat
 
 ## Por qué esto importa bajo regulación
 
-Sin este método, un equipo de agentes produce mucho código rápido y **pierde la trazabilidad** — justo lo que SaMD prohíbe. El método existe para que la velocidad de N agentes no destruya la cohesión que IEC 62304 §5.6/§5.7 exige. Velocidad **y** trazabilidad, no una a costa de la otra.
+Sin este método, un equipo de agentes produce mucho código rápido y **pierde la trazabilidad** — justo lo que SaMD prohíbe. El método existe para que la velocidad de N agentes no destruya la cohesión que IEC 62304 §7.4/§5.7 exige. Velocidad **y** trazabilidad, no una a costa de la otra.
 
 ---
 **Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md)

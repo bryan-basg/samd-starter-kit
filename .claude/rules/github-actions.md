@@ -12,7 +12,7 @@ paths:
 
 ## Reglas duras
 
-* **Workflow en rojo → logs FRESCOS antes de teorizar** (§5.6): reproducí lo barato en local antes de asumir bug de código o config; la caída puede ser **ambiental** (timeout, OOM del runner, flaky), no de código. Diagnóstico paso a paso: skill `/ci-rojo`.
+* **Workflow en rojo → logs FRESCOS antes de teorizar** (§7.4): reproducí lo barato en local antes de asumir bug de código o config; la caída puede ser **ambiental** (timeout, OOM del runner, flaky), no de código. Diagnóstico paso a paso: skill `/ci-rojo`.
 * **Optimizaciones obligatorias en todo workflow nuevo**: cancelación de runs duplicados (`concurrency`), cache de dependencias **solo en runners de la nube** (ver §Runner self-hosted), `timeout-minutes` duro y filtros por `paths` cuando el repo crece.
 * **Acciones de terceros pineadas por SHA, no por tag.** Un tag (`@v4`) lo puede mover su dueño hacia otro commit en cualquier momento; en un contexto regulado eso es una cadena de suministro sin control de configuración (IEC 62304 §8). Pineá al SHA completo con el tag como comentario (`uses: org/action@<sha>  # v4.4.0`) y **unificá la misma versión en todos los usos** — el mismo repo referenciando una acción de dos formas distintas es drift.
 * **Un baseline que se regenera en cada corrida no es un baseline.** Si un gate compara contra una línea base (cobertura, número de warnings, hallazgos de seguridad), esa base debe **persistir entre corridas** y actualizarse solo con intención explícita. Si la corrida roja la sobrescribe, el gate deja de detectar regresiones justo cuando hace falta.

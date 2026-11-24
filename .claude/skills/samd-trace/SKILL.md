@@ -1,9 +1,9 @@
 ---
 name: samd-trace
-description: Análisis de impacto SaMD §5.6 — busca consumidores de un símbolo/archivo y propone tests a correr antes de declarar verde. Úsalo antes de declarar "arreglado" cualquier cambio que toque un símbolo compartido (función, schema, endpoint, constante).
+description: Análisis de impacto SaMD §7.4 — busca consumidores de un símbolo/archivo y propone tests a correr antes de declarar verde. Úsalo antes de declarar "arreglado" cualquier cambio que toque un símbolo compartido (función, schema, endpoint, constante).
 ---
 
-# samd-trace — Análisis de impacto (IEC 62304 §5.6)
+# samd-trace — Análisis de impacto (IEC 62304 §7.4)
 
 Un bug se considera "arreglado" SOLO tras revisar **todos los consumidores** del símbolo modificado, no solo el archivo donde se reportó. Esta skill materializa ese análisis.
 

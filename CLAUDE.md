@@ -23,7 +23,7 @@ Este software está bajo regulación **SaMD (Software as a Medical Device) Clase
 3. **No eliminar documentación existente** sobre arquitectura o algoritmos clínicos sin reporte de trazabilidad. Está prohibido.
 4. **Verificación obligatoria** (IEC 62304 §5.7): no se declara una tarea "verde" sin haber corrido los tests vinculados y reportado los números.
 5. **Fail-safe explícito** (ISO 14971): cuando un módulo clínico falle (red, BD, IA), el sistema degrada de forma segura y predecible — nunca silenciosa, nunca con tracebacks expuestos al usuario.
-6. **Análisis de impacto antes de fixear** (IEC 62304 §5.6): un bug se considera "arreglado" solo tras revisar TODOS los consumidores del símbolo modificado, no solo el archivo donde se reportó.
+6. **Análisis de impacto antes de fixear** (IEC 62304 §7.4): un bug se considera "arreglado" solo tras revisar TODOS los consumidores del símbolo modificado, no solo el archivo donde se reportó.
 
 Las secciones que siguen —y las **reglas en `.claude/rules/`** y el **estilo de salida «Orquestador SaMD»** (solo la sesión principal)— son **CONSECUENCIAS PRÁCTICAS** de la Regla 0. No son reglas independientes que el dev puede priorizar a gusto.
 
@@ -115,7 +115,7 @@ Cuando completes una tarea o modifiques un archivo:
 
 ---
 
-## ANÁLISIS DE IMPACTO ANTES DE DECLARAR "ARREGLADO" (consecuencia SaMD §5.6)
+## ANÁLISIS DE IMPACTO ANTES DE DECLARAR "ARREGLADO" (consecuencia SaMD §7.4)
 
 * **Búsqueda global obligatoria** cuando modifiques un parámetro, retorno, schema o constante: `grep` en todo el repo para encontrar TODOS los consumidores. (Para el análisis de impacto de un símbolo puntual: skill `/samd-trace`.)
 * **EL ENCHUFE, no solo la pieza — «¿el camino real usa MI versión?»** La búsqueda de consumidores responde *quién usa este símbolo*; esta responde *si lo que escribiste es lo que se ejecuta*. Un arreglo puede estar impecable y **perfectamente testeado en aislamiento** y aun así no proteger nada porque **nadie lo llama** (se escribió el helper y no se enganchó al flujo) o porque **se llama a otra versión** (un `__init__` que reexporta la función cruda hace que reasignar el alias dentro del módulo no cambie nada, y el arreglo queda escrito pero MUERTO). Los tests unitarios de la pieza pasan verdes en ambos casos. Por eso, antes de declarar "arreglado": **(a)** un test que recorra el **flujo real** (endpoint/servicio de entrada), no solo la unidad nueva; **(b)** si el símbolo tiene **dos rutas de import**, verificá que apuntan al MISMO objeto y anclalo con un test.

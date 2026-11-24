@@ -30,7 +30,7 @@ body:
     id: standard
     attributes:
       label: Related regulatory standard (optional)
-      description: If this maps to a specific norm or clause, name it (e.g. IEC 62304 §5.6, ISO 14971, GDPR Art. 32).
+      description: If this maps to a specific norm or clause, name it (e.g. IEC 62304 §7.4, ISO 14971, GDPR Art. 32).
       placeholder: e.g. IEC 62304 §5.7
     validations:
       required: false

@@ -10,7 +10,7 @@
 
 ## 1. Propósito
 
-Garantizar que ningún cambio que toque algoritmo clínico, esquema de datos, regla de negocio o flujo de seguridad llegue a producción sin **trazabilidad** (IEC 62304 §5.1/§5.7), **análisis de impacto** (§5.6) y **verificación demostrable** (§5.7).
+Garantizar que ningún cambio que toque algoritmo clínico, esquema de datos, regla de negocio o flujo de seguridad llegue a producción sin **trazabilidad** (IEC 62304 §5.1/§5.7), **análisis de impacto** (§7.4) y **verificación demostrable** (§5.7).
 
 ---
 
@@ -30,7 +30,7 @@ Garantizar que ningún cambio que toque algoritmo clínico, esquema de datos, re
 ## 3. Procedimiento de auditoría de un changeset
 
 1. **Leer el `git diff` real** del changeset (no el resumen de quien lo hizo).
-2. **Análisis de impacto** (§5.6): buscar globalmente TODOS los consumidores de cada símbolo, parámetro, retorno, schema o constante modificada. Actualizar cada consumidor en el mismo cambio.
+2. **Análisis de impacto** (§7.4): buscar globalmente TODOS los consumidores de cada símbolo, parámetro, retorno, schema o constante modificada. Actualizar cada consumidor en el mismo cambio.
 3. **Verificación** (§5.7): correr los tests vinculados y registrar números reales (pasados/fallados/cobertura/mutation cuando aplique).
 4. **Verificación adversarial** sobre hallazgos clínicos o de seguridad: un segundo revisor independiente debe refutar el hallazgo antes de actuar. Hallazgo no verificado ≠ arreglado.
 5. **Fail-safe**: confirmar que los modos de fallo degradan seguro y no exponen tracebacks.

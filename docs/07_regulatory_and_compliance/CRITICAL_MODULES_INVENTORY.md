@@ -40,6 +40,10 @@
 | MOD-04 | <ej. capa de sincronización offline> | `frontend/src/<...>.ts` | <qué hace> | B | Pérdida temporal de datos del usuario; recuperable. | R-SYNC-01 | Cov ≥ <COV_B>% / Mut ≥ <MUT_B>% | Implementado |
 | MOD-05 | <ej. panel de ajustes visuales> | `frontend/src/<...>.tsx` | <qué hace> | A | Un fallo no produce daño; solo inconveniente. | — | Cov ≥ <COV_A>% | Verificado |
 | MOD-06 | <ej. middleware de auditoría> | `app/middleware/<...>.py` | <qué hace> | B | Un fallo impide reconstruir un evento; sin daño directo. | R-SEC-02 | Cov ≥ <COV_B>% / Mut ≥ <MUT_B>% | Implementado |
+| MOD-07 | Cifrado en reposo de PII/PHI (lo trae el kit) | `app/core/encryption.py` | Cifra y descifra cada campo sensible | C | Un fallo expone o pierde PHI. | R-SEC-03 | Cov ≥ <COV_C>% / Mut ≥ <MUT_C>% | Verificado |
+| MOD-08 | Salida de errores (lo trae el kit) | `app/main.py` | Respuesta empática y log sin datos del usuario | B | Un fallo filtra PHI al log o un detalle técnico al usuario. | R-SEC-01 | Cov ≥ <COV_B>% / Mut ≥ <MUT_B>% | Verificado |
+
+> Las filas `R-NOTIF-01`, `R-SYNC-01` y `R-SEC-02` son ejemplos: registrá esos riesgos en `ISO_14971_RISK_MATRIX.md` antes de usarlos.
 
 ---
 
@@ -64,7 +68,7 @@ Módulos de clase inferior que tocan datos o flujos de un módulo de clase super
 ## 6. Mantenimiento del inventario
 
 - Todo módulo nuevo se clasifica **antes** de su primer release.
-- Un cambio que eleve la consecuencia de fallo de un módulo (nuevo flujo clínico, acceso a PHI) **re-clasifica** el módulo y dispara revisión de umbrales en la misma pasada (IEC 62304 §5.6).
+- Un cambio que eleve la consecuencia de fallo de un módulo (nuevo flujo clínico, acceso a PHI) **re-clasifica** el módulo y dispara revisión de umbrales en la misma pasada (IEC 62304 §7.4).
 - La revisión periódica del inventario se sincroniza con la revisión de `ISO_14971_RISK_MATRIX.md`.
 
 ---

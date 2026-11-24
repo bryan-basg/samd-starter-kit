@@ -25,7 +25,7 @@ La FDA clasifica los dispositivos en **Class I / II / III** (eje propio, distint
 |---|---|
 | ¿Cuál es el uso previsto declarado? | {{INTENDED_USE}} |
 | ¿Existe un *predicate* legalmente comercializado? | {{TODO: sí/no + identificación del predicate}} |
-| ¿La función es de *Clinical Decision Support* (CDS) potencialmente no-dispositivo? | {{TODO — evaluar contra la guía CDS Software (Sep 2022)}} |
+| ¿La función es de *Clinical Decision Support* (CDS) potencialmente no-dispositivo? | {{TODO — evaluar contra la guía CDS Software (29-ene-2026)}} |
 | Clase FDA estimada | {{TODO: I / II / III}} |
 | **Vía seleccionada** | {{TODO: Exenta / 510(k) / De Novo / PMA}} |
 
@@ -41,7 +41,7 @@ Mapeo del contenido esperado (alineado con *Content of Premarket Submissions for
 
 | Elemento de la submission FDA | Documento DHF que lo cubre | Evidencia / estado |
 |---|---|---|
-| **Documentation Level Evaluation** | `SOFTWARE_SAFETY_CLASSIFICATION.md` (mapear Clase {{SAMD_CLASS}} → Basic/Enhanced) | {{Pendiente de evidencia}} |
+| **Documentation Level Evaluation** | Evaluación propia: ¿un fallo puede causar muerte o lesión grave **antes** de implementar controles de riesgo? **No se deriva de la clase IEC 62304** (esa se fija **después** de los controles externos: un Clase B puede ser *Enhanced*) | {{Pendiente de evidencia}} |
 | **Software Description** | `02_architecture_and_design/ARCHITECTURE_OVERVIEW.md` | {{Pendiente de evidencia}} |
 | **System and Software Architecture Diagram** | `02_architecture_and_design/ARCHITECTURE_OVERVIEW.md`; `DATA_FLOW_DOCUMENTATION.md` | {{Pendiente de evidencia}} |
 | **Risk Management File** | `ISO_14971_RISK_MATRIX.md`; `RISK_CONTROL_TRACEABILITY.md` | {{Pendiente de evidencia}} |
@@ -58,14 +58,14 @@ Mapeo del contenido esperado (alineado con *Content of Premarket Submissions for
 
 ## 3. FDA Premarket Cybersecurity ↔ DHF
 
-Alineado con *Cybersecurity in Medical Devices: Quality System Considerations and Content of Premarket Submissions* (FDA, Sep 2023) y **§524B FD&C Act** (requisitos de "cyber devices", añadidos por la Consolidated Appropriations Act 2023).
+Alineado con *Cybersecurity in Medical Devices: Quality System Considerations and Content of Premarket Submissions* (FDA, 3-feb-2026; reemplaza las de 2023 y 2025) y **§524B FD&C Act** (requisitos de "cyber devices", añadidos por la Consolidated Appropriations Act 2023).
 
 | Requisito de ciberseguridad FDA | Documento DHF que lo cubre | Evidencia / estado |
 |---|---|---|
 | **Secure Product Development Framework (SPDF)** | `COMPLIANCE_AND_SECURITY_MASTER.md`; `SOFTWARE_DEVELOPMENT_PLAN.md` | {{Pendiente de evidencia}} |
 | **Threat Model** | `DATA_FLOW_DOCUMENTATION.md` (fronteras de confianza) | {{Pendiente de evidencia}} |
 | **Cybersecurity Risk Assessment** | `ISO_14971_RISK_MATRIX.md` (riesgos `R-SEC-*`) | {{Pendiente de evidencia}} |
-| **Software Bill of Materials (SBOM)** | `SBOM_MANAGEMENT_PLAN.md` + `.github/workflows/sbom.yml` + `sbom/` | {{Pendiente de evidencia}} |
+| **Software Bill of Materials (SBOM)** | `SBOM_MANAGEMENT_PLAN.md` + `.github/workflows/sbom.yml` + `sbom/` (guía §V.A.4 y §VII.C.3) | {{Pendiente de evidencia}} |
 | **Security Testing (SAST/DAST/fuzz/pentest)** | `COMPLIANCE_CHECKLIST.md` §A.4; `TESTING_TOOLS.md` | {{Pendiente de evidencia}} |
 | **Vulnerability Management / Coordinated Disclosure** | `SBOM_MANAGEMENT_PLAN.md` §6; `INCIDENT_RESPONSE_PLAN.md` | {{Pendiente de evidencia}} |
 | **Security Architecture views** | `ARCHITECTURE_OVERVIEW.md`; `DATA_FLOW_DOCUMENTATION.md` | {{Pendiente de evidencia}} |
@@ -81,7 +81,7 @@ Alineado con *Cybersecurity in Medical Devices: Quality System Considerations an
 
 ## 4. Predetermined Change Control Plan (PCCP) — funciones de IA/ML
 
-Aplica **solo si {{PROJECT_NAME}} incorpora una función de IA/ML adaptativa**. Alineado con *Marketing Submission Recommendations for a Predetermined Change Control Plan for Artificial Intelligence-Enabled Device Software Functions* (FDA, guía final Dic 2024).
+Aplica **si {{PROJECT_NAME}} incorpora una función con IA** y querés preautorizar cambios al modelo, se apliquen de forma automática o **manual** (no solo modelos adaptativos). Alineado con *Marketing Submission Recommendations for a Predetermined Change Control Plan for Artificial Intelligence-Enabled Device Software Functions* (FDA, guía final dic-2024, reemitida el 18-ago-2025).
 
 > **Si el proyecto NO usa IA/ML, declarar N/A aquí explícitamente** y omitir el resto de esta sección. Estado actual: {{TODO: aplica / N/A}}.
 
@@ -109,10 +109,10 @@ Desde el **2026-02-02**, la **Quality Management System Regulation (QMSR)** inco
 
 | Requisito QMS (21 CFR 820 / QMSR) | Documento DHF | Estado |
 |---|---|---|
-| Design Controls (820.30 → ISO 13485 §7.3) | `ISO_13485_READINESS_PLAN.md`; `TRACEABILITY_MATRIX_SAMD.md` | {{Pendiente}} |
-| Document Controls (820.40 → §4.2) | `REGULATORY_VERSION_LOG.md` | {{Pendiente}} |
-| CAPA (820.100 → §8.5) | `SOFTWARE_PROBLEM_RESOLUTION_PROCEDURE.md` | {{Pendiente}} |
-| Management Responsibility (820.20 → §5) | `VISION_AND_GOVERNANCE.md` | {{Pendiente}} |
+| Diseño y desarrollo (21 CFR 820.10(c) → ISO 13485 §7.3; antes 820.30) | `ISO_13485_READINESS_PLAN.md`; `TRACEABILITY_MATRIX_SAMD.md` | {{Pendiente}} |
+| Control de documentos (820.10(a) → §4.2.4) y de registros (820.35 → §4.2.5); antes 820.40 | `REGULATORY_VERSION_LOG.md` | {{Pendiente}} |
+| CAPA (820.10(a) → §8.5; antes 820.100) | `SOFTWARE_PROBLEM_RESOLUTION_PROCEDURE.md` | {{Pendiente}} |
+| Responsabilidad de la dirección (820.10(a) → §5; antes 820.20) | `VISION_AND_GOVERNANCE.md` | {{Pendiente}} |
 
 ---
 
@@ -122,9 +122,9 @@ Desde el **2026-02-02**, la **Quality Management System Regulation (QMSR)** inco
 |---|---|---|
 | Vía regulatoria sin confirmar | Determinar Exenta/510(k)/De Novo/PMA | {{OWNER}} |
 | Documentation Level sin fijar | Basic vs Enhanced según riesgo de la función | {{OWNER}} |
-| Determinación CDS no-dispositivo | Evaluar contra guía CDS (Sep 2022) | {{OWNER}} |
-| PCCP — aplicabilidad de IA/ML | Confirmar si hay función adaptativa | {{OWNER}} |
-| Referencias normativas | Verificadas contra fuentes FDA (guía Premarket Jun-2023, QMSR 21 CFR 820, 21 CFR 803/822, guía SaMD Clinical Evaluation); reconfirmar antes de una sumisión real | ✓ verificado |
+| Determinación CDS no-dispositivo | Evaluar contra guía CDS (29-ene-2026) | {{OWNER}} |
+| PCCP — aplicabilidad de IA/ML | Confirmar si hay función con IA y cambios a preautorizar | {{OWNER}} |
+| Referencias normativas | Contrastadas el 2026-11-24 con eCFR (21 CFR 820: 820.20–.30 y 820.40 están *Reserved*) y con las guías vigentes (Premarket 14-jun-2023, Ciberseguridad 3-feb-2026, CDS 29-ene-2026, PCCP 18-ago-2025; *SaMD: Clinical Evaluation* fue retirada en 2026). **Caducan: reconfirmar antes de una sumisión real** | {{OWNER}} |
 
 ---
 
@@ -136,4 +136,3 @@ Desde el **2026-02-02**, la **Quality Management System Regulation (QMSR)** inco
 
 ---
 **Navegación:** [Índice del DHF](../README.md) · [Master Map](../00_master/MASTER_MAP.md) · [Crosswalk](./REGULATORY_FRAMEWORK_CROSSWALK.md)
-</content>

@@ -109,8 +109,11 @@ def test_stryker_no_instalado_falla_con_mensaje_y_no_descarga(tmp_path):
 
 
 def test_stryker_usa_no_install_en_todas_las_invocaciones():
-    for linea in (SCRIPTS / "run_stryker.sh").read_text().splitlines():
-        if "npx" in linea and not linea.lstrip().startswith("#"):
+    fuentes = [SCRIPTS / "run_stryker.sh", ROOT / ".github" / "workflows" / "nightly-mutation.yml"]
+    for fuente in fuentes:
+        usos = [x for x in fuente.read_text().splitlines() if "npx" in x and not x.lstrip().startswith("#")]
+        assert usos, fuente
+        for linea in usos:
             assert "--no-install" in linea, linea
 
 

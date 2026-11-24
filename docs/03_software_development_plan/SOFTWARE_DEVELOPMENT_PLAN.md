@@ -61,10 +61,11 @@ Leyenda: ● obligatorio · ○ no exigido por la norma (puede adoptarse volunta
 | Plan de desarrollo de software | §5.1 | ● | ● | ● |
 | Requisitos de software | §5.2 | ● | ● | ● |
 | Diseño arquitectónico | §5.3 | ○ | ● | ● |
-| Diseño detallado de unidades | §5.4 | ○ | ○ | ● |
+| Subdividir en unidades de software | §5.4.1 | ○ | ● | ● |
+| Diseño detallado de unidades e interfaces, y su verificación | §5.4.2–§5.4.4 | ○ | ○ | ● |
 | Implementación y verificación de unidades | §5.5 | ● | ● | ● |
 | Verificación de integración | §5.6 | ○ | ● | ● |
-| Pruebas del sistema de software | §5.7 | ○ | ● | ● |
+| Pruebas del sistema de software (Clase A desde la Amd 1:2015) | §5.7 | ● | ● | ● |
 | Liberación del software | §5.8 | ● | ● | ● |
 | Gestión de configuración | §8 | ● | ● | ● |
 | Resolución de problemas | §9 | ● | ● | ● |
@@ -151,7 +152,7 @@ Leyenda: ● obligatorio · ○ no exigido por la norma (puede adoptarse volunta
 **Reglas duras de verificación:**
 - Ninguna tarea se declara completa sin ejecutar las pruebas vinculadas y reportar resultados numéricos.
 - Las pruebas degradan de forma segura ante fallo de dependencias externas (fail-safe explícito, ISO 14971).
-- Antes de modificar un símbolo compartido, ejecutar análisis de impacto sobre todos sus consumidores (§5.6).
+- Antes de modificar un símbolo compartido, ejecutar análisis de impacto sobre todos sus consumidores (§7.4).
 
 ---
 

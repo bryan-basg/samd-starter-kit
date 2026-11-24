@@ -50,13 +50,13 @@ Detalles de construcción:
 - **Flag de control** (plantilla del derivado; no existe en `app/core/config.py`): variable de entorno `ENABLE_INTERNAL_SCHEDULER` con default `false`. En prod permanece `false`; en dev local sin cron externo se pone `true` para no depender de infraestructura.
 - **Endpoint disparador**: idempotente y acotado en trabajo por invocación; protegido para que solo el cron pueda invocarlo. **Preferí OIDC** (token de vida corta firmado por la plataforma; el endpoint verifica firma, audiencia y la identidad exacta del invocador) a un secreto compartido: el secreto suele quedar en texto plano en la configuración del cron y hay que rotarlo a mano. Si tu plataforma no ofrece OIDC, secreto compartido con rotación programada.
 - **Cobertura**: el cron externo cubre los tres jobs (eventos próximos, despacho de cola, reprocesado de pospuestos) con un único tick periódico.
-- **Alineación de pool** (§5.6): el cálculo del techo de conexiones (`max-instances × pool_por_instancia + baseline`) se reevalúa sin sumar trabajo de scheduler por instancia, porque ya no existe en prod.
+- **Alineación de pool** (§7.4): el cálculo del techo de conexiones (`max-instances × pool_por_instancia + baseline`) se reevalúa sin sumar trabajo de scheduler por instancia, porque ya no existe en prod.
 
 ## 5. Consecuencias
 
 - **Positivas**: un solo disparo por tick sin importar cuántas instancias haya; pool de BD acotado y predecible; avisos clínicos entregados exactamente una vez; reintentos y observabilidad del cron gestionados por la plataforma.
 - **Negativas / costo**: depende de un componente externo (si el cron del {{CLOUD_STACK}} falla o se desconfigura, no hay ticks → se necesita alerta de "cron no disparó en X minutos"); el endpoint disparador es superficie de ataque y debe protegerse.
-- **Impacto en consumidores** (§5.6): cualquier código que asumiera "el scheduler corre dentro del proceso" debe migrar a "el trabajo se hace cuando llega el tick HTTP"; el arranque de la app ya no inicia jobs en prod.
+- **Impacto en consumidores** (§7.4): cualquier código que asumiera "el scheduler corre dentro del proceso" debe migrar a "el trabajo se hace cuando llega el tick HTTP"; el arranque de la app ya no inicia jobs en prod.
 - **Fail-safe**: si el endpoint falla en un tick, el cron reintenta; el trabajo es idempotente, por lo que un reintento no duplica avisos. Falta prolongada de ticks → alerta de monitoreo (no falla silenciosa).
 - **Deuda técnica generada** (a abrir en el proyecto derivado si adopta la decisión; el kit no la lleva en su índice): `D-CLOUD-CRON-MISSED-TICK-ALERT-01` — alerta que dispare si el endpoint no recibe un tick dentro de la ventana esperada; `D-CLOUD-CRON-SECRET-ROTATION-01` — solo si se usó secreto compartido: rotarlo y migrar a OIDC.
 

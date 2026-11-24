@@ -28,7 +28,7 @@
 
 1. Pasa linting + CI local (`scripts/run_local_ci.sh`).
 2. Tests vinculados verdes, números reportados.
-3. Se redujo deuda técnica en al menos un punto (Boy Scout).
+3. Boy Scout oportunista: la deuda chica y evidente del archivo tocado quedó limpia o anotada.
 4. Documentación al día (Master Map, TECHNICAL_DEBT, TRACEABILITY, y Risk Matrix si aplica).
 5. UI accesible (contraste WCAG AA, diseño plano, modales canónicos).
 6. Cambio comunicado al dueño con genealogía clara y autorizado explícitamente.

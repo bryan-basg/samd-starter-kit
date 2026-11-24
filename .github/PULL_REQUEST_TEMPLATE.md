@@ -15,7 +15,7 @@ apply (or are explicitly justified as N/A).
 - [ ] **Documentation traceability (DHF) is updated in this same PR.** Changes to clinical logic, schemas, business rules, or security flows are reflected in the relevant Design History File documents — not deferred to a later sprint.
 - [ ] **Impact analysis done.** I searched for every consumer of any symbol, parameter, schema, return value, or constant I changed, and updated them all (not only the file where the change started).
 - [ ] **Identity comes only from the verified token.** No user/subject identity is read from request body or query parameters.
-- [ ] **Boy Scout rule applied.** I left the touched files at least as clean as I found them (dead imports, stray `any`, oversized functions).
+- [ ] **Boy Scout rule, opportunistic.** Small, evident debt in the touched files is cleaned up or logged; I did not grow a focused fix to refactor around it.
 - [ ] I have read and followed [CONTRIBUTING.md](../CONTRIBUTING.md).
 
 ## Test Evidence

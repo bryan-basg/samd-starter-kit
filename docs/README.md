@@ -15,6 +15,7 @@ Brújula del DHF de {{PROJECT_NAME}}. El **[Master Map](./00_master/MASTER_MAP.m
 ## 02 · Arquitectura y diseño
 
 - [ARCHITECTURE_OVERVIEW](./02_architecture_and_design/ARCHITECTURE_OVERVIEW.md) — visión de arquitectura, ítems de software y su clase, puntos de fail-safe.
+- [AGENT_TEAM_AND_FLOW](./02_architecture_and_design/AGENT_TEAM_AND_FLOW.md) — el equipo de agentes, sus fronteras y el flujo de trabajo.
 
 ## 03 · Plan de desarrollo de software (IEC 62304 §5.1)
 
@@ -97,6 +98,7 @@ Brújula del DHF de {{PROJECT_NAME}}. El **[Master Map](./00_master/MASTER_MAP.m
 ## 09 · Experiencia de ingeniería
 
 - [PRODUCTION_LESSONS](./09_engineering_experience/PRODUCTION_LESSONS.md) — field notes: lecciones de producción (síntoma → causa → lección).
+- [STARTUP_DISCIPLINE](./09_engineering_experience/STARTUP_DISCIPLINE.md) — qué priorizar el primer día.
 - [REFERENCE_ARCHITECTURE](./09_engineering_experience/REFERENCE_ARCHITECTURE.md) — patrón híbrido offline-first y el porqué de cada decisión.
 - [MULTI_AGENT_ENGINEERING_METHOD](./09_engineering_experience/MULTI_AGENT_ENGINEERING_METHOD.md) — método "Mesa de Ingenieros" (anti-drift + verificación adversarial).
 

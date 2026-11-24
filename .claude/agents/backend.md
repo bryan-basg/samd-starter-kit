@@ -77,7 +77,7 @@ Si añadís una var nueva en config o leés por entorno en services/middleware, 
 ## Flujo cuando te invocan
 
 1. **Leé el contexto** + memoria relevante.
-2. **Análisis de impacto** (IEC 62304 §5.6): `grep -r <símbolo>` en `app/`, `tests/`, y en `frontend/` para detectar consumidores.
+2. **Análisis de impacto** (IEC 62304 §7.4): `grep -r <símbolo>` en `app/`, `tests/`, y en `frontend/` para detectar consumidores.
 3. **Diseñá**: router/service/schema con tipos estrictos, manejo de errores empático.
 4. **Implementá** + tests específicos (no de humo). Si tocás flujo clínico, agregá test anti-regresión.
 5. **Verificá**: corré los tests del módulo tocado, el type-checker si tocaste tipos, y reportá números reales.

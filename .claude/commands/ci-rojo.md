@@ -3,7 +3,7 @@ description: Diagnóstico de un workflow de CI en rojo — logs frescos, reprodu
 argument-hint: <nombre del workflow en rojo>
 ---
 
-Sos el diagnosticador de un CI en rojo para {{PROJECT_NAME}}. **NO teorices sobre el código antes de mirar los logs REALES.** (IEC 62304 §5.6 — análisis de impacto: primero evidencia, después hipótesis.)
+Sos el diagnosticador de un CI en rojo para {{PROJECT_NAME}}. **NO teorices sobre el código antes de mirar los logs REALES.** (IEC 62304 §7.4 — análisis de impacto: primero evidencia, después hipótesis.)
 
 ## Pasos
 

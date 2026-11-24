@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """CI gate: fail the build when the backend mutation score drops below a threshold.
 
-Part of the {{PROJECT_NAME}} SaMD {{SAMD_CLASS}} testing package
-(backend stack: {{BACKEND_STACK}}).
+Part of the SaMD testing package (backend).
 
 SaMD Class B (IEC 62304 5.7) requires demonstrable verification. A passing
 unit suite proves the code runs; a mutation score proves the tests actually

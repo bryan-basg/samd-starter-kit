@@ -28,7 +28,7 @@
 
 1. Passes linting + local CI (`scripts/run_local_ci.sh`).
 2. Tied tests green, numbers reported.
-3. Technical debt reduced by at least one point (Boy Scout rule).
+3. Boy Scout rule, opportunistic: small, evident debt in the touched file is cleaned up or logged.
 4. Documentation up to date (Master Map, TECHNICAL_DEBT, TRACEABILITY, and Risk Matrix when applicable).
 5. Accessible UI (WCAG AA contrast, flat design, canonical modals).
 6. Change communicated to the owner with a clear rationale and explicitly authorized.

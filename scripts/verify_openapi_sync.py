@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Candado de drift del contrato OpenAPI — {{PROJECT_NAME}} (SaMD {{SAMD_CLASS}}).
+"""Candado de drift del contrato OpenAPI (SaMD).
 
 IEC 62304 §5.1/§5.7 — el contrato publicado debe reflejar la API real. Compara
 el `openapi.json` VERSIONADO en el repo contra el que genera el código en

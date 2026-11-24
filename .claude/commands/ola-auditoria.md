@@ -30,7 +30,7 @@ Vas a lanzar agentes a **BUSCAR defectos**, no a arreglarlos, en el proyecto {{P
 
 ## Hallazgo clínico o de seguridad
 
-Lo **refuta otro agente** antes de tocar código (§5.6), con lentes distintos (correctitud · seguridad · «¿reproduce?»), no revisores repetidos.
+Lo **refuta otro agente** antes de tocar código (§7.4), con lentes distintos (correctitud · seguridad · «¿reproduce?»), no revisores repetidos.
 
 ## Al recibir
 

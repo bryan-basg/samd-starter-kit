@@ -22,9 +22,22 @@ pytest -m security                    # solo los de seguridad
 
 Usá estos tests como plantilla del nivel de rigor esperado; reemplazalos por los de tu app real.
 
+### Al borrar el ejemplo, reanclá (no borres) lo que apunta a él
+
+Estos guardianes rojean **a propósito** cuando `app/` cambia; apuntalos a tus archivos:
+
+| Qué rojea | Qué hacer |
+| --- | --- |
+| `test_audit_clinical_log.py` | Poné tus módulos clínicos en `CLINICAL_PATTERNS` (`.claude/scripts/audit_clinical_log.py`) |
+| `check_doc_citations.py` y `test_citas_del_dhf.py` | Reemplazá en `docs/` las citas a `app/…::símbolo` y a `test_hard_rules.py` por las de tu código |
+| `test_scripts_audit_hallucinations.py` | Quitá de `ALLOWLIST` las líneas de archivos que ya no existen |
+| `test_scripts_audit_smells.py` | Ajustá la carpeta que audita `scripts/audit_smells.py` |
+
+`conftest.py` tolera que el ejemplo no exista; si existe y está roto, rojea.
+
 ## Guardianes del propio kit (NO los borres al traer tu app)
 
-Estos dos archivos no prueban `app/`: **vigilan que una regla del kit se siga cumpliendo**. Una regla escrita en prosa que nada comprueba se erosiona sin ruido; un guardián la vuelve verificable (IEC 62304 §5.7).
+Los demás archivos no prueban `app/`: **vigilan que una regla del kit se siga cumpliendo**. Una regla escrita en prosa que nada comprueba se erosiona sin ruido; un guardián la vuelve verificable (IEC 62304 §5.7).
 
 - `test_workflows_pineados_a_sha.py` — toda acción de `.github/workflows/` pineada a un SHA de 40 caracteres (cadena de suministro, SOUP §8), con una sola versión por acción y la versión legible en comentario. Se deriva de los workflows en disco: uno nuevo entra solo. Si adaptás el kit a menos acciones, bajá `MINIMO_DE_REFERENCIAS`; su trabajo es no aprobar por vacío.
 - `test_mutmut_gate.py` — el gate de mutación backend (`scripts/check_mutmut_score.py`), el runner de pytest para mutmut y el cableado de `scripts/run_mutmut.sh` (flag `--CI`, sin `|| true`, versión fijada igual a `requirements-dev.txt`). Si quitás la mutación backend de tu proyecto, quitá este archivo junto con los tres scripts.

@@ -25,8 +25,7 @@ export default function App() {
     <main className="app">
       <h1>Notas privadas</h1>
       <p className="hint">
-        Esqueleto de ejemplo del SaMD Starter Kit. En tu app real, esto guarda
-        offline-first y sincroniza con el backend.
+        Esto es un ejemplo: lo que escribas se borra al recargar la página.
       </p>
 
       <form onSubmit={handleSubmit} className="note-form">

@@ -39,10 +39,10 @@ Cada problema reportado pasa por un análisis estructurado **antes** de proponer
 | Paso | Actividad | Salida |
 |---|---|---|
 | 1 | Registro del problema (§9.1) | `<id, fecha YYYY-MM-DD, severidad, descripción reproducible>` |
-| 2 | Evaluación de impacto en la seguridad (§6.2.1.1) | `<¿afecta a un riesgo ISO 14971? ¿cambia la clase del ítem?>` |
-| 3 | Notificación a partes interesadas (§6.2.1.3) | `<a quién y cuándo se comunica si hay impacto en seguridad>` |
+| 2 | Evaluación de impacto en la seguridad (§6.2.1.3) | `<¿afecta a un riesgo ISO 14971? ¿cambia la clase del ítem?>` |
+| 3 | Notificación a partes interesadas (§6.2.5) | `<a quién y cuándo se comunica si hay impacto en seguridad>` |
 | 4 | Análisis de causa raíz | `<diagnóstico antes de codificar el arreglo>` |
-| 5 | Análisis de impacto sobre consumidores del símbolo (§5.6) | `<lista de archivos/módulos afectados>` |
+| 5 | Análisis de impacto sobre consumidores del símbolo (§7.4) | `<lista de archivos/módulos afectados>` |
 
 | ID problema | Fecha | Severidad | ¿Impacto en seguridad? | Riesgo asociado | Estado |
 |---|---|---|---|---|---|

@@ -16,7 +16,7 @@ La **Regla 11** del **Anexo VIII** clasifica el software que es un dispositivo e
 
 | Supuesto de la Regla 11 | Clase MDR |
 |---|---|
-| Software destinado a aportar información usada para tomar decisiones con fines de **valoración** o terapéuticos | **IIa** |
+| Software destinado a aportar información usada para tomar decisiones con fines **diagnósticos** o terapéuticos (término legal; el glosario de la interfaz no aplica a esta tabla) | **IIa** |
 | …si esas decisiones pueden causar **muerte o deterioro irreversible** del estado de salud | **III** |
 | …si pueden causar **deterioro grave** del estado de salud o una intervención quirúrgica | **IIb** |
 | Software para **monitorizar procesos fisiológicos** | **IIa** |
@@ -42,16 +42,16 @@ El **Anexo I** define los GSPR. La evidencia se consolida en una *GSPR checklist
 
 | GSPR (Anexo I) | Requisito | Documento DHF que lo cubre | Estado |
 |---|---|---|---|
-| §1–§4 | Seguridad y funcionamiento generales; reducción de riesgos ALARP | `ISO_14971_RISK_MATRIX.md`; `RISK_CONTROL_TRACEABILITY.md` | {{Pendiente}} |
+| §1–§4 | Seguridad y funcionamiento generales, incluido el funcionamiento conforme al uso previsto (§1); reducción de riesgos **tanto como sea posible** sin perjudicar la relación beneficio-riesgo (§2; no es «ALARP»: si tu política usa esa etiqueta, demostrá que no deja margen económico) | `ISO_14971_RISK_MATRIX.md`; `RISK_CONTROL_TRACEABILITY.md`; `CLINICAL_VALIDATION_REPORT.md` | {{Pendiente}} |
 | §3 | Sistema de gestión de riesgos | `ISO_14971_RISK_MATRIX.md` | {{Pendiente}} |
 | §5 | Riesgos asociados al uso (factores humanos) | `USER_GUIDE.md`; `CLINICAL_EVALUATION_PLAN.md` | {{Pendiente}} |
-| §9 | Funcionamiento conforme al uso previsto | `CLINICAL_VALIDATION_REPORT.md` | {{Pendiente}} |
+| §9 | Productos del Anexo XVI, sin finalidad médica (N/A para un SaMD) | — | N/A |
 | §14.2 (d) | Interacción del software con su entorno IT (compatibilidad con sistemas previstos) | `COMPLETE_TESTING_STRATEGY.md` | Verificado (la repetibilidad/fiabilidad del software vive en §17.1, no aquí) |
 | **§17.1** | Sistemas electrónicos programables — repetibilidad, fiabilidad, funcionamiento | `ARCHITECTURE_OVERVIEW.md` | {{Pendiente}} |
 | **§17.2** | Software desarrollado conforme al estado del arte (ciclo de vida, gestión de riesgo, verificación, validación) | `SOFTWARE_DEVELOPMENT_PLAN.md`; `TRACEABILITY_MATRIX_SAMD.md` | {{Pendiente}} |
 | **§17.3** | Software en plataformas móviles — entorno de uso | `MEDICAL_DEVICE_LABELING.md`; `USER_GUIDE.md` | {{Pendiente}} |
 | **§17.4** | Requisitos mínimos de **seguridad informática** (IT security) | `COMPLIANCE_AND_SECURITY_MASTER.md`; `INFOSEC_READINESS_ISO27001_SOC2.md`; `DATA_FLOW_DOCUMENTATION.md` | {{Pendiente}} |
-| §22 | Protección contra riesgos de dispositivos para legos (si aplica) | `USER_GUIDE.md` | Verificado (Anexo I, Cap. III, punto 22) |
+| §22 | Protección contra riesgos de dispositivos para legos (si aplica) | `USER_GUIDE.md` | Verificado (Anexo I, Cap. II, punto 22) |
 | §23.1 | Etiqueta e instrucciones de uso | `MEDICAL_DEVICE_LABELING.md`; `INSTRUCTIONS_FOR_USE_IFU.md` | {{Pendiente}} |
 | §23.4 | Contenido de las instrucciones de uso | `INSTRUCTIONS_FOR_USE_IFU.md` | {{Pendiente}} |
 
@@ -85,7 +85,7 @@ El **Anexo II** define la documentación técnica; el **Anexo III**, la document
 | Sistema de vigilancia post-comercialización | Art. 83 | `POST_MARKET_SURVEILLANCE_PLAN.md` | {{Pendiente}} |
 | Plan de vigilancia post-comercialización | Art. 84 + Anexo III | `POST_MARKET_SURVEILLANCE_PLAN.md` | {{Pendiente}} |
 | Informe PMS / PSUR | Art. 85 (informe PMS, Clase I) / Art. 86 (PSUR, Clase IIa/IIb/III) | `POST_MARKET_SURVEILLANCE_PLAN.md` | Verificado |
-| Notificación de incidentes graves y FSCA | Art. 87–89 | `INCIDENT_RESPONSE_PLAN.md`; `SOFTWARE_PROBLEM_RESOLUTION_PROCEDURE.md` | {{Pendiente}} |
+| Notificación de incidentes graves y FSCA | Art. 87–89 | `POST_MARKET_SURVEILLANCE_PLAN.md` §7 (plazos) | {{Pendiente}} |
 
 ---
 

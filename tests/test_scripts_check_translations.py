@@ -84,7 +84,7 @@ def test_texto_latino_de_otro_idioma_en_locale_no_latino_da_rc1(tmp_path, texto)
     assert _run(tmp_path).returncode == 1
 
 
-@pytest.mark.parametrize("texto", ["Доброе утро", "Отправить email", "PDF", "{{name}}", "12 %"])
+@pytest.mark.parametrize("texto", ["Доброе утро", "Отправить email", "PDF", "12 %"])
 def test_traduccion_legitima_no_latina_pasa(tmp_path, texto):
     _json(tmp_path, "locales/en.json", {"g": "Good morning"})
     _json(tmp_path, "locales/ru.json", {"g": texto})
@@ -130,3 +130,54 @@ def test_idiomas_sin_su_base_no_se_omiten(tmp_path, superficie):
     _json(tmp_path, rota.format("en-US"), {"s": "Save"})
     res = _run(tmp_path)
     assert res.returncode == 1 and "pero no la base" in res.stdout, res.stdout
+
+
+@pytest.mark.parametrize(
+    "texto", ["Hola, tenés notas", "Hola {{nombre}}, tenés {{count}}", "Hola {{name}} {{count}} {{x}}"]
+)
+def test_marcador_perdido_o_inventado_da_rc1(tmp_path, texto):
+    _json(tmp_path, "locales/en.json", {"m": "Hello {{name}}, you have {{count}} notes"})
+    _json(tmp_path, "locales/es.json", {"m": texto})
+    res = _run(tmp_path, "-v")
+    assert res.returncode == 1 and "marcadores" in res.stdout, res.stdout
+
+
+def test_marcadores_en_otro_orden_y_con_espacios_pasan(tmp_path):
+    _json(tmp_path, "locales/en.json", {"m": "{{ name }} has {{count}}", "n": "%s of %d"})
+    _json(tmp_path, "locales/es.json", {"m": "{{count}} de {{name}}", "n": "%d de %s"})
+    _json(tmp_path, "locales/ru.json", {"m": "{{count}} {{name}}", "n": "%d из %s"})
+    assert _run(tmp_path).returncode == 0
+
+
+PLURAL_EN = {"n_one": "{{count}} note", "n_other": "{{count}} notes"}
+
+
+@pytest.mark.parametrize(
+    ("idioma", "formas"),
+    [
+        ("ru", {"n_one": "{{count}} заметка", "n_few": "{{count}} заметки",
+                "n_many": "{{count}} заметок", "n_other": "{{count}} заметки"}),
+        ("zh", {"n_other": "{{count}} 条笔记"}),
+        ("es", {"n_one": "una nota", "n_other": "{{count}} notas"}),
+    ],
+)
+def test_cada_idioma_trae_sus_formas_de_plural(tmp_path, idioma, formas):
+    _json(tmp_path, "locales/en.json", PLURAL_EN)
+    _json(tmp_path, f"locales/{idioma}.json", formas)
+    res = _run(tmp_path, "-v")
+    assert res.returncode == 0, res.stdout
+
+
+@pytest.mark.parametrize(
+    "formas",
+    [
+        {"n_one": "una nota"},  # falta `_other`
+        {"n_one": "una nota", "n_other": "muchas notas"},  # `_other` sin {{count}}
+        {"n_one": "{{total}} nota", "n_other": "{{count}} notas"},  # marcador inventado
+        {"n_other": "{{count}} notas", "x_few": "sobra"},  # no es un grupo de la base
+    ],
+)
+def test_plural_roto_da_rc1(tmp_path, formas):
+    _json(tmp_path, "locales/en.json", PLURAL_EN)
+    _json(tmp_path, "locales/es.json", formas)
+    assert _run(tmp_path).returncode == 1

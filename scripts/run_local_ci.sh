@@ -47,6 +47,9 @@ fi
 echo "[CI] 3/5 Backend: imports muertos + type-check estricto"
 if command -v ruff >/dev/null 2>&1; then ruff check app/ --select F401,F841,F811; fi
 if command -v mypy >/dev/null 2>&1; then mypy .; fi
+python3 scripts/audit_hallucinations.py
+python3 scripts/audit_smells.py
+python3 scripts/lint_agents.py
 
 echo "[CI] 4/5 Backend: tests (activá el entorno virtual antes)"
 if command -v pytest >/dev/null 2>&1 && [ -d tests ]; then
@@ -60,4 +63,8 @@ bash scripts/check_doc_links.sh
 python3 scripts/check_doc_anchors.py
 python3 scripts/check_doc_citations.py
 
-echo "[CI] OK"
+if [ -f frontend/src/api/openapi.json ] && command -v pytest >/dev/null 2>&1; then
+  TESTING=True python scripts/verify_openapi_sync.py
+fi
+
+echo "[CI] OK (falta lo que solo corre el CI: piso de cobertura —bash scripts/check_coverage.sh— y escaneos de seguridad)"

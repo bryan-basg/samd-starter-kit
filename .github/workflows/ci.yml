@@ -83,6 +83,11 @@ jobs:
               # `tests/test_hard_rules.py` lee la plantilla de entorno.
               - '.env.example'
               - 'Dockerfile*'
+              # `tests/test_versiones_coherentes.py` compara las versiones de estos sitios.
+              - 'docker-compose.yml'
+              - '.devcontainer/**'
+              - 'frontend/package.json'
+              - '.coveragerc'
               - 'scripts/**/*.sh'
               - 'pyproject.toml'
               - 'pytest.ini'

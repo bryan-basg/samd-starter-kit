@@ -76,7 +76,7 @@ Anexo A 2022 organizado en 4 temas: **A.5** organizacionales, **A.6** personas, 
 | A.8.25 Ciclo de vida de desarrollo seguro | Tec. | `SOFTWARE_DEVELOPMENT_PLAN.md` | {{Pendiente de evidencia}} |
 | A.8.26 Requisitos de seguridad de la aplicación | Tec. | `COMPLIANCE_CHECKLIST.md` | {{Pendiente de evidencia}} |
 | A.8.28 Codificación segura | Tec. | SAST (Semgrep) + revisión de código | {{Pendiente de evidencia}} |
-| A.8.29 Pruebas de seguridad en desarrollo y aceptación | Tec. | SAST + DAST + fuzz + Gitleaks en CI | {{Pendiente de evidencia}} |
+| A.8.29 Pruebas de seguridad en desarrollo y aceptación | Tec. | SAST + DAST + fuzz en CI; Gitleaks con el hook pre-commit o `scripts/run_gitleaks.sh` (el kit NO lo corre en CI) | {{Pendiente de evidencia}} |
 
 > **Documentos del SGSI que ISO 27001 exige y NO están cubiertos por controles técnicos** (cláusulas §4–§10 del cuerpo de la norma, no del Anexo A): política del SGSI, evaluación de riesgos de seguridad de la información, **Statement of Applicability (SoA)**, objetivos, competencias, auditoría interna y revisión por la dirección. Marcados como gap organizacional en §5.
 

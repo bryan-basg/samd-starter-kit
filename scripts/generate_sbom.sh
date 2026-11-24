@@ -74,6 +74,19 @@ detect_venv() {
     log "venv activado: $(python -c 'import sys; print(sys.executable)')"
 }
 
+# El SBOM nuevo se escribe aparte y solo reemplaza al publicado si trae componentes: un fallo
+# de la herramienta no puede dejar como "latest" el del dia anterior ni uno vacio. (Las
+# funciones corren con `|| rc=$?`, que apaga `set -e` adentro: cada paso se chequea a mano.)
+publicar() {
+    local out_file="$1" latest_file="$2" motivo="$3" n
+    n="$(python3 -c 'import json,sys; print(len(json.load(open(sys.argv[1])).get("components") or []))' "$out_file.tmp" 2>/dev/null || echo 0)"
+    if [ "$n" -eq 0 ]; then
+        err "SBOM sin componentes: $motivo"
+        return 1
+    fi
+    mv -f "$out_file.tmp" "$out_file" && cp -f "$out_file" "$latest_file"
+}
+
 # ------------------------------------------------------------------ backend
 generate_backend() {
     detect_venv
@@ -113,16 +126,10 @@ EOF
         --mc-type application \
         --output-reproducible \
         --validate \
-        -o "$out_file" \
-        "$VENV_DIR/bin/python"
+        -o "$out_file.tmp" \
+        "$VENV_DIR/bin/python" || { err "cyclonedx-py fallo."; return 1; }
 
-    # Guard: el SBOM NO puede salir vacío (sin componentes => evidencia inútil).
-    if [ ! -s "$out_file" ]; then
-        err "SBOM backend vacio. Revisa el venv."
-        return 1
-    fi
-
-    cp -f "$out_file" "$latest_file"
+    publicar "$out_file" "$latest_file" "backend. Revisa el venv." || return 1
     log "Backend SBOM -> $out_file"
     log "Pointer estable -> $latest_file"
 }
@@ -166,15 +173,9 @@ EOF
         --output-format JSON \
         --output-reproducible \
         --omit dev \
-        --output-file "$out_file" )
+        --output-file "$out_file.tmp" ) || { err "cyclonedx-npm fallo."; return 1; }
 
-    # Guard: lockfile íntegro => SBOM con componentes; vacío => abortar.
-    if [ ! -s "$out_file" ]; then
-        err "SBOM frontend vacio. Revisa que el lockfile este integro."
-        return 1
-    fi
-
-    cp -f "$out_file" "$latest_file"
+    publicar "$out_file" "$latest_file" "frontend. Revisa que el lockfile este integro." || return 1
     log "Frontend SBOM -> $out_file"
     log "Pointer estable -> $latest_file"
 }

@@ -18,7 +18,7 @@
 # Config por env (defaults sensatos):
 #   COVERAGE_FLOOR        piso global.            Default: 95
 #   SQL_FLOOR             piso capa datos/SQL.    Default: 95
-#   COVERAGE_SQL_INCLUDE  globs de la capa datos. Default: app/database/*,app/crud/*,app/models/*,app/schemas/*
+#   COVERAGE_SQL_INCLUDE  globs de la capa datos. Default: app/database/*,app/crud/*,app/models/*,app/schemas/*,app/schemas.py
 #   PYTEST_BIN            binario de pytest.      Default: ./venv/bin/pytest (o pytest si no hay venv)
 #   COVERAGE_BIN          binario de coverage.    Default: ./venv/bin/coverage (o coverage si no hay venv)
 # ============================================================================
@@ -29,7 +29,7 @@ cd "$(dirname "$0")/.."
 export TESTING=True
 GLOBAL_FLOOR="${COVERAGE_FLOOR:-95}"
 SQL_FLOOR="${SQL_FLOOR:-95}"
-SQL_INCLUDE="${COVERAGE_SQL_INCLUDE:-app/database/*,app/crud/*,app/models/*,app/schemas/*}"
+SQL_INCLUDE="${COVERAGE_SQL_INCLUDE:-app/database/*,app/crud/*,app/models/*,app/schemas/*,app/schemas.py}"
 PYTEST="${PYTEST_BIN:-$( [ -x ./venv/bin/pytest ] && echo ./venv/bin/pytest || echo pytest )}"
 COVERAGE="${COVERAGE_BIN:-$( [ -x ./venv/bin/coverage ] && echo ./venv/bin/coverage || echo coverage )}"
 
@@ -56,12 +56,15 @@ fi
 
 echo ""
 echo "════════ Piso capa DATOS/SQL (≥ ${SQL_FLOOR}%) ════════"
-if "$COVERAGE" report --include="$SQL_INCLUDE" >/dev/null 2>&1; then
+# La sonda solo pregunta si HAY datos: `--fail-under=0` le quita el `fail_under` de
+# .coveragerc. Sin eso, una capa por debajo del piso salía con error y se leía como
+# «sin archivos»: el piso no podía fallar nunca.
+if "$COVERAGE" report --include="$SQL_INCLUDE" --fail-under=0 >/dev/null 2>&1; then
   # La capa existe y tiene archivos cubiertos → el piso se exige.
   if ! "$COVERAGE" report --include="$SQL_INCLUDE" --fail-under="$SQL_FLOOR" >/dev/null 2>&1; then
     echo "✗ Cobertura de la capa datos/SQL por DEBAJO de ${SQL_FLOOR}%"; FAIL=1
   fi
-  "$COVERAGE" report --include="$SQL_INCLUDE" | tail -1
+  "$COVERAGE" report --include="$SQL_INCLUDE" --fail-under=0 | tail -1
 else
   echo "  (capa datos/SQL sin archivos cubiertos — piso omitido; existirá cuando agregues $SQL_INCLUDE)"
 fi

@@ -11,6 +11,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parent.parent
 SCRIPT = ROOT / "scripts" / "check_translations.py"
 
@@ -63,3 +65,68 @@ def test_copiado_sin_traducir_en_idioma_no_latino_da_rc1(tmp_path):
     _json(tmp_path, "locales/en.json", {"greeting": "Good morning"})
     _json(tmp_path, "locales/ja.json", {"greeting": "Good morning"})
     assert _run(tmp_path).returncode == 1
+
+
+# --- Verdes que mentían (auditoría 2026-11-24): cada uno daba «completo» con rc=0 -----------
+
+@pytest.mark.parametrize("idioma", ["zh-CN", "ja_JP", "zh", "RU"])
+def test_la_region_no_saca_al_idioma_del_gate_duro(tmp_path, idioma):
+    _json(tmp_path, "locales/en.json", {"g": "Good morning friend"})
+    _json(tmp_path, f"locales/{idioma}.json", {"g": "Good morning friend"})
+    res = _run(tmp_path)
+    assert res.returncode == 1 and "SIN TRADUCIR" in res.stdout, res.stdout
+
+
+@pytest.mark.parametrize("texto", ["Buenos días", "Good morning to you"])
+def test_texto_latino_de_otro_idioma_en_locale_no_latino_da_rc1(tmp_path, texto):
+    _json(tmp_path, "locales/en.json", {"g": "Good morning"})
+    _json(tmp_path, "locales/ru.json", {"g": texto})
+    assert _run(tmp_path).returncode == 1
+
+
+@pytest.mark.parametrize("texto", ["Доброе утро", "Отправить email", "PDF", "{{name}}", "12 %"])
+def test_traduccion_legitima_no_latina_pasa(tmp_path, texto):
+    _json(tmp_path, "locales/en.json", {"g": "Good morning"})
+    _json(tmp_path, "locales/ru.json", {"g": texto})
+    res = _run(tmp_path)
+    assert res.returncode == 0, res.stdout
+
+
+@pytest.mark.parametrize("valor", ["", "   ", None, 3, ["x"], {}])
+def test_valor_vacio_o_de_otro_tipo_da_rc1(tmp_path, valor):
+    _json(tmp_path, "locales/en.json", {"a": "Alpha beta"})
+    _json(tmp_path, "locales/es.json", {"a": valor})
+    assert _run(tmp_path).returncode == 1
+
+
+def test_base_vacia_admite_traduccion_vacia(tmp_path):
+    _json(tmp_path, "locales/en.json", {"a": "", "b": "Beta"})
+    _json(tmp_path, "locales/es.json", {"a": "", "b": "Be"})
+    assert _run(tmp_path).returncode == 0
+
+
+def test_lista_mas_corta_da_rc1(tmp_path):
+    _json(tmp_path, "locales/en.json", {"pasos": ["One", "Two"]})
+    _json(tmp_path, "locales/es.json", {"pasos": ["Uno"]})
+    res = _run(tmp_path, "-v")
+    assert res.returncode == 1 and "pasos.1" in res.stdout
+
+
+def test_namespace_huerfano_da_rc1(tmp_path):
+    for idioma, texto in (("en", "Save"), ("es", "Guardar")):
+        _json(tmp_path, f"frontend/public/locales/{idioma}/common.json", {"s": texto})
+    _json(tmp_path, "frontend/public/locales/es/viejo.json", {"s": "x"})
+    res = _run(tmp_path)
+    assert res.returncode == 1 and "viejo.json" in res.stdout
+
+
+@pytest.mark.parametrize("superficie", ["frontend", "backend"])
+def test_idiomas_sin_su_base_no_se_omiten(tmp_path, superficie):
+    """Una superficie sana no tapa a la otra, que tiene idiomas pero no el base."""
+    sana = {"frontend": "locales/{}.json", "backend": "frontend/public/locales/{}/c.json"}[superficie]
+    rota = {"backend": "locales/{}.json", "frontend": "frontend/public/locales/{}/c.json"}[superficie]
+    for idioma, texto in (("en", "Save"), ("es", "Guardar")):
+        _json(tmp_path, sana.format(idioma), {"s": texto})
+    _json(tmp_path, rota.format("en-US"), {"s": "Save"})
+    res = _run(tmp_path)
+    assert res.returncode == 1 and "pero no la base" in res.stdout, res.stdout

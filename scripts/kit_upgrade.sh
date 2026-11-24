@@ -75,7 +75,19 @@ echo "      upstream  : $upstream_ver"
 # 4) Qué te falta del upstream -------------------------------------------
 echo "[4/4] Cambios del kit que tu proyecto aún no tiene (excluyendo lo personalizado)"
 echo
-ahead_count="$(git rev-list --count "HEAD..${UPSTREAM_REF}" 2>/dev/null || echo 0)"
+if ! git rev-parse --verify -q HEAD >/dev/null; then
+  echo "  ✗ Tu repo todavía no tiene commits: no hay contra qué comparar." >&2
+  echo "    Hacé tu primer commit y volvé a correr este script." >&2
+  exit 1
+fi
+if ! git merge-base HEAD "$UPSTREAM_REF" >/dev/null 2>&1; then
+  echo "  ⚠️  Tu historial no comparte ancestro con el kit (pasa si empezaste con 'git init')."
+  echo "      La lista de commits es TODO el historial del kit, y la de archivos incluye los"
+  echo "      que vos adaptaste: mirá el contenido, no el conteo."
+  echo
+fi
+# Sin `|| echo 0`: un fallo de git no puede leerse como «estás al día».
+ahead_count="$(git rev-list --count "HEAD..${UPSTREAM_REF}")"
 if [[ "$ahead_count" -eq 0 ]]; then
   echo "  ✓ Estás al día con '$UPSTREAM_REF' (0 commits por delante)."
   echo

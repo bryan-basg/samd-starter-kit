@@ -105,7 +105,7 @@ Este documento consolida el modelo de amenazas, los controles de seguridad por c
 
 | Herramienta | Objetivo | Frecuencia | Gate |
 |---|---|---|---|
-| Trivy | CVEs en dependencias e imágenes de contenedor | CI + nightly | Bloquea CVEs críticos sin excepción documentada |
+| Trivy (`fs`) + pip-audit | CVEs en lockfiles y `requirements.txt`, secretos y mala configuración del `Dockerfile`. **No escanea la imagen construida**: los CVEs del sistema base quedan fuera hasta que agregues `trivy image` | CI + semanal | Bloquea CVEs críticos sin excepción documentada |
 | Semgrep | SAST código (backend + frontend) | CI | Bloquea hallazgos altos |
 | Fuzz de OpenAPI | Fuzzing de contrato API | Nightly | Bloquea desviaciones de contrato/errores 5xx |
 | DAST (opcional) | Escaneo dinámico | Nightly | Bloquea fallos confirmados |

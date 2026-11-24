@@ -190,8 +190,8 @@ def lint_rules(files: list[Path]) -> bool:
     """Lintea `.claude/rules/*.md` distinguiendo path-scoped de transversales."""
     print("\n== Reglas (.claude/rules/*.md) ==")
     if not files:
-        print("  (sin archivos — omitido)")
-        return True
+        print("  ✗ no se encontró ninguna regla (se esperaba al menos una)")
+        return False
 
     ok = True
     for path in sorted(files):

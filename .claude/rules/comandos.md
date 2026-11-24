@@ -28,7 +28,7 @@ pytest --cov=app --cov-report=term-missing # cobertura canónica
 bash scripts/run_local_ci.sh
 
 # Stack SaMD-grade — CORTOS, corren SIN OK (exigir permiso para esto solo lograba que no se corrieran)
-bash scripts/run_trivy.sh        # CVEs deps + Docker (~30s)
+bash scripts/run_trivy.sh        # CVEs de lockfiles + config del Dockerfile (~30s)
 bash scripts/run_semgrep.sh      # SAST (~2min)
 
 # Stack SaMD-grade — ⚠️ PIDEN OK EXPLÍCITO CADA VEZ (procesos pesados: .claude/rules/orquestacion.md regla dura 2)

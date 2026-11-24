@@ -51,7 +51,10 @@ exclude_lines =
     raise NotImplementedError
     if TYPE_CHECKING:
     if __name__ == .__main__.:
-    \.\.\.
+    # Solo el cuerpo `...` de un stub (Protocol, overload). Un `...` suelto en un comentario
+    # escondía la línea y todo el bloque que abría.
+    ^\s*\.\.\.\s*$
+    ^\s*((async\s+)?def|class|\))[^#]*:\s*\.\.\.\s*$
 
 # Canonical gate. Override per-run with `coverage report --fail-under=N`
 # if a layer (e.g. data/SQL) carries a higher floor.

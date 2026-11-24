@@ -30,7 +30,7 @@ on:
       - 'app/schemas.py'
       - 'app/schemas/**'
       - 'app/main.py'
-      - 'app/dependencies.py'
+      - 'app/core/**'
       - 'scripts/run_schemathesis.sh'
       - 'scripts/sast.sh'
       - 'requirements-fuzz.txt'

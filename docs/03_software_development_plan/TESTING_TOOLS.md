@@ -33,7 +33,7 @@ Idioma de trabajo del equipo: {{CHAT_LANG}}.
 | **SAST** (analizador estático de seguridad) | Vulnerabilidades en código Python+TS, secretos hardcodeados, patrones inseguros. | Nightly; gate de PR sobre archivos tocados. | `bash scripts/run_semgrep.sh` |
 | **DAST** (escáner dinámico, OWASP ZAP) | Superficie HTTP en runtime: headers, auth, inyección, exposición. | Nightly contra entorno efímero. | `bash scripts/run_zap_dast.sh` |
 | **Fuzz de API** (schemathesis contra OpenAPI) | Que cada endpoint respete su contrato OpenAPI bajo entradas adversariales. | Al cambiar el esquema/API; nightly. | `bash scripts/run_schemathesis.sh` |
-| **SCA / deps** (escáner de CVEs) | CVEs en dependencias y capas de imagen Docker. | Nightly; gate de PR sobre lockfiles. | `bash scripts/run_trivy.sh` |
+| **SCA / deps** (escáner de CVEs) | CVEs en lockfiles y mala configuración del `Dockerfile` (no escanea la imagen construida; `requirements.txt` lo cubre `pip-audit` en CI). | Semanal; gate de PR sobre lockfiles. | `bash scripts/run_trivy.sh` |
 | **E2E** (navegador headless) | Flujos críticos de usuario de punta a punta en un navegador real. | Pre-release; nightly. | `<comando e2e>` |
 | **Flaky check** (este kit) | Tests cuyo resultado verde↔rojo cambia entre corridas sin tocar código. | Cuando se sospecha inestabilidad; antes de cerrar una suite. | `FLAKY_RUNS=10 TEST_CMD="pytest -q" scripts/run_flaky_check.sh` |
 

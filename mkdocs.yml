@@ -40,6 +40,8 @@ edit_uri: edit/main/docs/
 
 theme:
   name: material
+  logo: assets/logo-white.svg
+  favicon: assets/logo.svg
   language: en
   icon:
     repo: fontawesome/brands/github
@@ -58,19 +60,22 @@ theme:
     # Modo claro
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: teal
-      accent: teal
+      primary: custom
+      accent: custom
       toggle:
         icon: material/weather-night
         name: Switch to dark mode
     # Modo oscuro
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: teal
-      accent: teal
+      primary: custom
+      accent: custom
       toggle:
         icon: material/weather-sunny
         name: Switch to light mode
+
+extra_css:
+  - assets/marca.css
 
 # Solo el plugin de búsqueda integrado: nada externo ni frágil. Los diagramas
 # Mermaid se renderizan vía pymdownx.superfences (custom_fences, abajo), que es

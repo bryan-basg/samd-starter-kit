@@ -12,6 +12,7 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y e
 - **`/tandas-agentes`, cláusula 7**: nada de esperas encadenadas en un turno ni matar procesos por nombre; y una única excepción a «parar entre tandas»: una noche autorizada con `/trabajo-nocturno`, hasta su tope.
 
 ### Changed
+- **README (inglés y español): fila «Candados automáticos» y línea en «Qué tenés el primer día».** El candado de subagentes y el vigía clínico existían pero el README no los mencionaba.
 - **El vigía clínico ve también la terminal** (`.claude/scripts/audit_clinical_log.py`): mira lo que cambió en el disco (`git status` + `ctime`) tras `Bash`, `Edit` o `Write`, en vez de escuchar solo el editor — en la referencia el anterior estuvo mudo varios días con el trabajo hecho por `sed`/`python`. Si la capa se tocó por terminal, le entrega al agente su regla de `.claude/rules/`; si el vigía falla, lo dice en vez de callar. Contrato reescrito sobre un repositorio de juguete (`tests/test_audit_clinical_log.py`, 28 casos; 10 sabotajes de lógica y enchufe rojean). Pasado por `/code-review` antes de subir: la marca solo avanza si la bitácora se escribió, un borrado (también de una carpeta entera) se anota una sola vez, se ve el `Edit` en una copia de trabajo fuera del repo, el recordatorio nombra cada archivo clínico nuevo y el aviso de fallo no miente sobre lo que sí quedó anotado.
 
 ### Fixed

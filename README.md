@@ -52,6 +52,7 @@ bash scripts/init_kit.sh          # interactive & re-runnable: fills the {{...}}
 - **Gates that fail when they didn't look.** Coverage, doc links, code citations, placeholders, translations and the SBOM go red on an empty scan; tests pin every CI step so none can be switched off silently.
 - **Traceability that resolves.** Every requirement cites code and a test by name, and CI checks that both exist today.
 - **Clinical UX guardians.** Text contrast, control borders, flat design and reduced motion are tested, not just documented.
+- **Controls that don't depend on the AI remembering.** Hooks stop subagents from running heavy processes on your machine and log every change to a clinical module, whether it came from the editor or the terminal.
 
 ## Who is this for?
 
@@ -67,6 +68,7 @@ bash scripts/init_kit.sh          # interactive & re-runnable: fills the {{...}}
 | **Per-layer rules** | `.claude/rules/` | The rest of the ruleset: five **path-scoped** rules (backend, clinical UX, testing, CI, docs) that load only when that layer is touched, plus two cross-cutting ones (hard execution rules, commands). What only the main session needs lives in the output style `.claude/output-styles/orquestador.md`. |
 | **Team of 12 agents** | `.claude/agents/` | Per-layer specialists — see [the team](#the-12-agent-team). |
 | **Skills & commands** | `.claude/skills/`, `.claude/commands/` | 23 reusable procedures, e.g. `/samd-trace` (impact analysis before declaring anything "fixed"), `/anti-drift`, `/ola-mutation`, `/cierre-bloque`, `/ci-rojo`, `/tandas-agentes`, `/trabajo-nocturno`, `/revision-visual`. |
+| **Mechanical hooks** | `.claude/settings.json`, `.claude/scripts/` | Guardrails that don't depend on the agent remembering: a `PreToolUse` lock stops a **subagent** from running the full suite or a heavy process (mutation, fuzz, E2E) on your machine, and the **clinical watcher** (`PostToolUse`) checks what changed on disk after every edit *or terminal command*, logs each change to a clinical/critical module (local file, outside git), reminds the agent of the traceability it owes and hands it the layer's rules when the layer was touched from the terminal. If the watcher fails, it says so. |
 | **Multi-agent workflow** | `.claude/workflows/` | `samd-review`: diff review across risk dimensions with adversarial verification. |
 | **Development protocol** | `.agents/workflows/` | Agent-agnostic mirror of the stable process. |
 | **Memory** | `memory/MEMORY.md` | The agent's persistent memory structure. |

@@ -52,6 +52,7 @@ bash scripts/init_kit.sh          # interactivo y re-ejecutable: rellena los mar
 - **Gates que fallan si no miraron.** Cobertura, enlaces, citas al código, marcadores, traducciones y SBOM rojean con un escaneo vacío; hay tests que anclan cada paso del CI para que ninguno se apague en silencio.
 - **Trazabilidad que resuelve.** Cada requisito cita código y un test por nombre, y el CI comprueba que los dos existen hoy.
 - **Guardianes de UX clínica.** Contraste de texto, bordes de controles, diseño plano y movimiento reducido se prueban, no solo se documentan.
+- **Controles que no dependen de que la IA se acuerde.** Los hooks frenan los procesos pesados en los subagentes y anotan cada cambio a un módulo clínico, venga del editor o de la terminal.
 
 ## ¿Para quién es?
 
@@ -67,6 +68,7 @@ bash scripts/init_kit.sh          # interactivo y re-ejecutable: rellena los mar
 | **Reglas por capa** | `.claude/rules/` | El resto del reglamento: cinco reglas **path-scoped** (backend, UX clínica, testing, CI, docs) que cargan solas al tocar esa capa, más dos transversales (reglas duras de ejecución, comandos). Lo que solo necesita la sesión principal vive en el estilo de salida `.claude/output-styles/orquestador.md`. |
 | **Equipo de 12 agentes** | `.claude/agents/` | Especialistas por capa — ver [el equipo](#el-equipo-de-12-agentes). |
 | **Skills y comandos** | `.claude/skills/`, `.claude/commands/` | 23 procedimientos reutilizables, p. ej. `/samd-trace` (análisis de impacto antes de declarar algo "arreglado"), `/anti-drift`, `/ola-mutation`, `/cierre-bloque`, `/ci-rojo`, `/tandas-agentes`, `/trabajo-nocturno`, `/revision-visual`. |
+| **Candados automáticos** | `.claude/settings.json`, `.claude/scripts/` | Controles que no dependen de que el agente se acuerde: un candado `PreToolUse` impide que un **subagente** corra la suite completa o un proceso pesado (mutación, fuzz, E2E) en tu máquina, y el **vigía clínico** (`PostToolUse`) mira lo que cambió en el disco tras cada edición *o comando de terminal*, anota cada cambio a un módulo clínico/crítico (archivo local, fuera de git), le recuerda al agente la trazabilidad pendiente y le entrega las reglas de la capa si la tocó por terminal. Si el vigía falla, lo dice. |
 | **Workflow multi-agente** | `.claude/workflows/` | `samd-review`: revisión del diff por dimensiones de riesgo con verificación adversarial. |
 | **Protocolo de desarrollo** | `.agents/workflows/` | Espejo agnóstico al agente del proceso estable. |
 | **Memoria** | `memory/MEMORY.md` | Estructura de memoria persistente del agente. |

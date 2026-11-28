@@ -8,7 +8,7 @@ Vas a repartir un trabajo grande entre subagentes en el proyecto {{PROJECT_NAME}
 ## Las 2 reglas duras
 
 1. **Máximo 12 agentes por tanda** (regla B del estilo «Orquestador SaMD» §2, `.claude/output-styles/orquestador.md`), contando **todos**: los que trabajan Y los que verifican. Un pipeline de 12 ítems con 2 revisores cada uno son **36 agentes**, no 12.
-2. **Entre tanda y tanda, PARÁS y PREGUNTÁS.** Nunca encadenes la siguiente por tu cuenta, aunque el plan la contemple. **"Vamos con todo" autoriza el PLAN, no el GASTO de cada tanda** — igual que no autoriza procesos pesados implícitos (regla dura 2 de orquestación).
+2. **Entre tanda y tanda, PARÁS y PREGUNTÁS.** Nunca encadenes la siguiente por tu cuenta, aunque el plan la contemple. **"Vamos con todo" autoriza el PLAN, no el GASTO de cada tanda** — igual que no autoriza procesos pesados implícitos (regla dura 2 de orquestación). **Única excepción**: una noche con OK escrito de encadenar y tope de gasto (`/trabajo-nocturno`), solo esa noche y hasta ese tope.
 
 ## Presupuesto — decilo ANTES de lanzar
 
@@ -42,6 +42,7 @@ No asumas que quedó ni bien ni roto: **medí**. Buscá **huérfanos** (archivo 
 4. **Sin huérfanos ni temporales.**
 5. **Hay guardianes que leen TEXTO, no conducta** — el sabotaje de comportamiento es ciego ante ellos.
 6. **Los killers de los módulos críticos son un CONTRATO**: tocar el literal obliga a tocar su killer en el mismo cambio.
+7. **Nada de esperas encadenadas ni procesos sueltos**: cada comando, **menos de 3 min** (`timeout 170`) **y todos los comandos de un mismo turno, menos de 4 min entre todos** — el tope por comando solo no sirve: se burla encadenando esperas. Los sabotajes van de a uno o dos por turno, en primer plano y con solo las pruebas que pueden matarlos; nada de segundo plano, `sleep`, `until` ni `tail --pid`. **Prohibido matar procesos por nombre** (`pkill`, `killall`): solo por el PID que vos lanzaste — matar por nombre se lleva puestos los procesos de otras ventanas y agentes.
 
 Verificación adversarial con **lentes distintos** (equivalencia lógica · seguridad clínica · contratos y guardianes). En zona crítica, **basta que UN lente diga "rompe"** para bloquear.
 

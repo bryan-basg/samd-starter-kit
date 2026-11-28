@@ -52,8 +52,8 @@ Frontmatter obligatorio: `name` (slug kebab), `description` (una línea; es lo q
 M=<ruta de la carpeta memory/ de este proyecto>
 wc -c "$M/MEMORY.md"                      # antes y después: ¿creció?
 grep -oh "\[\[[a-z0-9_-]*\]\]" "$M"/*.md | tr -d '[]' | sort -u | while read -r s; do
-  [ -f "$M/$s.md" ] || echo "ENLACE ROTO: [[$s]]"
-done                                       # slug mal escrito ≠ ficha futura
+  [ -f "$M/$s.md" ] || grep -lqE "^name: *\"?$s\"?$" "$M"/*.md || echo "ENLACE ROTO: [[$s]]"
+done                                       # slug mal escrito ≠ ficha futura; vale el archivo O el `name:`
 ls -S "$M" | head -5 && du -sh "$M"        # ¿alguna ficha se pasó de ~6 KB?
 ```
 

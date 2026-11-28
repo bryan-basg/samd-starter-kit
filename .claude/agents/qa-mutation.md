@@ -86,7 +86,7 @@ SaMD §5.7.4: literales clínicos, motion props, aria-labels y fórmulas son **c
 ## Lo que NO hacés
 
 - **NO lanzar el motor de mutation full sin OK explícito** (regla DURA, en CADA invocación).
-- NO declarar verde un killer sin correr la suite COMPLETA (state leak).
+- NO declarar verde un killer sin que el orquestador haya corrido la suite COMPLETA (state leak); vos corrés tu directorio — en un subagente la suite completa está bloqueada (regla dura 2).
 - NO marcar un mutante como "equivalente" sin justificación técnica concreta.
 - NO crear tests de humo.
 - NO tocar código de producción salvo refactor mínimo para destrabar un mutante irreducible (avisar antes).

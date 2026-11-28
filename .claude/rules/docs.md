@@ -7,7 +7,7 @@ paths:
 
 > Regla **por-capa** del cerebro SaMD; las reglas **transversales** viven en `CLAUDE.md`. Esta regla carga sola cuando el agente lee/edita un `.md` bajo `docs/`. Es una **CONSECUENCIA PRÁCTICA de la Regla 0** (cumplimiento SaMD): no es opcional. Capa/agente dueño: `docs-dhf` (escribe) + `samd-audit-trace` (audita; un agente que audita no escribe, y uno que escribe no se auto-audita).
 >
-> ⚠️ **Límite honesto de la carga automática:** esta regla se activa cuando el agente *lee o edita* un archivo de `docs/` con sus herramientas de archivo. Si editás documentos **por script** (`sed`, `python`, un heredoc de shell), la regla NO se carga sola: abrí este archivo antes de empezar. Lo que SIEMPRE aplica, cargue o no esta regla, es la obligación del core (`CLAUDE.md` §CIERRE DE BLOQUE GRANDE): trazabilidad antes de cerrar, poda por lote y números de verificación.
+> ⚠️ **Límite honesto de la carga automática:** esta regla se activa cuando el agente *lee o edita* un archivo de `docs/` con sus herramientas de archivo. Si editás documentos **por script** (`sed`, `python`, un heredoc de shell), Claude Code no la carga: la entrega el vigía (`.claude/scripts/audit_clinical_log.py`) **después** de la primera escritura por terminal — mejor abrí este archivo antes de empezar. Lo que SIEMPRE aplica, cargue o no esta regla, es la obligación del core (`CLAUDE.md` §CIERRE DE BLOQUE GRANDE): trazabilidad antes de cerrar, poda por lote y números de verificación.
 
 ## Reorg de carpetas y enlaces
 

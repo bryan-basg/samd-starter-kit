@@ -1,6 +1,6 @@
 # Master Map — {{PROJECT_NAME}}
 
-> Mapa maestro del proyecto. **No asumir rutas; verificarlas.** Toda doc nueva, renombre o reorg se refleja acá (lo mantiene `docs-dhf`). Versión: v1.16.
+> Mapa maestro del proyecto. **No asumir rutas; verificarlas.** Toda doc nueva, renombre o reorg se refleja acá (lo mantiene `docs-dhf`). Versión: v1.17.
 
 ## Identidad del dispositivo
 
@@ -54,7 +54,7 @@ El reglamento que gobierna a los agentes vive junto al código, no en el DHF:
 | Equipo de agentes | `.claude/agents/` | 12 especialistas por capa, cada uno con `model:` en el frontmatter (palanca de costo/velocidad — ver el estilo `.claude/output-styles/orquestador.md` §2, que trae también la matriz de "cuándo usar cada uno"). |
 | Procedimientos | `.claude/commands/`, `.claude/skills/` | Skills operativas (anti-drift y **tandas de agentes** — cohesión y costo, las dos caras de orquestar—, **ola de auditoría** — veracidad del hallazgo—, **arreglar no envolver** — arreglar en vez de tapar—, cierre de bloque, mutation, diagnóstico, memoria del agente, **reporte corto** — el cierre de una tarea cabe en un celular—, **auditor simulado** — ensayo de auditoría ISO 13485, solo práctica—). |
 | Verificadores y aviso de CI | `scripts/check_doc_{links,anchors,citations}`, `.github/workflows/main-en-rojo.yml` | Tres verificadores de la documentación (enlaces, `#anclas`, citas al código por nombre `ruta/archivo.py::símbolo`; 0 rotas, los corre el CI) y el aviso que abre un Issue cuando un workflow rojea en `main`. Guardianes: `tests/test_citas_del_dhf.py`, `tests/test_workflow_main_en_rojo.py`. |
-| Hooks mecánicos | `.claude/settings.json`, `.claude/scripts/` | Candados que no dependen de que el agente se acuerde: `PreToolUse` sobre `Bash` deniega a un SUBAGENTE correr la suite completa o un proceso pesado (`.claude/rules/orquestacion.md`, regla dura 2); `PostToolUse` sobre `Edit\|Write` anota en una bitácora local (`.claude/audit_clinical_changes.log`, fuera de git) cada cambio a un módulo clínico/crítico y le recuerda al agente la trazabilidad (`.claude/scripts/audit_clinical_log.py`). |
+| Hooks mecánicos | `.claude/settings.json`, `.claude/scripts/` | Candados que no dependen de que el agente se acuerde: `PreToolUse` sobre `Bash` deniega a un SUBAGENTE correr la suite completa o un proceso pesado (`.claude/rules/orquestacion.md`, regla dura 2); `PostToolUse` sobre `Bash\|Edit\|Write` (el vigía, `.claude/scripts/audit_clinical_log.py`) mira lo que cambió en el disco con `git status` —venga de la herramienta que venga—, anota en una bitácora local (`.claude/audit_clinical_changes.log`, fuera de git) cada cambio a un módulo clínico/crítico, le recuerda al agente la trazabilidad y, si la capa se tocó por terminal, le entrega su regla de `.claude/rules/`; si falla, lo dice. `subagentPromptCacheTtl: "1h"` alarga la caché de los subagentes (`/tandas-agentes`). |
 
 > Cambios en estas piezas son **cambios de proceso/gobernanza**: se trazan en el
 > `SOFTWARE_CONFIGURATION_MANAGEMENT_PLAN` + este Master Map, no en la matriz de riesgo
@@ -83,7 +83,7 @@ El reglamento que gobierna a los agentes vive junto al código, no en el DHF:
 
 | Doc | Versión | Última actualización |
 |---|---|---|
-| MASTER_MAP | v1.16 | 2026-11-24 |
-| SOFTWARE_CONFIGURATION_MANAGEMENT_PLAN | v1.19 | 2026-11-24 |
+| MASTER_MAP | v1.17 | 2026-11-27 |
+| SOFTWARE_CONFIGURATION_MANAGEMENT_PLAN | v1.20 | 2026-11-27 |
 | ISO_14971_RISK_MATRIX | vX.Y (plantilla; la versión la fija el proyecto derivado) | 2026-11-16 |
 | TRACEABILITY_MATRIX_SAMD | vX.Y (plantilla; la versión la fija el proyecto derivado) | 2026-11-16 |

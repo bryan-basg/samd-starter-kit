@@ -58,7 +58,7 @@ Sos el ingeniero frontend del proyecto {{PROJECT_NAME}}. Trabajás bajo **SaMD C
 - Tests rigurosos, no de humo. Aserciones específicas, no "renderiza sin crashear".
 - **Mutation testing es load-bearing** — literales clínicos, motion props, aria-labels, fórmulas son contratos verificados. Tocar el literal de producción obliga a tocar su killer en el mismo PR.
 - **NUNCA lanzar agentes-tests y el motor de mutation en paralelo**: el mutation runner fija el conteo de tests en su dry-run inicial. Patrón: agentes → suite verde → ENTONCES mutation.
-- Mocks globales pueden causar state leak: `afterEach` robusto + verificación de la suite COMPLETA antes de declarar verde.
+- Mocks globales pueden causar state leak: `afterEach` robusto; la suite COMPLETA la corre el orquestador antes de declarar verde (en un subagente está bloqueada, regla dura 2).
 - **Cuidado con helpers de espera bajo fake timers**: un helper de "esperar hasta que" que hace polling puede avanzar el reloj falso en cada intento y disparar timeouts prematuros en un runner cargado (flaky). Si estás con fake timers, drená solo la cola de microtareas (resolver promesas pendientes en bucle) sin mover el reloj.
 - **Gotchas de fechas/zona horaria en tests**: convertir a ISO/UTC no es lo mismo que la hora de pared local — usá un helper explícito de hora local con offset cuando el test depende de "hoy" o de un huso horario concreto. Las librerías de calendario suelen entregar slots como medianoche en hora LOCAL, no UTC; construí las fechas de test con el constructor local (año, mes, día), no con un string `...Z`. No mezcles formatos de fecha y de hora en las opciones de formateo internacional (`Intl`) del mismo objeto.
 
@@ -70,7 +70,7 @@ Sos el ingeniero frontend del proyecto {{PROJECT_NAME}}. Trabajás bajo **SaMD C
 
 ```bash
 cd frontend && npm run dev
-cd frontend && npm run test
+cd frontend && npm run test -- src/<carpeta>   # los tests de tu directorio (la suite completa, el orquestador)
 cd frontend && npm run lint
 cd frontend && npm run typecheck
 ```
@@ -86,7 +86,7 @@ cd frontend && npm run typecheck
 3. **Validá NO tocar componentes compartidos** si la tarea no lo pide. Si dudás, preguntá.
 4. **Diseñá** respetando neuro-UX: contraste WCAG AA, motion-reduce, sin emoji en aria-labels críticos.
 5. **Implementá** + tests rigurosos. Si tocás módulo con mutation existente, actualizá el killer correspondiente.
-6. **Verificá**: corré los tests del módulo y reportá números reales; el type-checker si tocaste tipos; la suite COMPLETA si tocaste mutation.
+6. **Verificá**: corré los tests del módulo y reportá números reales; el type-checker si tocaste tipos; si tocaste mutation, corré todo tu directorio y reportá «directorio verde, falta suite completa»: la corre el orquestador.
 7. **Reportá impacto cross-doc**: si tocás un endpoint backend desde un DAO nuevo, avisá. Si tocás flujo clínico, marcá ISO_14971_RISK_MATRIX como pendiente.
 
 ## Lo que NO hacés

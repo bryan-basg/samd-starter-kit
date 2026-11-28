@@ -29,6 +29,7 @@ Estos guardianes rojean **a propósito** cuando `app/` cambia; apuntalos a tus a
 | Qué rojea | Qué hacer |
 | --- | --- |
 | `test_audit_clinical_log.py` | Poné tus módulos clínicos en `CLINICAL_PATTERNS` (`.claude/scripts/audit_clinical_log.py`) |
+| `test_gasto_trabajo_nocturno.py` | Nada que adaptar; si cambian los precios oficiales, actualizá `PRECIOS` en `.claude/skills/trabajo-nocturno/scripts/gasto.py` y este test |
 | `check_doc_citations.py` y `test_citas_del_dhf.py` | Reemplazá en `docs/` las citas a `app/…::símbolo` y a `test_hard_rules.py` por las de tu código |
 | `test_scripts_audit_hallucinations.py` | Quitá de `ALLOWLIST` las líneas de archivos que ya no existen |
 | `test_scripts_audit_smells.py` | Ajustá la carpeta que audita `scripts/audit_smells.py` |

@@ -18,7 +18,7 @@ Vas a repartir un trabajo grande entre subagentes. **El riesgo que esta skill at
 ## Las 2 reglas duras
 
 1. **Máximo 12 agentes por tanda.** Es el tope de la regla B del estilo «Orquestador SaMD» §2 (`.claude/output-styles/orquestador.md`), y cuenta **todos** los agentes de la tanda: los que hacen el trabajo Y los que verifican. Un pipeline de 12 ítems con 2 revisores cada uno son **36 agentes**, no 12.
-2. **Entre tanda y tanda, PARÁS y PREGUNTÁS.** Nunca encadenes la siguiente por tu cuenta, aunque el plan la contemple y aunque el dueño haya dicho "vamos con todo". **"Vamos con todo" autoriza el PLAN, no el GASTO de cada tanda** — igual que no autoriza los procesos pesados implícitos (regla dura 2 de orquestación).
+2. **Entre tanda y tanda, PARÁS y PREGUNTÁS.** Nunca encadenes la siguiente por tu cuenta, aunque el plan la contemple y aunque el dueño haya dicho "vamos con todo". **"Vamos con todo" autoriza el PLAN, no el GASTO de cada tanda** — igual que no autoriza los procesos pesados implícitos (regla dura 2 de orquestación). **Única excepción**: una noche con OK escrito de encadenar y tope de gasto (`/trabajo-nocturno`), solo esa noche y hasta ese tope.
 
 ## Presupuesto — estimalo ANTES, no después
 
@@ -51,7 +51,7 @@ Al agotarse el límite de sesión, los agentes mueren **después de guardar sus 
 * **Buscá temporales**: `git status --short | grep "^??"`.
 * **Los revisores que no corrieron son deuda, no un detalle**: anotala explícitamente en `TECHNICAL_DEBT_SUMMARY.md`. Tests verdes ≠ revisión adversarial.
 
-## Contrato de la tanda — metelo LITERAL en el brief de cada agente
+## Contrato de la tanda (7 cláusulas) — metelo LITERAL en el brief de cada agente
 
 Cada punto salió de un fallo real que ya costó caro:
 
@@ -61,6 +61,9 @@ Cada punto salió de un fallo real que ya costó caro:
 4. **No dejes código huérfano ni temporales.** Cada archivo nuevo necesita un importador real.
 5. **Hay guardianes que leen TEXTO, no conducta.** Un test que lee el archivo con `readFileSync` y exige una forma concreta se rompe con un cambio que al ejecutarse es idéntico (`if (!x) return;` en vez de `if (x) { … }`). ⇒ El sabotaje de comportamiento es **ciego** ante ellos: mirá también si el diff cambió la FORMA que alguien vigila.
 6. **La suite de mutación de los módulos críticos es un CONTRATO** (regla dura 5 de orquestación): literales empáticos, logs, etiquetas ARIA y fórmulas. Tocar el literal obliga a tocar su killer en el mismo cambio. **Prohibido aflojar un killer para que pase un refactor** — si hace falta aflojarlo, el refactor está mal.
+7. **Nada de esperas encadenadas ni procesos sueltos**: cada comando, **menos de 3 min** (`timeout 170`) **y todos los comandos de un mismo turno, menos de 4 min entre todos** — el tope por comando solo no sirve: se burla encadenando esperas. Los sabotajes van de a uno o dos por turno, en primer plano y con solo las pruebas que pueden matarlos; nada de segundo plano, `sleep`, `until` ni `tail --pid`. **Prohibido matar procesos por nombre** (`pkill`, `killall`): solo por el PID que vos lanzaste — matar por nombre se lleva puestos los procesos de otras ventanas y agentes.
+
+**Por qué la cláusula 7 y la caché de 1 h** (mecanismo portado del proyecto de referencia; el ahorro allá fue *simulado*, no medido — medilo en tu proyecto): un subagente que pasa **más de 5 min sin turno** (esperando un proceso propio en segundo plano o un mensaje) pierde la caché y paga de nuevo la **escritura** de todo su contexto, que allá resultó la mayor parte del costo de una tanda. Por eso el kit trae `"subagentPromptCacheTtl": "1h"` en `.claude/settings.json` (ajuste oficial de Claude Code; la variable de entorno `CLAUDE_CODE_SUBAGENT_PROMPT_CACHE_TTL` tiene precedencia). Contrapartida: escribir caché de 1 h cuesta más que la de 5 min, así que solo compensa si los agentes de verdad esperan; y Claude Code **ignora** el `1h` mientras una suscripción está en *overage*. Para medir el gasto real de una tanda: `python3 .claude/skills/trabajo-nocturno/scripts/gasto.py`.
 
 ## Verificación adversarial: lentes distintos, no revisores repetidos
 

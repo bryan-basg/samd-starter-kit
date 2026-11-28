@@ -35,7 +35,7 @@ Este `CLAUDE.md` (**core**) guarda la **espina de comportamiento** que aplica a 
 
 El resto vive en tres lugares, según **quién** lo necesita:
 
-**① Path-scoped** (frontmatter `paths:`) — **cargan solo cuando el agente lee/edita un archivo de esa capa**, aligerando el contexto cuando no se toca:
+**① Path-scoped** (frontmatter `paths:`) — **cargan solo cuando el agente lee/edita un archivo de esa capa con sus herramientas de archivo**, aligerando el contexto cuando no se toca. **Si la capa se toca por terminal** (`sed`, `python`, heredoc), la entrega el vigía (`.claude/scripts/audit_clinical_log.py`) después de la primera escritura — mejor leela antes:
 
 | Regla | Archivo | Carga automática al tocar |
 | --- | --- | --- |

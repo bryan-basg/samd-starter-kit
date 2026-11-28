@@ -35,6 +35,7 @@ Aplica una migración de esquema MANUAL contra la base de datos de producción d
 # 1) Levantar el proxy/túnel en background contra un puerto local libre
 <binario-proxy-de-tu-nube> --port=5433 \
   <proyecto>:<región>:<instancia> &
+PROXY_PID=$!
 
 # 2) Esperar a que el puerto esté listo
 until ss -tln | grep -q ':5433 '; do sleep 0.3; done
@@ -51,7 +52,7 @@ venv/bin/alembic current    # ver en qué revisión está prod
 venv/bin/alembic upgrade head
 
 # 4) Cerrar el proxy
-pkill -f "<binario-proxy-de-tu-nube> --port=5433"
+kill "$PROXY_PID"   # por PID, nunca por nombre: `pkill` se lleva los túneles de otras ventanas
 ```
 
 ## Verificar antes y después
@@ -65,4 +66,4 @@ pkill -f "<binario-proxy-de-tu-nube> --port=5433"
 - Requiere el entorno virtual del proyecto activo (sin él, la herramienta de migración y el driver síncrono del sistema pueden fallar o resolver versiones distintas a las del proyecto).
 - Si el flujo normal migra solo vía un job/paso automatizado en el deploy, esta receta es la excepción (pasos diferidos, recuperación, rotación de claves/re-cifrado de datos sensibles vía túnel manual).
 - Un CI que migra contra un motor de base de datos distinto al de producción (ej. SQLite en CI vs Postgres en prod) puede ocultar errores específicos del driver de prod (como el problema del motor síncrono/asíncrono de arriba). NUNCA confiar en el verde de la migración del CI sin verificar la revisión real aplicada en el entorno destino.
-- Cerrar SIEMPRE el proxy/túnel al terminar (`pkill` o equivalente) — dejarlo abierto es una conexión viva innecesaria contra prod.
+- Cerrar SIEMPRE el proxy/túnel al terminar por su PID (`kill "$PROXY_PID"`), nunca por nombre — dejarlo abierto es una conexión viva innecesaria contra prod.

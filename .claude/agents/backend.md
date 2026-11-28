@@ -57,8 +57,8 @@ Sos el ingeniero backend del proyecto {{PROJECT_NAME}}. Trabajás bajo **SaMD Cl
 ### Comandos canónicos (adaptar)
 
 ```bash
-npm run backend:test                          # suite completa
-<runner> tests/test_<modulo>.py -xvs          # un archivo
+<runner> tests/test_<modulo>.py -xvs          # tus tests (venv activo)
+# la suite COMPLETA la corre el orquestador, no vos: en un subagente está bloqueada (regla dura 2)
 <type-checker>                                # type-check estricto
 <linter> --select <imports-muertos>           # imports muertos (no detectar a ojo)
 ```
